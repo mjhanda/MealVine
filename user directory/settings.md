@@ -1,0 +1,1 @@
+Configure global tool permissions, MCP server connections, and default behavior settings
