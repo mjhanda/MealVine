@@ -46,8 +46,8 @@ which answers the main complaint about how Mealime shut down. See T25.
 
 ### Milestones (proposed)
 
-- **M1, personal-use parity:** T01–T09, T22. Target 2026-10-19.
-- **M2, full Mealime parity:** T10–T14, T19, T20. Target 2026-11-02.
+- **M1, personal-use parity:** T01–T09, T20, T22, T25. Target 2026-10-19.
+- **M2, full Mealime parity:** T10–T14, T19. Target 2026-11-02.
 - **M3, publishable:** T15–T18, T21, T23–T25. Target 2026-11-30.
 
 ---
