@@ -1,0 +1,140 @@
+name: AI Task Request
+description: Structured request for a task to be routed to or through an AI assistant/agent
+title: "[TASK] "
+labels: ["ai-task"]
+body:
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary
+      description: One or two sentences — what needs to be done and why.
+    validations:
+      required: true
+
+  - type: input
+    id: requester
+    attributes:
+      label: Requester
+    validations:
+      required: true
+
+  - type: input
+    id: assignee
+    attributes:
+      label: Assignee(s) / AI agent
+      description: Who or what is doing the work.
+    validations:
+      required: true
+
+  - type: input
+    id: reviewer
+    attributes:
+      label: Reviewer(s)
+    validations:
+      required: false
+
+  - type: input
+    id: end_user
+    attributes:
+      label: End user(s) / affected party
+    validations:
+      required: false
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Context
+      description: Background, links to related issues/PRs/docs, prior decisions that constrain this task.
+    validations:
+      required: false
+
+  - type: dropdown
+    id: data_classification
+    attributes:
+      label: Data Classification
+      description: What kind of data does this task touch?
+      multiple: true
+      options:
+        - No sensitive data involved
+        - Internal/confidential (non-PII business data)
+        - PII / customer data
+        - Credentials / secrets
+        - Regulated data (PCI, HIPAA, GDPR-scoped, etc.)
+    validations:
+      required: true
+
+  - type: textarea
+    id: data_handling_notes
+    attributes:
+      label: Notes on data handling
+      description: Any constraints on how this data can be accessed, logged, or stored during the task.
+    validations:
+      required: false
+
+  - type: textarea
+    id: in_scope
+    attributes:
+      label: In scope
+    validations:
+      required: true
+
+  - type: textarea
+    id: out_of_scope
+    attributes:
+      label: Out of scope
+    validations:
+      required: false
+
+  - type: textarea
+    id: acceptance_criteria
+    attributes:
+      label: Acceptance Criteria
+      description: Written as testable, binary conditions (checkable as done/not done).
+      placeholder: |
+        - [ ] ...
+        - [ ] ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: test_strategy
+    attributes:
+      label: Test Strategy
+      description: Unit tests, integration tests, manual verification steps, edge cases to cover.
+    validations:
+      required: true
+
+  - type: textarea
+    id: dependencies
+    attributes:
+      label: Dependencies / Blockers
+      description: Other issues, PRs, external systems, or approvals this depends on.
+    validations:
+      required: false
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priority
+      options:
+        - P0 - Critical
+        - P1 - High
+        - P2 - Medium
+        - P3 - Low
+    validations:
+      required: true
+
+  - type: input
+    id: target_date
+    attributes:
+      label: Target date
+    validations:
+      required: false
+
+  - type: textarea
+    id: additional_notes
+    attributes:
+      label: Additional Notes
+      description: Constraints, non-goals, open questions.
+    validations:
+      required: false

@@ -1,0 +1,612 @@
+# MealApp — Task List (Mealime parity → publishable)
+
+Written 2026-10-05. Each task follows `.github/ISSUE_TEMPLATE/ai-task.yml`
+and is mirrored as a GitHub issue. This file is the planning snapshot; once
+work starts, the issues are the source of truth.
+
+## Product north star
+
+Mealime's core loop: **pick meals that fit how you eat → get one
+aisle-sorted grocery list → cook from clear step-by-step instructions.**
+Its plan isn't a calendar: you pick a batch of meals and cook them whenever
+you like. MealApp already has that list model (v2). The gaps are in the
+**personalization layer** (diets, allergies, dislikes), the **grocery list**
+(it doesn't merge ingredients well and has no pantry awareness), and the
+**cook step** (there's no cooking mode, and no way to mark a meal as done).
+
+### Mealime feature inventory (researched 2026-10-05)
+
+| Mealime feature | MealApp today | Task |
+|---|---|---|
+| Diets: Classic, Flexitarian, Pescetarian, Vegetarian, Vegan, Low Carb, Keto, Paleo; Gluten-free and Dairy-free plans | 2 options ("vegetarian only" / "veg + lean protein") | T07 |
+| Allergy exclusions (shellfish, gluten, nuts, etc.) | None | T08 |
+| Dislikes ("no tofu, no olives"), 200+ personalization options | None | T08 |
+| Servings per meal (2 / 4 / 6) | Household size 1–8 plus per-entry servings, but entry servings can't be seen or edited | T04 |
+| Browse recipe photos, tap to add to the plan | Emoji cards, quick-add | T05, T15 |
+| Swap a meal for another one | Remove, then re-add manually | T05 |
+| Aisle-sorted, auto-generated grocery list | Yes, but no unit merging, messy ingredient names, sticky check-offs | T03, T09, T10 |
+| Check off items you already have; add custom items | Check-off yes; custom items all land in one aisle | T11, T12 |
+| Hands-free cooking mode, step by step | Static list of steps | T13 |
+| Recipes ≤ ~30–45 min, everyday ingredients | Yes (authored to that brief) | T16 |
+| Nutrition: calories, macros, micros (Pro) | None | T17 |
+| Recipe notes and previous meal plans (Pro) | None | T18 |
+| Recipe box / favorites | Yes | — |
+| Grocery delivery integrations | None — out of scope (needs a backend and partners) | — |
+
+### Market context that changes the stakes
+
+**Mealime shuts down on 2026-10-21.** Albertsons is folding it into the
+"Meals Hub" inside its grocery-store apps. The app has **no export**, and all
+user data is deleted at shutdown. It's rated 4.8★ from 54k+ App Store ratings.
+At least six competitors are already publishing "Mealime alternative" posts.
+A store launch before 10-21 isn't realistic (review queues plus the gaps below),
+but people will keep searching for a replacement for months. What we can
+honestly offer: **offline, private, no account, your data is exportable**,
+which answers the main complaint about how Mealime shut down. See T25.
+
+### Milestones (proposed)
+
+- **M1, personal-use parity:** T01–T09, T22. Target 2026-10-19.
+- **M2, full Mealime parity:** T10–T14, T19, T20. Target 2026-11-02.
+- **M3, publishable:** T15–T18, T21, T23–T25. Target 2026-11-30.
+
+---
+
+## T01 — Put the codebase under version control on GitHub
+
+- **Summary:** All of v2 (≈1,200 changed lines, including the switch from a weekly grid to a flat list and recipes 51–100) existed only in the working tree, and the repo had no remote. A single disk failure would lose it.
+- **Requester:** Owner (@element-dot)
+- **Assignee(s) / AI agent:** Claude Code
+- **Reviewer(s):** Owner
+- **End user(s):** n/a (repo hygiene)
+- **Context:** `git status` on 2026-10-05: one commit (v1 MVP); v2 uncommitted; `src/utils/recipeCatalog.ts` untracked; no `origin`.
+- **Data Classification:** No sensitive data involved
+- **Notes on data handling:** Secret scan run over the working tree and full history before the first push (clean). The repo is private.
+- **In scope:** Commit v2; create private GitHub repo; push; add `.github/ISSUE_TEMPLATE/ai-task.yml`; add this task list.
+- **Out of scope:** CI (T20).
+- **Acceptance Criteria:**
+  - [x] v2 committed on `main`
+  - [x] Private repo exists, `origin/main` matches local `main`
+  - [x] Issue template visible in the GitHub "New issue" picker
+- **Test Strategy:** `git status` clean; `git rev-parse main origin/main` match; open the New Issue page.
+- **Dependencies / Blockers:** None
+- **Priority:** P0 - Critical
+- **Target date:** 2026-10-05 (done)
+- **Additional Notes:** —
+
+## T02 — Fix stale and contradictory project docs
+
+- **Summary:** The docs contradict the code and each other. Anyone (human or AI) who reads them first will build the wrong thing.
+- **Requester:** Owner
+- **Assignee(s) / AI agent:** Claude Code
+- **Reviewer(s):** Owner
+- **End user(s):** Contributors / AI agents
+- **Context:** Specific defects:
+  - `mealplan-app-project-plan.md` §7 still marks "Weekly grid UI", "Auto-generate plan algorithm", "Swap-meal UI" and "Regenerate week" as done. v2 deleted all of them (`planGenerator.ts` is gone). §1, §3, §5 and §6 still describe a 7-day weekly plan. §8 says "50 recipes" (there are 100).
+  - The plan is titled "Mealime-style Clone". Mealime is a trademark, so the name can't appear in anything that ships or in store copy.
+  - `CLAUDE.md` §4 lists "plan generation" as business logic in `src/utils/`; it no longer exists.
+  - `project directory/CLAUDE.md` is a diverging duplicate of the root `CLAUDE.md`. `project directory/security_bootstrap_instruction.md` is an empty duplicate of the root file.
+  - The folder names `project directory/` and `user directory/` contain spaces, which breaks naive tooling and shell scripts.
+  - `.claude/rules/security.md` claims "No PII or sensitive data". That stops being true once T08 stores allergy data.
+- **Data Classification:** No sensitive data involved
+- **Notes on data handling:** —
+- **In scope:** Rewrite the plan around the list model and this task list; delete or merge duplicates; rename folders to `docs/project/` and `docs/user/` and fix references; remove "clone" wording.
+- **Out of scope:** Marketing copy.
+- **Acceptance Criteria:**
+  - [ ] No doc describes a weekly grid, auto-generation, or regenerate as current behavior
+  - [ ] One `CLAUDE.md` (root); no empty or duplicate files
+  - [ ] No folder names with spaces; `grep -r "project directory"` returns nothing
+  - [ ] "Mealime" appears only in internal competitive-research docs, never in app copy
+- **Test Strategy:** Manual read-through against `src/`; grep checks above.
+- **Dependencies / Blockers:** T01
+- **Priority:** P1 - High
+- **Target date:** 2026-10-08
+- **Additional Notes:** Do this before any big feature work so AI agents get accurate context.
+
+## T03 — Grocery check-offs are sticky across plans (bug)
+
+- **Summary:** Checked state is keyed by `name__unit` and never pruned. If you check off "Garlic (clove)", clear the plan, and later add any recipe that uses garlic, it already shows as bought. You'd skip buying it.
+- **Requester:** Owner
+- **Assignee(s) / AI agent:** Claude Code
+- **Reviewer(s):** Owner
+- **End user(s):** All users at the store
+- **Context:** `src/store/groceryStore.ts` (`checked: Record<string, boolean>`); `clearChecked()` exists but nothing in the UI calls it. `PlanScreen` clear doesn't touch grocery state. Mealime users complained about the opposite failure: list items vanishing when they picked a new menu.
+- **Data Classification:** No sensitive data involved
+- **Notes on data handling:** Changes the persisted `GroceryState` shape, so it needs a migration (T22).
+- **In scope:** Prune checked keys that aren't on the current derived list whenever the plan changes; a "Clear checked" / "Start fresh list" action on the Grocery tab; checked items sort to the bottom of their aisle; clearing the plan offers to reset the list as well.
+- **Out of scope:** Pantry "already have" (T11).
+- **Acceptance Criteria:**
+  - [ ] Check item → remove every recipe that uses it → re-add one → item is unchecked
+  - [ ] "Clear checked" action exists and asks for confirmation
+  - [ ] Checked items render below unchecked ones within each aisle
+  - [ ] Manual items survive plan changes (they're independent of recipes)
+- **Test Strategy:** Unit-test a pure `pruneChecked(checked, lines)` in `src/utils/grocery.ts`; manual repro of the scenario on web.
+- **Dependencies / Blockers:** T22
+- **Priority:** P0 - Critical
+- **Target date:** 2026-10-12
+- **Additional Notes:** —
+
+## T04 — Plan entries hide their servings; Recipe Detail shows a different amount (bug)
+
+- **Summary:** Each plan entry stores `servings`, and the grocery list scales by it. But the Plan tab never shows that number, you can't edit it, and opening the recipe from the plan resets the stepper to household size. What you cook from doesn't match what you shopped for.
+- **Requester:** Owner
+- **Assignee(s) / AI agent:** Claude Code
+- **Reviewer(s):** Owner
+- **End user(s):** All users
+- **Context:** `PlanScreen` → `navigation.navigate('RecipeDetail', { recipeId })` drops `item.id`; `RecipeDetailScreen` uses `useState(householdSize)`. Mealime has a fixed servings setting per plan (2/4/6).
+- **Data Classification:** No sensitive data involved
+- **Notes on data handling:** —
+- **In scope:** Show "· 4 servings" on plan cards; an inline stepper (or sheet) to edit an entry's servings; open Recipe Detail with `planItemId` so the stepper starts at, and edits, that entry; add an `updateServings(id, n)` store action.
+- **Out of scope:** Leftover tracking.
+- **Acceptance Criteria:**
+  - [ ] Plan card displays entry servings
+  - [ ] Changing servings on a plan entry updates grocery amounts immediately
+  - [ ] Recipe Detail opened from the plan shows that entry's servings, and edits persist to it
+  - [ ] Recipe Detail opened from Browse still defaults to household size and says "Add to plan"
+- **Test Strategy:** Unit-test `updateServings` plus grocery scaling; manual: 2 → 6 servings and the onion count triples.
+- **Dependencies / Blockers:** None
+- **Priority:** P0 - Critical
+- **Target date:** 2026-10-12
+- **Additional Notes:** Add a `planItemId?: string` param to `RootStackParamList.RecipeDetail`.
+
+## T05 — Browse quick-add silently duplicates; there's no swap
+
+- **Summary:** The Browse "+" turns into a ✓ once a recipe is in the plan, but tapping the ✓ adds *another* copy with no feedback. Users expect it to toggle. There's also no "swap this meal", one of Mealime's signature interactions.
+- **Requester:** Owner
+- **Assignee(s) / AI agent:** Claude Code
+- **Reviewer(s):** Owner
+- **End user(s):** All users
+- **Context:** `BrowseScreen.tsx` calls `addItem` regardless of `inPlan`. Mealime: tap a meal photo to swap it, or swipe down to swap all.
+- **Data Classification:** No sensitive data involved
+- **Notes on data handling:** —
+- **In scope:** ✓ removes the recipe (with an undo snackbar); adding the same recipe twice is only possible from Recipe Detail ("Add another"); a "Swap" action on plan cards opens Browse pre-filtered to the same meal type and replaces the entry in place, keeping its servings; a plan-count badge on the Plan tab icon.
+- **Out of scope:** "Swap all" / auto-suggest (no generator by design — revisit only if users ask).
+- **Acceptance Criteria:**
+  - [ ] Tapping ✓ in Browse removes the entry and shows Undo for ~4 s
+  - [ ] Swap replaces the plan entry (same position, same servings)
+  - [ ] Plan tab shows the count of planned meals
+- **Test Strategy:** Store unit tests (`replaceItem`); manual web walkthrough.
+- **Dependencies / Blockers:** T04 (servings carry over on swap)
+- **Priority:** P1 - High
+- **Target date:** 2026-10-15
+- **Additional Notes:** —
+
+## T06 — "Mark as cooked": close the plan → shop → cook loop
+
+- **Summary:** Since the plan isn't a calendar, the only way a meal ever leaves it is by deleting it (same as "never mind") or wiping the whole plan. There's no "done" state, so the plan and grocery list never shrink naturally and you can't tell what's left to cook.
+- **Requester:** Owner
+- **Assignee(s) / AI agent:** Claude Code
+- **Reviewer(s):** Owner
+- **End user(s):** All users
+- **Context:** The user requirement is explicit: "meals can be just prepared when you want". That makes "cooked" the natural end of each entry's lifecycle.
+- **Data Classification:** No sensitive data involved
+- **Notes on data handling:** New persisted `history` (recipeId, servings, cookedAt), with a migration (T22).
+- **In scope:** A "Cooked it" action on plan cards and at the end of cooking mode (T13). It moves the entry to history and removes its ingredients from the *unbought* grocery list (bought items stay checked). A "Recently cooked" section, with "Cook again" to re-add.
+- **Out of scope:** Ratings and notes (T18).
+- **Acceptance Criteria:**
+  - [ ] Marking a meal cooked removes it from the plan and adds it to history
+  - [ ] Its ingredients no longer appear as needed on the grocery list
+  - [ ] "Cook again" re-adds with the same servings
+- **Test Strategy:** Unit tests for the store transition; manual flow on web.
+- **Dependencies / Blockers:** T22
+- **Priority:** P0 - Critical
+- **Target date:** 2026-10-15
+- **Additional Notes:** This is the missing verb in the product; without it the plan is just a bookmark list.
+
+## T07 — Diet taxonomy at Mealime parity
+
+- **Summary:** Replace the two-option `DietPref` ('vegetarian' | 'mixed') with Mealime's set: Classic, Flexitarian, Pescetarian, Vegetarian, Vegan, Low Carb, Keto, Paleo, plus the Gluten-free and Dairy-free modifiers. Browse filters by the chosen diet.
+- **Requester:** Owner
+- **Assignee(s) / AI agent:** Claude Code
+- **Reviewer(s):** Owner
+- **End user(s):** All users
+- **Context:** Recipes are tagged with a single `diet` that's really a *protein* tag (`vegetarian|chicken|turkey|fish`), so it can't express vegan, low-carb, keto, gluten-free, and so on. The diets should be **derived** from canonical ingredient tags (T09), not hand-tagged per recipe. Hand tags drift. The owner's personal "lean protein, no pork" preference becomes Classic plus dislikes (pork, beef), via T08.
+- **Data Classification:** No sensitive data involved
+- **Notes on data handling:** `Preferences.diet` shape change → migration: `'vegetarian'` → `vegetarian`; `'mixed'` → `classic` + dislikes `[pork]`.
+- **In scope:** `DietId` type and definitions (allowed/excluded ingredient tags, carb thresholds for low-carb/keto); a `recipeDiets(recipe)` util; onboarding and settings pickers; Browse filtering; diet badges on cards; replace the current protein `DietTag` with a protein tag plus diet badges.
+- **Out of scope:** Nutrition-based thresholds need T17. Until then, gate low-carb and keto on ingredient rules and hide them if fewer than 10 recipes qualify.
+- **Acceptance Criteria:**
+  - [ ] Every recipe gets its diets from ingredient tags; no hand-maintained diet list per recipe
+  - [ ] Selecting Vegan shows zero recipes containing dairy, egg, honey, meat, or fish (verified by test over the whole catalog)
+  - [ ] Existing installs migrate without losing the plan or favorites
+  - [ ] A diet with too few recipes is hidden or labelled "coming soon", never shows an empty browse
+- **Test Strategy:** Catalog-wide property tests (for each diet, no recipe violates its exclusions); migration unit test with a v2 persisted blob.
+- **Dependencies / Blockers:** T09, T22
+- **Priority:** P0 - Critical
+- **Target date:** 2026-10-19
+- **Additional Notes:** The current catalog is 51 vegetarian / 49 poultry-or-fish recipes with **no red meat**, which makes "Classic" thin. See T16.
+
+## T08 — Allergies and disliked ingredients
+
+- **Summary:** Let users exclude allergens (gluten, dairy, egg, peanut, tree nut, soy, sesame, fish, shellfish, mustard, sulfites, nightshades) and any disliked ingredient (tofu, olives, mushrooms, pork, cilantro…). Excluded recipes never appear. This is a core Mealime differentiator.
+- **Requester:** Owner
+- **Assignee(s) / AI agent:** Claude Code
+- **Reviewer(s):** Owner
+- **End user(s):** All users; safety-relevant for allergic users
+- **Context:** Nothing exists today. Ingredient names are free text (see T09), so exclusion can't be done reliably yet.
+- **Data Classification:** PII / customer data
+- **Notes on data handling:** Allergy data is health-adjacent. Keep it on-device only, never log it, and include it in the T24 export only with the user's consent. Update `.claude/rules/security.md` and `docs/project/security.md`. They currently claim no sensitive data.
+- **In scope:** Onboarding steps for allergies and dislikes; settings editor; hard filter in Browse, Favorites, and search (no "show all" escape for allergens); a warning on Recipe Detail if a planned or favorited recipe conflicts after prefs change; in-app disclaimer ("check labels, we can't guarantee…").
+- **Out of scope:** Cross-contamination, brand-level label data.
+- **Acceptance Criteria:**
+  - [ ] Excluding "peanut" hides every recipe with a peanut-tagged ingredient (catalog-wide test)
+  - [ ] Dislikes are searchable from the canonical ingredient list
+  - [ ] Existing plan entries that conflict get a visible warning
+  - [ ] Allergy disclaimer shown at onboarding and in settings
+- **Test Strategy:** Catalog-wide tests per allergen; manual: set an allergy and confirm it's excluded everywhere.
+- **Dependencies / Blockers:** T09, T22
+- **Priority:** P0 - Critical
+- **Target date:** 2026-10-19
+- **Additional Notes:** A wrong allergen tag is the single highest-liability bug this app can ship. T09's tagging needs a second-pass human review before publishing.
+
+## T09 — Canonical ingredient catalog (foundation)
+
+- **Summary:** Ingredients are free-text strings repeated across 100 recipes, which causes duplicate grocery lines and makes diet and allergen filtering impossible. Introduce a canonical ingredient table and make recipes reference it by id.
+- **Requester:** Owner
+- **Assignee(s) / AI agent:** Claude Code
+- **Reviewer(s):** Owner
+- **End user(s):** All users (indirectly)
+- **Context:** Found in an audit on 2026-10-05:
+  - "Plain Greek yogurt" vs "Greek yogurt"; "Green onion" vs "Green onions"; "Bell pepper" / "Bell peppers" / "Red bell pepper"; "Salt" vs "Salt & pepper"
+  - The same item in incompatible units: celery as `cup`/`stalk`/none; chickpeas and black beans as `can`/`cup`; chicken breast as `lb`/`oz`; romaine as `cup`/`head`
+- **Data Classification:** No sensitive data involved
+- **Notes on data handling:** Recipe ids must not change (CLAUDE.md §9).
+- **In scope:** `src/data/ingredients.ts`: `{ id, name, pluralName, aisle, tags: (allergen|animal|meat|fish|shellfish|dairy|egg|gluten|grain|sugar…)[], unitFamily, purchaseUnit, isPantryStaple }`. Rewrite each recipe ingredient as `{ ingredientId, amount, unit, prep? }` (prep notes like "diced" go in `prep`, not the name). Add a validation script that fails if any recipe references an unknown ingredient or a unit outside its family.
+- **Out of scope:** Nutrition values (T17).
+- **Acceptance Criteria:**
+  - [ ] Every recipe ingredient resolves to a canonical id
+  - [ ] No two canonical entries are the same food
+  - [ ] Validation script runs in CI (T20) and passes
+  - [ ] Grocery list for the full catalog shows no duplicate-food lines
+- **Test Strategy:** Validation script; a snapshot of the grocery list for a fixed 10-recipe plan, before and after.
+- **Dependencies / Blockers:** None (unblocks T07, T08, T10, T11, T17)
+- **Priority:** P0 - Critical
+- **Target date:** 2026-10-14
+- **Additional Notes:** Most of the work is data entry. Script the conversion, then review every tag by hand.
+
+## T10 — Unit normalization in grocery aggregation
+
+- **Summary:** "1 cup + 2 tbsp" of the same ingredient shows as two lines, and amounts come out like "7.5 tbsp" or "0.33 can". Convert within each unit family and round to sensible shopping quantities.
+- **Requester:** Owner
+- **Assignee(s) / AI agent:** Claude Code
+- **Reviewer(s):** Owner
+- **End user(s):** All users at the store
+- **Context:** `src/utils/grocery.ts` keys lines by `name__unit`; `units.ts` only does pluralization and two-decimal rounding.
+- **Data Classification:** No sensitive data involved
+- **Notes on data handling:** —
+- **In scope:** Convert volume (tsp/tbsp/cup) and weight (oz/lb) to a base unit, then display in the largest sensible unit; show fractions (½, ⅓, ¼) instead of decimals; round countables up (0.5 bell pepper → 1); purchase-unit hints for canned goods (1.5 cup chickpeas → "1 can (15 oz)"). Fix the pluralizer, which today turns "pinch" into "pinches" correctly only by accident and would turn "leaf" into "leafs".
+- **Out of scope:** Metric display toggle (P3 later).
+- **Acceptance Criteria:**
+  - [ ] 1 cup + 2 tbsp of an ingredient shows as one line, "1⅛ cups"
+  - [ ] No decimal amounts are displayed anywhere in the app
+  - [ ] Countable produce always shows whole numbers
+- **Test Strategy:** Table-driven unit tests for conversion, rounding, and fraction formatting.
+- **Dependencies / Blockers:** T09
+- **Priority:** P1 - High
+- **Target date:** 2026-10-26
+- **Additional Notes:** —
+
+## T11 — Pantry staples and "I already have this"
+
+- **Summary:** Olive oil appears in 24 recipes, and seasonings in nearly all of them, so the list fills up with things nobody buys weekly. Mealime lets you mark items you already have.
+- **Requester:** Owner
+- **Assignee(s) / AI agent:** Claude Code
+- **Reviewer(s):** Owner
+- **End user(s):** All users
+- **Context:** Uses `isPantryStaple` from T09.
+- **Data Classification:** No sensitive data involved
+- **Notes on data handling:** New persisted `pantry: ingredientId[]` → migration.
+- **In scope:** A collapsed "Probably in your pantry" section at the bottom of the list; "I have this" on any item, remembered across plans; a pantry editor in settings.
+- **Out of scope:** Quantity-tracked inventory.
+- **Acceptance Criteria:**
+  - [ ] Staples appear in a separate collapsed section
+  - [ ] Marking "I have this" moves an item there for future plans
+  - [ ] Item count in the header excludes the pantry section
+- **Test Strategy:** Unit tests for list partitioning; manual.
+- **Dependencies / Blockers:** T09, T22
+- **Priority:** P1 - High
+- **Target date:** 2026-10-26
+- **Additional Notes:** —
+
+## T12 — Grocery list: manual items in the right aisle, editing, and sharing
+
+- **Summary:** Every manually added item is hard-coded into "Pantry & Canned" (milk ends up next to canned beans). Items can't be edited, and the list can't leave the app, which matters for a household where one person plans and another shops.
+- **Requester:** Owner
+- **Assignee(s) / AI agent:** Claude Code
+- **Reviewer(s):** Owner
+- **End user(s):** All users
+- **Context:** `groceryStore.addManual` sets `category: 'Pantry & Canned'`. The aisle taxonomy has no Frozen, Bakery, Beverages, or Household aisles.
+- **Data Classification:** No sensitive data involved
+- **Notes on data handling:** Sharing uses the OS share sheet only; no network.
+- **In scope:** Auto-guess the aisle from the canonical catalog with a manual override; add the missing aisles; edit and delete manual items; "Share list" as plain text grouped by aisle, unchecked items only; an estimated shopping time like Mealime's ("~25 min"), only if cheap to do.
+- **Out of scope:** Delivery integrations.
+- **Acceptance Criteria:**
+  - [ ] Adding "milk" files it under Dairy & Eggs
+  - [ ] User can change a manual item's aisle
+  - [ ] Share produces readable text with aisle headers and no checked items
+- **Test Strategy:** Unit tests for the aisle guess and the share formatter; manual share on iOS/Android.
+- **Dependencies / Blockers:** T09
+- **Priority:** P1 - High
+- **Target date:** 2026-10-29
+- **Additional Notes:** —
+
+## T13 — Cooking mode
+
+- **Summary:** Mealime's "stress-free cooking" is a step-by-step mode with hands-free advancing. MealApp shows a static numbered list, and the screen dims while your hands are covered in flour.
+- **Requester:** Owner
+- **Assignee(s) / AI agent:** Claude Code
+- **Reviewer(s):** Owner
+- **End user(s):** All users while cooking
+- **Context:** 91 of the 100 recipes mention a duration in their steps ("simmer 15 minutes"). That's a ready-made source for timers.
+- **Data Classification:** No sensitive data involved
+- **Notes on data handling:** —
+- **In scope:** A "Start cooking" button → full-screen, one step at a time, large type; keep the screen awake (`expo-keep-awake`); show the ingredients used in each step, with amounts scaled to the entry's servings; a tap-to-start timer when a step has a duration, with a local notification when it ends; "Cooked it" at the end (T06).
+- **Out of scope:** Voice or gesture advance (Mealime's hands-free). Revisit after launch.
+- **Acceptance Criteria:**
+  - [ ] Screen doesn't sleep while in cooking mode
+  - [ ] Steps with a duration offer a timer that fires even if the app is backgrounded
+  - [ ] Final step offers "Cooked it"
+- **Test Strategy:** Unit test for duration parsing over all recipe steps; manual on a physical device (timers and keep-awake don't behave the same on web).
+- **Dependencies / Blockers:** T04, T06; recipe schema gains optional per-step `ingredientIds` and `timerMinutes`
+- **Priority:** P1 - High
+- **Target date:** 2026-11-02
+- **Additional Notes:** Needs `expo-notifications` for the timer alert, which is the first permission prompt in the app. Ask only when the first timer starts.
+
+## T14 — Search and filtering
+
+- **Summary:** Browse can only filter by meal type, plus a vegetarian toggle that the user can bypass. Add filters for diet, max total time, and favorites. Allergy and dislike exclusions apply everywhere and can't be bypassed.
+- **Requester:** Owner
+- **Assignee(s) / AI agent:** Claude Code
+- **Reviewer(s):** Owner
+- **End user(s):** All users
+- **Context:** `filterRecipes(mealType, dietPref, search)` in `src/utils/recipeCatalog.ts`.
+- **Data Classification:** No sensitive data involved
+- **Notes on data handling:** —
+- **In scope:** A filter object `{ mealType, diets, maxMinutes, favoritesOnly, query }`; filter sheet UI; result count; search that matches canonical ingredient names and plurals; "Hide recipes already in plan" toggle.
+- **Out of scope:** Fuzzy or typo-tolerant search (P3).
+- **Acceptance Criteria:**
+  - [ ] "≤ 20 min" + "Dinner" returns only matching recipes
+  - [ ] Allergen-excluded recipes can't appear under any filter combination
+  - [ ] Empty results show which filter to relax
+- **Test Strategy:** Unit tests over the full catalog for the filter combinations.
+- **Dependencies / Blockers:** T07, T08
+- **Priority:** P1 - High
+- **Target date:** 2026-11-02
+- **Additional Notes:** —
+
+## T15 — Recipe photography decision (publish blocker)
+
+- **Summary:** Emoji cards are fine for personal use but a non-starter for a store listing. Mealime sells itself on photos. Decide the source and pipeline.
+- **Requester:** Owner
+- **Assignee(s) / AI agent:** Owner (decision), then Claude Code (pipeline)
+- **Reviewer(s):** Owner
+- **End user(s):** All users
+- **Context:** CLAUDE.md §5 forbids adding an image pipeline without the owner's sign-off. The project plan flags the trade-off between bundle size and a CDN.
+- **Data Classification:** No sensitive data involved
+- **Notes on data handling:** Photo licensing records must be kept. Copying Mealime's or any other site's photos isn't allowed.
+- **In scope:** Decide between (a) self-shot, (b) licensed stock, or (c) AI-generated with disclosure; then pick a bundled WebP (~100 recipes × ~40 KB ≈ 4 MB) or a CDN with an offline cache; add an `image` field and a fallback to emoji.
+- **Out of scope:** Step photos.
+- **Acceptance Criteria:**
+  - [ ] Decision recorded in docs, with licensing basis
+  - [ ] Every recipe has an image; app size stays under 50 MB
+- **Test Strategy:** Build size check (`npx expo export`); visual check on device.
+- **Dependencies / Blockers:** Owner decision
+- **Priority:** P1 - High
+- **Target date:** 2026-11-16
+- **Additional Notes:** Recommendation: bundled WebP keeps the app fully offline, which is the positioning (T25).
+
+## T16 — Recipe catalog depth and quality
+
+- **Summary:** 100 recipes, of which only 34 are dinners, and zero red meat. That's too thin for 8 diets plus allergy filtering: a vegan, gluten-free user might see 3 dinners.
+- **Requester:** Owner
+- **Assignee(s) / AI agent:** Claude Code (drafting), Owner (taste review)
+- **Reviewer(s):** Owner
+- **End user(s):** All users
+- **Context:** Current mix: 22 breakfast / 26 lunch / 34 dinner / 18 snack; 51 vegetarian / 19 chicken / 14 turkey / 16 fish. Mealime is dinner-centric.
+- **Data Classification:** No sensitive data involved
+- **Notes on data handling:** All recipes must be originally authored (they are today). Don't copy Mealime's recipes.
+- **In scope:** Add a coverage report script (recipes per diet × meal type after typical exclusions); grow to ≥ 150 dinners total with ≥ 20 dinners per supported diet; add beef/pork/lamb dinners so Classic is real (the owner's personal profile excludes them through dislikes); keep ≤ 45 min total; use everyday ingredients only.
+- **Out of scope:** Remote content updates (P3; needs a backend).
+- **Acceptance Criteria:**
+  - [ ] Coverage report shows ≥ 20 dinners for every supported diet
+  - [ ] All new recipes pass the T09 validator
+  - [ ] Owner has cooked or spot-checked ≥ 10% of new recipes
+- **Test Strategy:** Coverage script in CI; manual cook-testing.
+- **Dependencies / Blockers:** T07, T09
+- **Priority:** P1 - High
+- **Target date:** 2026-11-23
+- **Additional Notes:** AI-drafted recipes need a human sanity check on quantities and times before publishing.
+
+## T17 — Nutrition per serving
+
+- **Summary:** Calories, protein, carbs, fat, fiber, and sodium per serving (Mealime made this a Pro feature). Also needed so the low-carb and keto diets mean something.
+- **Requester:** Owner
+- **Assignee(s) / AI agent:** Claude Code
+- **Reviewer(s):** Owner
+- **End user(s):** Health-focused users
+- **Context:** Computed from per-ingredient nutrition (USDA FoodData Central, public domain) × amounts, so it updates automatically when recipes change.
+- **Data Classification:** No sensitive data involved
+- **Notes on data handling:** —
+- **In scope:** Per-100 g nutrition plus unit→gram conversions on canonical ingredients; `recipeNutrition()` util; a nutrition panel on Recipe Detail; calorie filter in Browse.
+- **Out of scope:** Daily tracking and Apple Health / Health Connect (P3).
+- **Acceptance Criteria:**
+  - [ ] Every recipe shows per-serving nutrition
+  - [ ] Values are within ±15% of a hand-calculated check on 5 sample recipes
+  - [ ] "Estimated" disclaimer shown
+- **Test Strategy:** Unit tests on the util; manual spot checks.
+- **Dependencies / Blockers:** T09
+- **Priority:** P2 - Medium
+- **Target date:** 2026-11-30
+- **Additional Notes:** —
+
+## T18 — Recipe notes and ratings
+
+- **Summary:** Per-recipe private notes ("use less chili") and a thumbs-up/down after cooking, shown on cards. These were Mealime Pro features. They also feed "favorites you actually cook".
+- **Requester:** Owner
+- **Assignee(s) / AI agent:** Claude Code
+- **Reviewer(s):** Owner
+- **End user(s):** All users
+- **Context:** Builds on T06 history.
+- **Data Classification:** No sensitive data involved
+- **Notes on data handling:** New persisted store → migration.
+- **In scope:** Notes field on Recipe Detail; rating prompt on "Cooked it"; "Times cooked" on the card; Favorites sortable by last cooked.
+- **Out of scope:** Sharing notes.
+- **Acceptance Criteria:**
+  - [ ] Notes persist and show in cooking mode
+  - [ ] Rating captured after cooking, editable later
+- **Test Strategy:** Store unit tests; manual.
+- **Dependencies / Blockers:** T06, T22
+- **Priority:** P2 - Medium
+- **Target date:** 2026-11-30
+- **Additional Notes:** —
+
+## T19 — Settings correctness
+
+- **Summary:** Settings has edge cases that will bite: changing diet or allergies doesn't reconcile the existing plan; local form state is seeded once and goes stale; "Restart onboarding" wipes preferences but keeps the plan and favorites, with no explanation; meal-type preferences only reorder sections.
+- **Requester:** Owner
+- **Assignee(s) / AI agent:** Claude Code
+- **Reviewer(s):** Owner
+- **End user(s):** All users
+- **Context:** `SettingsScreen.tsx` uses `useState(preferences.x)` with no resync. `DIET_OPTIONS`, `ALL_MEAL_TYPES`, `MIN/MAX_HOUSEHOLD` and the stepper markup are duplicated between Onboarding and Settings (breaks the DRY rule in CLAUDE.md §8).
+- **Data Classification:** No sensitive data involved
+- **Notes on data handling:** —
+- **In scope:** Extract shared preference controls into `src/components/`; after a prefs change, flag conflicting plan entries (offer to swap or remove); replace "Restart onboarding" with "Reset all data" (clear everything, with confirmation) plus "Edit preferences"; add an "About / privacy" row.
+- **Out of scope:** —
+- **Acceptance Criteria:**
+  - [ ] Onboarding and Settings share one set of controls
+  - [ ] Switching to Vegetarian with a chicken dish planned surfaces a conflict prompt
+  - [ ] "Reset all data" clears all four stores
+- **Test Strategy:** Manual; unit test for the conflict detector.
+- **Dependencies / Blockers:** T07, T08
+- **Priority:** P2 - Medium
+- **Target date:** 2026-11-02
+- **Additional Notes:** —
+
+## T20 — Automated tests and CI
+
+- **Summary:** No test suite, no lint, no CI. Every task above changes persisted data or pure logic. That's exactly where a regression silently corrupts a user's plan.
+- **Requester:** Owner
+- **Assignee(s) / AI agent:** Claude Code
+- **Reviewer(s):** Owner
+- **End user(s):** Contributors
+- **Context:** CLAUDE.md §7 recommends testing `src/utils/` first.
+- **Data Classification:** No sensitive data involved
+- **Notes on data handling:** —
+- **In scope:** `jest-expo` setup; tests for `grocery.ts`, `units.ts`, `recipeCatalog.ts`, `migrateLegacyPlan`; ESLint (expo config); GitHub Actions running `tsc --noEmit`, lint, tests, and the T09 data validator on every push/PR; `npm test` script.
+- **Out of scope:** E2E (Maestro/Detox) — P3.
+- **Acceptance Criteria:**
+  - [ ] `npm test` runs locally and in CI
+  - [ ] CI blocks merges on red
+  - [ ] ≥ 80% line coverage on `src/utils/`
+- **Test Strategy:** CI is the test.
+- **Dependencies / Blockers:** T01
+- **Priority:** P1 - High
+- **Target date:** 2026-10-12 (do early; it pays for T03–T10)
+- **Additional Notes:** —
+
+## T21 — Store readiness
+
+- **Summary:** Everything needed to submit to the Play Store and App Store.
+- **Requester:** Owner
+- **Assignee(s) / AI agent:** Claude Code + Owner (accounts, brand)
+- **Reviewer(s):** Owner
+- **End user(s):** Public
+- **Context:** `app.json` has no `ios.bundleIdentifier`, no `android.package`, a placeholder icon and splash, `userInterfaceStyle: "light"`, and the name "MealApp", which is generic and not brandable. No EAS config.
+- **Data Classification:** Credentials / secrets
+- **Notes on data handling:** Signing keys go through EAS credentials only (see `.claude/rules/security.md` rule 1).
+- **In scope:** Final app name (trademark search; no "Mealime" lookalikes); bundle IDs; icon, splash, and adaptive icon; `eas.json`; privacy policy page ("no data collected; allergy data stays on device"); Data Safety form and App Privacy labels; screenshots; store copy; dark mode (or an explicit decision to skip it); `npm audit` clean.
+- **Out of scope:** Paid tiers.
+- **Acceptance Criteria:**
+  - [ ] An internal test build installs on a physical Android and iOS device
+  - [ ] Privacy policy URL is live
+  - [ ] Store listings drafted with screenshots
+- **Test Strategy:** EAS internal distribution builds; checklist review.
+- **Dependencies / Blockers:** T15, T02, T08 (privacy wording), T23
+- **Priority:** P1 - High
+- **Target date:** 2026-11-30
+- **Additional Notes:** —
+
+## T22 — Versioned persistence migrations (prerequisite)
+
+- **Summary:** T03, T06, T07, T08, T11 and T18 all change persisted state. Today the only migration is ad-hoc logic in `onRehydrateStorage`. Use zustand persist's `version` + `migrate` per store so upgrades are deterministic and testable.
+- **Requester:** Owner
+- **Assignee(s) / AI agent:** Claude Code
+- **Reviewer(s):** Owner
+- **End user(s):** Anyone upgrading
+- **Context:** CLAUDE.md §9 requires a migration path for every shape change. `planStore.migrateLegacyPlan` is the existing precedent.
+- **Data Classification:** No sensitive data involved
+- **Notes on data handling:** Never drop user data on a migration failure. Fall back to the old data and log locally.
+- **In scope:** Add `version: 1` to all four stores; move legacy plan migration into `migrate`; a pattern doc in CLAUDE.md; tests feeding real v1/v2 persisted blobs.
+- **Out of scope:** —
+- **Acceptance Criteria:**
+  - [ ] Every store declares `version` and `migrate`
+  - [ ] A v1 weekly-plan blob migrates to a list-plan in a unit test
+  - [ ] A corrupt blob doesn't crash the app (falls back to defaults, with a one-time notice)
+- **Test Strategy:** Unit tests with fixture blobs.
+- **Dependencies / Blockers:** T20 (test harness)
+- **Priority:** P0 - Critical
+- **Target date:** 2026-10-12
+- **Additional Notes:** —
+
+## T23 — Accessibility pass
+
+- **Summary:** Icon-only buttons (add, remove, heart, back, trash, steppers) have no `accessibilityLabel`/`accessibilityRole`; screen readers announce "button" with no name. Several tap targets are 28–34 pt (the guideline is 44/48). Both stores reject or flag these.
+- **Requester:** Owner
+- **Assignee(s) / AI agent:** Claude Code
+- **Reviewer(s):** Owner
+- **End user(s):** Users with assistive tech
+- **Context:** `RecipeCard`, `BrowseScreen` add button (34 pt), `RecipeDetail` steppers (28 pt), grocery checkboxes (20 pt, though the whole row is pressable, so that one's OK).
+- **Data Classification:** No sensitive data involved
+- **Notes on data handling:** —
+- **In scope:** Labels, roles, and states (`checked`, `selected`) on all interactive elements; minimum 44 pt hit areas; Dynamic Type / font-scale doesn't break layouts; color-contrast check on the gold and sage text.
+- **Out of scope:** —
+- **Acceptance Criteria:**
+  - [ ] VoiceOver/TalkBack can complete onboarding → add meal → check grocery item
+  - [ ] All tap targets ≥ 44 pt
+  - [ ] Text contrast ≥ 4.5:1
+- **Test Strategy:** Manual screen-reader pass on device; contrast checker.
+- **Dependencies / Blockers:** None
+- **Priority:** P2 - Medium
+- **Target date:** 2026-11-23
+- **Additional Notes:** `colors.gold` (#C99A3C) on cream almost certainly fails 4.5:1 for the small eyebrow text.
+
+## T24 — Local export and import (backup)
+
+- **Summary:** Export the plan, favorites, history, notes, pantry, and preferences to a JSON file, and import it back. Mealime's biggest shutdown complaint is that users can't take their data with them. Answering that is cheap and a clear positioning point.
+- **Requester:** Owner
+- **Assignee(s) / AI agent:** Claude Code
+- **Reviewer(s):** Owner
+- **End user(s):** All users; device switchers
+- **Context:** No backend by design, so this is the only backup or restore path.
+- **Data Classification:** PII / customer data
+- **Notes on data handling:** The export contains allergy data. Ask the user to confirm before sharing, and use the OS share sheet only.
+- **In scope:** Versioned export schema; import with validation and merge-or-replace choice; Settings entry point.
+- **Out of scope:** Cloud sync; importing Mealime data (Mealime has no export to import from).
+- **Acceptance Criteria:**
+  - [ ] Export → reset all data → import restores everything
+  - [ ] An invalid or old-version file shows a clear error and changes nothing
+- **Test Strategy:** Unit tests for the schema round-trip; manual on device.
+- **Dependencies / Blockers:** T22
+- **Priority:** P2 - Medium
+- **Target date:** 2026-11-30
+- **Additional Notes:** —
+
+## T25 — Positioning and launch decision
+
+- **Summary:** Decide whether and how to publish, given that Mealime shuts down on 2026-10-21 and competitors are already targeting its users.
+- **Requester:** Owner
+- **Assignee(s) / AI agent:** Owner
+- **Reviewer(s):** —
+- **End user(s):** Public
+- **Context:** Mealime: 4.8★, 54k+ ratings, free core plus a $2.99/mo Pro tier, being shut down by Albertsons with no export and all data deleted. Competitors are already publishing "Mealime alternative" content. Our defensible angle is **fully offline, no account, private, exportable**. Our weakness is catalog depth (T16) and photos (T15).
+- **Data Classification:** No sensitive data involved
+- **Notes on data handling:** —
+- **In scope:** Go/no-go; name; free vs. paid (a one-time unlock fits "no account" better than a subscription); launch platform order (Android first is cheaper and faster through review); a landing page with a waitlist.
+- **Out of scope:** Paid acquisition.
+- **Acceptance Criteria:**
+  - [ ] Decision recorded in `docs/` with name, price model, and target launch date
+- **Test Strategy:** n/a
+- **Dependencies / Blockers:** None. Decide early, because it sets how much of M3 matters.
+- **Priority:** P1 - High
+- **Target date:** 2026-10-12
+- **Additional Notes:** Don't use "Mealime" in the app name, icon, or store title. Using it in keywords or comparison copy needs a trademark check first.
