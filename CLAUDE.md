@@ -16,12 +16,14 @@ tabs). Zustand with the `persist` middleware backed by
 no network calls, no auth.
 
 ## 3. Architecture
-- `src/data/recipes.ts` — the 100-recipe catalog (id, diet, mealType, ingredients, steps). Adding recipes means appending objects here in the existing shape; no other code changes needed.
+- `src/data/ingredients.ts` — the canonical ingredient catalog (`id`, name/plural, aisle, allergen + dietary tags, `staple`). Every recipe ingredient references one of these by `id`. Allergen tags are deliberately conservative (tag if a typical store product *may* contain it). Never rename an ingredient id — grocery check-offs are keyed by it.
+- `src/data/recipes.ts` — the 100-recipe catalog. Ingredients are `{ id, amount, unit, prep? }`. To add a recipe, append an object in the same shape; any new ingredient goes into `ingredients.ts` first. Each ingredient must use ONE unit family across the whole catalog (volume tsp/tbsp/cup, weight oz/lb, or a single discrete unit like `can`/`clove`/`stalk`, or count = `null`) — `npm run validate` enforces this, plus valid ids and no meat in `diet: 'vegetarian'` recipes.
+- `src/data/legacyIngredientNames.ts` — pre-canonical free-text names → ids; only for migrating old grocery check-offs.
 - `src/types.ts` — shared domain types (`Recipe`, `Preferences`, `MealPlan`, etc.).
-- `src/theme.ts` — colors, spacing, and shared constants (`mealLabels`, `mealPlural`, `mealTypeOrder`, `categoryOrder`). Change visual identity here, not per-component.
+- `src/theme.ts` — colors, spacing, and shared constants (`mealLabels`, `mealPlural`, `mealTypeOrder`, `aisleOrder`). Change visual identity here, not per-component.
 - `src/store/*` — one Zustand store per concern (`preferencesStore`, `planStore`, `favoritesStore`, `groceryStore`), each persisted independently. Don't reach into another store's state directly from a component — read via that store's own hook.
 - `src/utils/recipeCatalog.ts` — recipe lookup and browse filtering (search by title/ingredient, diet, meal type); pure functions, no side effects.
-- `src/utils/grocery.ts` — ingredient aggregation across the plan's meals into grouped grocery lines (each plan entry scales its recipe by its own serving count).
+- `src/utils/grocery.ts` — ingredient aggregation across the plan's meals into one line per canonical ingredient (each plan entry scales its recipe by its own serving count; amounts convert within a unit family via `src/utils/units.ts`), grouped by aisle.
 - `src/store/persistence.ts` — `persistOptions()` (versioned persist config shared by every store) and `useStorageHealth` (non-persisted record of stores that failed to load).
 - `src/store/planStore.ts` — owns the plan list (`MealPlan.items`); `migratePlan()` upgrades both the v1-app weekly grid (via `migrateLegacyPlan()`) and the unversioned v2 list.
 - `src/navigation/` — `RootNavigator` (Onboarding vs. Main, plus modal `RecipeDetail`) and `MainTabs` (Plan/Browse/Grocery/Favorites/Settings).

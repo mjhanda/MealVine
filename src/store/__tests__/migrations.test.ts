@@ -4,7 +4,7 @@ import { migrateGrocery, useGroceryStore } from '../groceryStore';
 import { MigrationError, useStorageHealth } from '../persistence';
 import { migratePlan, usePlanStore } from '../planStore';
 import { migratePreferences, usePreferencesStore } from '../preferencesStore';
-import { favoritesV0, groceryV0, listPlanV0, preferencesV0, weeklyPlanV0 } from './fixtures';
+import { favoritesV0, groceryV0, groceryV1, listPlanV0, preferencesV0, weeklyPlanV0 } from './fixtures';
 
 afterEach(() => jest.restoreAllMocks());
 
@@ -45,6 +45,17 @@ describe('pure migrations', () => {
     expect(prefs.onboardingComplete).toBe(false);
   });
 
+  it('grocery v1 → v2 remaps checked keys to ingredient ids and categories to aisles', () => {
+    const grocery = migrateGrocery(groceryV1.state, 1);
+    expect(grocery.checked).toEqual({ 'greek-yogurt': true, salt: true, 'manual__manual-9': true });
+    expect(grocery.manualItems).toEqual([{ id: 'manual-9', name: 'Dish soap', aisle: 'Other' }]);
+  });
+
+  it('grocery v2 passes through', () => {
+    const v2 = { checked: { garlic: true }, manualItems: [{ id: 'm', name: 'Milk', aisle: 'Dairy & Eggs' }] };
+    expect(migrateGrocery(v2, 2)).toEqual(v2);
+  });
+
   it('favorites drop non-string ids', () => {
     expect(migrateFavorites({ favorites: ['r1', 3, null] }, 0).favorites).toEqual(['r1']);
   });
@@ -74,8 +85,8 @@ describe('rehydration from real storage', () => {
       useFavoritesStore.persist.rehydrate(),
     ]);
     expect(usePreferencesStore.getState()).toMatchObject({ householdSize: 4, diet: 'vegetarian', onboardingComplete: true });
-    expect(useGroceryStore.getState().manualItems).toHaveLength(1);
-    expect(useGroceryStore.getState().checked).toEqual({ Garlic__clove: true });
+    expect(useGroceryStore.getState().manualItems).toEqual([{ id: 'manual-1', name: 'Paper towels', aisle: 'Other' }]);
+    expect(useGroceryStore.getState().checked).toEqual({ garlic: true });
     expect(useFavoritesStore.getState().favorites).toEqual(['r1', 'r7']);
   });
 

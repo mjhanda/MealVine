@@ -9,7 +9,7 @@ import { useFavoritesStore } from '../store/favoritesStore';
 import { usePlanStore } from '../store/planStore';
 import { usePreferencesStore } from '../store/preferencesStore';
 import { colors } from '../theme';
-import { recipeById } from '../utils/recipeCatalog';
+import { ingredientDisplayName, recipeById } from '../utils/recipeCatalog';
 import { scaleAmount, unitLabel } from '../utils/units';
 
 const MIN_SERVINGS = 1;
@@ -93,14 +93,15 @@ export default function RecipeDetailScreen({ route, navigation }: Props) {
 
         <Text style={styles.sectionHeader}>Ingredients</Text>
         <View style={{ gap: 8 }}>
-          {recipe.ingredients.map((ing, i) => (
-            <View key={i} style={styles.ingredientRow}>
-              <Text style={styles.ingredientName}>{ing.name}</Text>
-              <Text style={styles.ingredientAmount}>
-                {unitLabel(scaleAmount(ing.amount, recipe.servings, servings), ing.unit)}
-              </Text>
-            </View>
-          ))}
+          {recipe.ingredients.map((ing, i) => {
+            const amount = scaleAmount(ing.amount, recipe.servings, servings);
+            return (
+              <View key={i} style={styles.ingredientRow}>
+                <Text style={styles.ingredientName}>{ingredientDisplayName(ing, amount)}</Text>
+                <Text style={styles.ingredientAmount}>{unitLabel(amount, ing.unit)}</Text>
+              </View>
+            );
+          })}
         </View>
 
         <Text style={styles.sectionHeader}>Steps</Text>

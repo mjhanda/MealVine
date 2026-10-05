@@ -2,11 +2,67 @@ export type MealType = 'breakfast' | 'lunch' | 'dinner' | 'snack';
 export type Diet = 'vegetarian' | 'chicken' | 'turkey' | 'fish';
 export type DietPref = 'vegetarian' | 'mixed';
 
-export interface Ingredient {
+export type Aisle =
+  | 'Produce'
+  | 'Meat & Seafood'
+  | 'Dairy & Eggs'
+  | 'Bakery & Bread'
+  | 'Pasta, Rice & Grains'
+  | 'Canned & Jarred'
+  | 'Oils & Condiments'
+  | 'Spices & Baking'
+  | 'Snacks & Nuts'
+  | 'Frozen'
+  | 'Other';
+
+export type AllergenTag =
+  | 'gluten'
+  | 'dairy'
+  | 'egg'
+  | 'peanut'
+  | 'tree-nut'
+  | 'soy'
+  | 'sesame'
+  | 'fish'
+  | 'shellfish'
+  | 'mustard'
+  | 'sulfite'
+  | 'nightshade';
+
+// Non-allergen tags used to derive diets (see src/utils/diets.ts).
+export type DietaryTag =
+  | 'poultry'
+  | 'red-meat'
+  | 'pork'
+  | 'honey'
+  | 'grain'
+  | 'legume'
+  | 'starchy'
+  | 'added-sugar'
+  | 'fruit-sugar';
+
+export type IngredientTag = AllergenTag | DietaryTag;
+
+export interface IngredientDef {
+  id: string;
   name: string;
+  plural?: string;
+  aisle: Aisle;
+  tags: IngredientTag[];
+  // Most kitchens already have it (oil, salt, spices); grocery list groups these separately.
+  staple?: boolean;
+}
+
+export type VolumeUnit = 'tsp' | 'tbsp' | 'cup';
+export type WeightUnit = 'oz' | 'lb';
+export type DiscreteUnit = 'can' | 'clove' | 'stalk' | 'head' | 'bunch' | 'slice' | 'pinch';
+export type Unit = VolumeUnit | WeightUnit | DiscreteUnit;
+
+export interface RecipeIngredient {
+  id: string;
   amount: number;
-  unit: string | null;
-  category: string;
+  unit: Unit | null; // null = count ("2 carrots")
+  prep?: string; // "diced", "hard-boiled" — shown in the recipe, ignored by the grocery list
 }
 
 export interface Recipe {
@@ -18,7 +74,7 @@ export interface Recipe {
   cook: number;
   servings: number;
   emoji: string;
-  ingredients: Ingredient[];
+  ingredients: RecipeIngredient[];
   steps: string[];
 }
 
@@ -42,7 +98,7 @@ export interface MealPlan {
 export interface ManualGroceryItem {
   id: string;
   name: string;
-  category: string;
+  aisle: Aisle;
 }
 
 export interface GroceryState {
@@ -51,8 +107,11 @@ export interface GroceryState {
 }
 
 export interface GroceryLine {
+  key: string;
+  ingredientId: string;
   name: string;
-  unit: string | null;
+  unit: Unit | null;
   amount: number;
-  category: string;
+  aisle: Aisle;
+  staple: boolean;
 }

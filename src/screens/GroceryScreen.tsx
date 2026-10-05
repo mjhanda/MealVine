@@ -2,10 +2,10 @@ import { Feather } from '@expo/vector-icons';
 import React, { useMemo, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useGroceryStore } from '../store/groceryStore';
+import { MANUAL_KEY_PREFIX, useGroceryStore } from '../store/groceryStore';
 import { usePlanStore } from '../store/planStore';
-import { categoryOrder, colors } from '../theme';
-import { groceryItemsFromPlan, groceryKey } from '../utils/grocery';
+import { aisleOrder, colors } from '../theme';
+import { groceryItemsFromPlan } from '../utils/grocery';
 import { unitLabel } from '../utils/units';
 
 export default function GroceryScreen() {
@@ -23,9 +23,9 @@ export default function GroceryScreen() {
     Object.values(grouped).reduce((n, list) => n + list.length, 0) + manualItems.length;
   const checkedCount =
     Object.values(grouped).reduce(
-      (n, list) => n + list.filter((it) => checked[groceryKey(it.name, it.unit)]).length,
+      (n, list) => n + list.filter((it) => checked[it.key]).length,
       0
-    ) + manualItems.filter((m) => checked[`manual__${m.id}`]).length;
+    ) + manualItems.filter((m) => checked[`${MANUAL_KEY_PREFIX}${m.id}`]).length;
 
   const handleAdd = () => {
     const name = newItem.trim();
@@ -61,16 +61,16 @@ export default function GroceryScreen() {
         {plan.items.length === 0 && (
           <Text style={styles.emptyText}>Add meals to your plan to generate your list.</Text>
         )}
-        {categoryOrder.map((cat) => {
-          const items = grouped[cat] || [];
-          const manuals = manualItems.filter((m) => m.category === cat);
+        {aisleOrder.map((cat) => {
+          const items = grouped[cat];
+          const manuals = manualItems.filter((m) => m.aisle === cat);
           if (items.length === 0 && manuals.length === 0) return null;
           return (
             <View key={cat}>
               <Text style={styles.categoryHeader}>{cat}</Text>
               <View style={{ gap: 6 }}>
                 {items.map((item) => {
-                  const key = groceryKey(item.name, item.unit);
+                  const key = item.key;
                   const isChecked = !!checked[key];
                   return (
                     <Pressable key={key} onPress={() => toggleCheck(key)} style={styles.row}>
@@ -85,7 +85,7 @@ export default function GroceryScreen() {
                   );
                 })}
                 {manuals.map((m) => {
-                  const key = `manual__${m.id}`;
+                  const key = `${MANUAL_KEY_PREFIX}${m.id}`;
                   const isChecked = !!checked[key];
                   return (
                     <Pressable key={key} onPress={() => toggleCheck(key)} style={styles.row}>

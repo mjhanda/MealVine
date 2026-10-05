@@ -1,48 +1,64 @@
-import { groceryItemsFromPlan, groceryKey } from '../grocery';
+import { RECIPES } from '../../data/recipes';
+import { aisleOrder } from '../../theme';
+import { groceryItemsFromPlan, groceryLinesFromPlan } from '../grocery';
 import { recipeById } from '../recipeCatalog';
 
-const allLines = (grouped: ReturnType<typeof groceryItemsFromPlan>) => Object.values(grouped).flat();
+const planOf = (...entries: [string, number][]) => ({
+  items: entries.map(([recipeId, servings], i) => ({ id: `i${i}`, recipeId, servings })),
+});
+const line = (plan: ReturnType<typeof planOf>, ingredientId: string) =>
+  groceryLinesFromPlan(plan).find((l) => l.ingredientId === ingredientId);
 
-describe('groceryItemsFromPlan', () => {
-  it('returns empty categories for an empty plan', () => {
-    expect(allLines(groceryItemsFromPlan({ items: [] }))).toHaveLength(0);
+describe('groceryLinesFromPlan', () => {
+  it('is empty for an empty plan', () => {
+    expect(groceryLinesFromPlan({ items: [] })).toEqual([]);
   });
 
   it('scales each entry by its own servings', () => {
-    const recipe = recipeById('r1')!;
-    const yogurt = recipe.ingredients[0];
-    const grouped = groceryItemsFromPlan({ items: [{ id: 'a', recipeId: 'r1', servings: recipe.servings * 2 }] });
-    const line = allLines(grouped).find((l) => l.name === yogurt.name)!;
-    expect(line.amount).toBeCloseTo(yogurt.amount * 2);
+    const r1 = recipeById('r1')!; // 2 cups greek yogurt for 2 servings
+    expect(line(planOf(['r1', r1.servings * 2]), 'greek-yogurt')).toMatchObject({ amount: 4, unit: 'cup' });
   });
 
-  it('sums the same ingredient across entries', () => {
-    const recipe = recipeById('r1')!;
-    const yogurt = recipe.ingredients[0];
-    const grouped = groceryItemsFromPlan({
-      items: [
-        { id: 'a', recipeId: 'r1', servings: recipe.servings },
-        { id: 'b', recipeId: 'r1', servings: recipe.servings },
-      ],
-    });
-    const lines = allLines(grouped).filter((l) => l.name === yogurt.name);
+  it('merges the same ingredient across entries into one line', () => {
+    const lines = groceryLinesFromPlan(planOf(['r1', 2], ['r1', 2])).filter((l) => l.ingredientId === 'greek-yogurt');
     expect(lines).toHaveLength(1);
-    expect(lines[0].amount).toBeCloseTo(yogurt.amount * 2);
+    expect(lines[0].amount).toBeCloseTo(4);
+  });
+
+  it('converts across units in the same family (cup + tbsp → cups)', () => {
+    const cupRecipe = RECIPES.find((r) => r.ingredients.some((i) => i.id === 'greek-yogurt' && i.unit === 'cup'))!;
+    const tbspRecipe = RECIPES.find((r) => r.ingredients.some((i) => i.id === 'greek-yogurt' && i.unit === 'tbsp'))!;
+    const cups = cupRecipe.ingredients.find((i) => i.id === 'greek-yogurt')!.amount;
+    const tbsp = tbspRecipe.ingredients.find((i) => i.id === 'greek-yogurt')!.amount;
+    const merged = line(planOf([cupRecipe.id, cupRecipe.servings], [tbspRecipe.id, tbspRecipe.servings]), 'greek-yogurt')!;
+    expect(merged.unit).toBe('cup');
+    expect(merged.amount).toBeCloseTo(cups + tbsp / 16);
+  });
+
+  it('uses the plural name for counts above one', () => {
+    expect(line(planOf(['r2', 4]), 'bell-pepper')).toMatchObject({ name: 'Bell peppers', amount: 2 });
   });
 
   it('skips unknown recipe ids', () => {
-    expect(allLines(groceryItemsFromPlan({ items: [{ id: 'a', recipeId: 'gone', servings: 2 }] }))).toHaveLength(0);
+    expect(groceryLinesFromPlan(planOf(['gone', 2]))).toEqual([]);
   });
 
-  it('sorts lines alphabetically within a category', () => {
-    const grouped = groceryItemsFromPlan({ items: [{ id: 'a', recipeId: 'r2', servings: 2 }] });
+  it('never produces two lines for the same food across the whole catalog', () => {
+    const lines = groceryLinesFromPlan(planOf(...RECIPES.map((r) => [r.id, r.servings] as [string, number])));
+    const names = lines.map((l) => l.name.toLowerCase());
+    expect(new Set(names).size).toBe(names.length);
+    expect(new Set(lines.map((l) => l.key)).size).toBe(lines.length);
+  });
+});
+
+describe('groceryItemsFromPlan', () => {
+  it('groups by aisle, every aisle present, sorted by name', () => {
+    const grouped = groceryItemsFromPlan(planOf(['r2', 2], ['r1', 2]));
+    expect(Object.keys(grouped)).toEqual(aisleOrder);
     Object.values(grouped).forEach((lines) => {
       const names = lines.map((l) => l.name);
       expect(names).toEqual([...names].sort((a, b) => a.localeCompare(b)));
     });
+    expect(grouped['Dairy & Eggs'].map((l) => l.ingredientId)).toEqual(expect.arrayContaining(['eggs', 'greek-yogurt']));
   });
-});
-
-describe('groceryKey', () => {
-  it('distinguishes units', () => expect(groceryKey('Celery', 'cup')).not.toBe(groceryKey('Celery', 'stalk')));
 });

@@ -1,4 +1,4 @@
-import { MealType } from './types';
+import { Aisle, MealType } from './types';
 
 export const colors = {
   cream: '#FAF6EE',
@@ -41,13 +41,19 @@ export const mealPlural: Record<MealType, string> = {
 
 export const mealTypeOrder: MealType[] = ['breakfast', 'lunch', 'dinner', 'snack'];
 
-export const categoryOrder = [
+// Roughly the order you walk a typical store; grocery list sections follow it.
+export const aisleOrder: Aisle[] = [
   'Produce',
-  'Protein',
+  'Meat & Seafood',
   'Dairy & Eggs',
-  'Grains & Bread',
-  'Pantry & Canned',
-  'Condiments & Spices',
+  'Bakery & Bread',
+  'Pasta, Rice & Grains',
+  'Canned & Jarred',
+  'Oils & Condiments',
+  'Spices & Baking',
+  'Snacks & Nuts',
+  'Frozen',
+  'Other',
 ];
 
 export const spacing = { xs: 4, sm: 8, md: 12, lg: 16, xl: 20, xxl: 28 };

@@ -26,3 +26,18 @@ export const groceryV0 = {
 };
 
 export const favoritesV0 = { state: { favorites: ['r1', 'r7'] }, version: 0 };
+
+// Grocery v1 (versioned, still free-text keys and `category`).
+export const groceryV1 = {
+  state: {
+    checked: {
+      'Plain Greek yogurt__cup': true,
+      'Salt & pepper__pinch': true,
+      'Unknown thing__cup': true,
+      'Eggs__unit': false,
+      'manual__manual-9': true,
+    },
+    manualItems: [{ id: 'manual-9', name: 'Dish soap', category: 'Pantry & Canned' }],
+  },
+  version: 1,
+};
