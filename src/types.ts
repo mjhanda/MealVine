@@ -1,7 +1,6 @@
-export type MealType = 'breakfast' | 'lunch' | 'dinner';
+export type MealType = 'breakfast' | 'lunch' | 'dinner' | 'snack';
 export type Diet = 'vegetarian' | 'chicken' | 'turkey' | 'fish';
 export type DietPref = 'vegetarian' | 'mixed';
-export type Day = 'Mon' | 'Tue' | 'Wed' | 'Thu' | 'Fri' | 'Sat' | 'Sun';
 
 export interface Ingredient {
   name: string;
@@ -30,10 +29,14 @@ export interface Preferences {
   onboardingComplete: boolean;
 }
 
-export type PlanEntries = Record<Day, Partial<Record<MealType, string>>>;
+export interface PlanItem {
+  id: string;
+  recipeId: string;
+  servings: number;
+}
 
 export interface MealPlan {
-  entries: PlanEntries;
+  items: PlanItem[];
 }
 
 export interface ManualGroceryItem {

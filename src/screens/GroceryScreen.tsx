@@ -4,14 +4,12 @@ import { Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useGroceryStore } from '../store/groceryStore';
 import { usePlanStore } from '../store/planStore';
-import { usePreferencesStore } from '../store/preferencesStore';
 import { categoryOrder, colors } from '../theme';
 import { groceryItemsFromPlan, groceryKey } from '../utils/grocery';
 import { unitLabel } from '../utils/units';
 
 export default function GroceryScreen() {
   const plan = usePlanStore((s) => s.plan);
-  const householdSize = usePreferencesStore((s) => s.householdSize);
   const checked = useGroceryStore((s) => s.checked);
   const toggleCheck = useGroceryStore((s) => s.toggleCheck);
   const manualItems = useGroceryStore((s) => s.manualItems);
@@ -19,10 +17,7 @@ export default function GroceryScreen() {
   const removeManual = useGroceryStore((s) => s.removeManual);
   const [newItem, setNewItem] = useState('');
 
-  const grouped = useMemo(
-    () => (plan ? groceryItemsFromPlan(plan, householdSize) : {}),
-    [plan, householdSize]
-  );
+  const grouped = useMemo(() => groceryItemsFromPlan(plan), [plan]);
 
   const totalItems =
     Object.values(grouped).reduce((n, list) => n + list.length, 0) + manualItems.length;
@@ -63,7 +58,9 @@ export default function GroceryScreen() {
       </View>
 
       <ScrollView contentContainerStyle={{ padding: 20, paddingTop: 4, gap: 20 }}>
-        {!plan && <Text style={styles.emptyText}>Build a meal plan to generate your list.</Text>}
+        {plan.items.length === 0 && (
+          <Text style={styles.emptyText}>Add meals to your plan to generate your list.</Text>
+        )}
         {categoryOrder.map((cat) => {
           const items = grouped[cat] || [];
           const manuals = manualItems.filter((m) => m.category === cat);

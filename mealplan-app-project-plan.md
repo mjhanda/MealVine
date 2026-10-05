@@ -2,14 +2,16 @@
 
 ## 0. Status (as of 2026-09-26)
 
-**MVP is built and running** as an Expo (React Native + TypeScript) app at the repo root — same codebase runs on web (`npm run web`), iOS, and Android (`npm run ios` / `npm run android`, or scan the QR code from `npm start` with Expo Go). See `src/` for the implementation and the root `README.md` for how to run it.
+**v2 is built and running** as an Expo (React Native + TypeScript) app at the repo root — same codebase runs on web (`npm run web`), iOS, and Android (`npm run ios` / `npm run android`, or scan the QR code from `npm start` with Expo Go). See `src/` for the implementation and the root `README.md` for how to run it.
 
-Implemented: onboarding, weekly plan grid with swap/regenerate, recipe detail with live serving-size scaling, auto-generated grocery list (grouped by aisle, checkable, manual add), favorites, browse/filter all recipes, and a settings screen to edit preferences with a regenerate prompt. All state persists locally via AsyncStorage (through Zustand's `persist` middleware) — the app is fully offline. 50 originally-authored recipes are seeded in `src/data/recipes.ts` (see Section 8 for sourcing decision).
+Implemented: onboarding, a free-form meal plan (a curated list of picked meals — breakfast, lunch, dinner, and snacks — grouped by meal type, with add/remove/clear; deliberately NOT a weekly grid), recipe search by title or ingredient, "add to plan" from Browse (quick-add) and Recipe Detail (each entry remembers its own serving count), recipe detail with live serving-size scaling, an auto-generated grocery list derived from the plan (grouped by aisle, checkable, manual add), favorites, browse with meal-type filter chips, and settings. All state persists locally via AsyncStorage (through Zustand's `persist` middleware) — the app is fully offline. 100 originally-authored recipes are seeded in `src/data/recipes.ts` (50 at v1 + 50 added for v2, including a new snack meal type).
 
-Deliberate deviations from the original plan below, made to ship a working v1 quickly:
+v2 model change: the plan moved from a 7-day grid (`MealPlan.entries` of day→mealType→recipeId) to a flat list of `PlanItem { id, recipeId, servings }`. There is no generation/swap/regenerate anymore — the user curates the list. Previously installed versions are migrated automatically on rehydrate (`migrateLegacyPlan()` in `planStore.ts`). The grocery list now scales each recipe by the per-entry serving count rather than by household size. Diet preference ("vegetarian only") now also filters the Browse tab, with a "show all" escape hatch.
+
+Deliberate deviations from the original plan below, made to ship a working v1 quickly (still in force unless noted):
 - **Storage:** plain AsyncStorage via Zustand persist, not SQLite/WatermelonDB. Fine at this data volume (a handful of small JSON blobs); revisit only if recipe search/filtering at scale becomes a bottleneck.
 - **Diet model:** simplified to two options users actually asked for in the original mock — "vegetarian only" vs. "vegetarian + lean protein (chicken/turkey/fish, no pork)" — rather than the full omnivore/vegetarian/vegan/pescatarian/gluten-free taxonomy. Recipes are individually tagged (`vegetarian` / `chicken` / `turkey` / `fish`), so splitting this further later is additive, not a rewrite.
-- **Skip days:** not implemented in onboarding; every day in the 7-day grid gets a plan. Low effort to add later (Epic C).
+- **Skip days:** no longer applicable — v2 has no week/day concept, so Epic C is moot.
 - **Grocery unit normalization** (e.g. combining "1 cup" + "2 tbsp"): not implemented — items aggregate by matching name+unit pairs, so the same ingredient in different units lists as separate lines. Called out as a known edge case in the original backlog (Epic F).
 
 ## 1. Product Summary

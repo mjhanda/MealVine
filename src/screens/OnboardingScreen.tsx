@@ -5,14 +5,13 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { colors, mealLabels } from '../theme';
 import { DietPref, MealType } from '../types';
 import { usePreferencesStore } from '../store/preferencesStore';
-import { usePlanStore } from '../store/planStore';
 
 const DIET_OPTIONS: { id: DietPref; label: string; sub: string }[] = [
   { id: 'vegetarian', label: 'Vegetarian only', sub: 'Plant-based recipes only' },
   { id: 'mixed', label: 'Vegetarian + lean protein', sub: 'Mostly veg, with chicken, turkey & fish — no pork' },
 ];
 
-const ALL_MEAL_TYPES: MealType[] = ['breakfast', 'lunch', 'dinner'];
+const ALL_MEAL_TYPES: MealType[] = ['breakfast', 'lunch', 'dinner', 'snack'];
 const MIN_HOUSEHOLD = 1;
 const MAX_HOUSEHOLD = 8;
 
@@ -20,10 +19,9 @@ export default function OnboardingScreen() {
   const [step, setStep] = useState(0);
   const [household, setHousehold] = useState(2);
   const [diet, setDiet] = useState<DietPref>('mixed');
-  const [mealTypes, setMealTypes] = useState<MealType[]>(['breakfast', 'lunch', 'dinner']);
+  const [mealTypes, setMealTypes] = useState<MealType[]>(['breakfast', 'lunch', 'dinner', 'snack']);
 
   const completeOnboarding = usePreferencesStore((s) => s.completeOnboarding);
-  const regenerate = usePlanStore((s) => s.regenerate);
 
   const toggleMeal = (m: MealType) =>
     setMealTypes((cur) => (cur.includes(m) ? cur.filter((x) => x !== m) : [...cur, m]));
@@ -72,7 +70,7 @@ export default function OnboardingScreen() {
       ),
     },
     {
-      title: 'Which meals do you want planned?',
+      title: 'Which meals do you plan?',
       canNext: mealTypes.length > 0,
       body: (
         <View style={{ gap: 10, marginTop: 24 }}>
@@ -104,7 +102,6 @@ export default function OnboardingScreen() {
       return;
     }
     completeOnboarding({ householdSize: household, diet, mealTypes });
-    regenerate(mealTypes, diet);
   };
 
   return (
@@ -126,7 +123,7 @@ export default function OnboardingScreen() {
         style={[styles.cta, { backgroundColor: current.canNext ? colors.forest : colors.line }]}
       >
         <Text style={[styles.ctaLabel, { color: current.canNext ? '#fff' : colors.inkSoft }]}>
-          {isLastStep ? 'Build my week' : 'Continue'}
+          {isLastStep ? 'Start planning' : 'Continue'}
         </Text>
       </Pressable>
     </SafeAreaView>

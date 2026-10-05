@@ -1,31 +1,53 @@
+import { Feather } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import React, { useMemo, useState } from 'react';
-import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import RecipeCard from '../components/RecipeCard';
-import { RECIPES } from '../data/recipes';
 import { RootStackParamList } from '../navigation/types';
-import { colors, mealLabels } from '../theme';
+import { usePlanStore } from '../store/planStore';
+import { usePreferencesStore } from '../store/preferencesStore';
+import { colors, mealLabels, mealTypeOrder } from '../theme';
 import { MealType } from '../types';
+import { filterRecipes } from '../utils/recipeCatalog';
 
 type Nav = NativeStackNavigationProp<RootStackParamList>;
 
-const FILTERS: { id: MealType | 'all'; label: string }[] = [
-  { id: 'all', label: 'All' },
-  { id: 'breakfast', label: mealLabels.breakfast },
-  { id: 'lunch', label: mealLabels.lunch },
-  { id: 'dinner', label: mealLabels.dinner },
-];
-
 export default function BrowseScreen() {
   const navigation = useNavigation<Nav>();
+  const mealTypes = usePreferencesStore((s) => s.mealTypes);
+  const diet = usePreferencesStore((s) => s.diet);
+  const householdSize = usePreferencesStore((s) => s.householdSize);
+  const plan = usePlanStore((s) => s.plan);
+  const addItem = usePlanStore((s) => s.addItem);
+
+  const [search, setSearch] = useState('');
   const [filter, setFilter] = useState<MealType | 'all'>('all');
+  const [showAllDiets, setShowAllDiets] = useState(false);
+
+  const chips: { id: MealType | 'all'; label: string }[] = useMemo(() => {
+    const selected = mealTypes.length > 0 ? mealTypes : mealTypeOrder;
+    return [
+      { id: 'all' as const, label: 'All' },
+      ...selected.map((id) => ({ id, label: mealLabels[id] })),
+    ];
+  }, [mealTypes]);
 
   const recipes = useMemo(
-    () => (filter === 'all' ? RECIPES : RECIPES.filter((r) => r.mealType === filter)),
-    [filter]
+    () => filterRecipes(filter, showAllDiets ? 'mixed' : diet, search),
+    [filter, diet, showAllDiets, search]
   );
+
+  const inPlanCounts = useMemo(() => {
+    const counts = new Map<string, number>();
+    plan.items.forEach((item) =>
+      counts.set(item.recipeId, (counts.get(item.recipeId) || 0) + 1)
+    );
+    return counts;
+  }, [plan.items]);
+
+  const showDietNote = diet === 'vegetarian' && !showAllDiets;
 
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
@@ -33,8 +55,31 @@ export default function BrowseScreen() {
         <Text style={styles.eyebrow}>Browse</Text>
         <Text style={styles.title}>All recipes</Text>
       </View>
-      <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.filterRow} contentContainerStyle={{ gap: 8 }}>
-        {FILTERS.map((f) => {
+
+      <View style={styles.searchRow}>
+        <Feather name="search" size={16} color={colors.inkSoft} />
+        <TextInput
+          value={search}
+          onChangeText={setSearch}
+          placeholder="Search recipes or ingredients"
+          placeholderTextColor={colors.inkSoft}
+          style={styles.searchInput}
+          autoCorrect={false}
+        />
+        {search.length > 0 && (
+          <Pressable onPress={() => setSearch('')} hitSlop={8}>
+            <Feather name="x-circle" size={16} color={colors.inkSoft} />
+          </Pressable>
+        )}
+      </View>
+
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        style={styles.filterRow}
+        contentContainerStyle={{ gap: 8 }}
+      >
+        {chips.map((f) => {
           const active = filter === f.id;
           return (
             <Pressable
@@ -47,14 +92,37 @@ export default function BrowseScreen() {
           );
         })}
       </ScrollView>
+
+      {showDietNote && (
+        <View style={styles.dietNoteRow}>
+          <Text style={styles.dietNote}>Showing vegetarian recipes only</Text>
+          <Pressable onPress={() => setShowAllDiets(true)} hitSlop={8}>
+            <Text style={styles.dietNoteLink}>Show all</Text>
+          </Pressable>
+        </View>
+      )}
+
       <ScrollView contentContainerStyle={{ padding: 20, paddingTop: 12, gap: 10 }}>
-        {recipes.map((recipe) => (
-          <RecipeCard
-            key={recipe.id}
-            recipe={recipe}
-            onPress={() => navigation.navigate('RecipeDetail', { recipeId: recipe.id })}
-          />
-        ))}
+        {recipes.length === 0 && <Text style={styles.emptyText}>No recipes match your search.</Text>}
+        {recipes.map((recipe) => {
+          const inPlan = (inPlanCounts.get(recipe.id) || 0) > 0;
+          return (
+            <RecipeCard
+              key={recipe.id}
+              recipe={recipe}
+              onPress={() => navigation.navigate('RecipeDetail', { recipeId: recipe.id })}
+              right={
+                <Pressable
+                  onPress={() => addItem(recipe.id, householdSize)}
+                  style={[styles.addBtn, inPlan && styles.addBtnInPlan]}
+                  hitSlop={8}
+                >
+                  <Feather name={inPlan ? 'check' : 'plus'} size={18} color="#fff" />
+                </Pressable>
+              }
+            />
+          );
+        })}
       </ScrollView>
     </SafeAreaView>
   );
@@ -65,8 +133,23 @@ const styles = StyleSheet.create({
   header: { paddingHorizontal: 20, paddingTop: 12 },
   eyebrow: { fontSize: 13, color: colors.gold, fontWeight: '600' },
   title: { fontSize: 24, fontWeight: '600', color: colors.forest },
-  filterRow: { marginTop: 14, paddingHorizontal: 20, flexGrow: 0 },
+  searchRow: {
+    flexDirection: 'row', alignItems: 'center', gap: 8, marginTop: 14,
+    marginHorizontal: 20, paddingHorizontal: 12, paddingVertical: 10,
+    borderRadius: 12, borderWidth: 1, borderColor: colors.line, backgroundColor: colors.card,
+  },
+  searchInput: { flex: 1, fontSize: 13.5, color: colors.ink },
+  filterRow: { marginTop: 12, paddingHorizontal: 20, flexGrow: 0 },
   filterPill: { paddingHorizontal: 14, paddingVertical: 8, borderRadius: 20 },
   filterPillInactive: { backgroundColor: colors.card, borderWidth: 1, borderColor: colors.line },
   filterLabel: { fontWeight: '700', fontSize: 13 },
+  dietNoteRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: 20, marginTop: 12 },
+  dietNote: { fontSize: 12.5, color: colors.inkSoft },
+  dietNoteLink: { fontSize: 12.5, color: colors.forest, fontWeight: '700' },
+  addBtn: {
+    width: 34, height: 34, borderRadius: 17, backgroundColor: colors.forest,
+    alignItems: 'center', justifyContent: 'center',
+  },
+  addBtnInPlan: { backgroundColor: colors.sage },
+  emptyText: { color: colors.inkSoft, fontSize: 14, textAlign: 'center', marginTop: 40 },
 });

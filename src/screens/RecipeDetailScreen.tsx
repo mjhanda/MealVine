@@ -6,9 +6,10 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import DietTag from '../components/DietTag';
 import { RootStackParamList } from '../navigation/types';
 import { useFavoritesStore } from '../store/favoritesStore';
+import { usePlanStore } from '../store/planStore';
 import { usePreferencesStore } from '../store/preferencesStore';
 import { colors } from '../theme';
-import { recipeById } from '../utils/planGenerator';
+import { recipeById } from '../utils/recipeCatalog';
 import { scaleAmount, unitLabel } from '../utils/units';
 
 const MIN_SERVINGS = 1;
@@ -22,6 +23,8 @@ export default function RecipeDetailScreen({ route, navigation }: Props) {
   const [servings, setServings] = useState(householdSize);
   const favorites = useFavoritesStore((s) => s.favorites);
   const toggleFavorite = useFavoritesStore((s) => s.toggleFavorite);
+  const plan = usePlanStore((s) => s.plan);
+  const addItem = usePlanStore((s) => s.addItem);
 
   if (!recipe) {
     return (
@@ -32,6 +35,7 @@ export default function RecipeDetailScreen({ route, navigation }: Props) {
   }
 
   const isFav = favorites.includes(recipe.id);
+  const inPlanCount = plan.items.filter((item) => item.recipeId === recipe.id).length;
 
   return (
     <SafeAreaView style={styles.container} edges={['top', 'bottom']}>
@@ -76,6 +80,16 @@ export default function RecipeDetailScreen({ route, navigation }: Props) {
             </Pressable>
           </View>
         </View>
+
+        <Pressable onPress={() => addItem(recipe.id, servings)} style={styles.addBtn}>
+          <Feather name="plus" size={18} color="#fff" />
+          <Text style={styles.addBtnLabel}>
+            {inPlanCount > 0 ? 'Add another to plan' : 'Add to plan'}
+          </Text>
+        </Pressable>
+        {inPlanCount > 0 && (
+          <Text style={styles.inPlanNote}>Already in your plan {inPlanCount} time{inPlanCount === 1 ? '' : 's'}</Text>
+        )}
 
         <Text style={styles.sectionHeader}>Ingredients</Text>
         <View style={{ gap: 8 }}>
@@ -130,6 +144,12 @@ const styles = StyleSheet.create({
     alignItems: 'center', justifyContent: 'center',
   },
   servingsValue: { fontWeight: '600', fontSize: 17, minWidth: 16, textAlign: 'center', color: colors.ink },
+  addBtn: {
+    flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, marginTop: 20,
+    backgroundColor: colors.forest, borderRadius: 14, paddingVertical: 14,
+  },
+  addBtnLabel: { color: '#fff', fontWeight: '700', fontSize: 15 },
+  inPlanNote: { fontSize: 12.5, color: colors.sage, textAlign: 'center', marginTop: 8, fontWeight: '600' },
   sectionHeader: {
     fontWeight: '800', fontSize: 13, color: colors.forest, marginTop: 24, marginBottom: 10,
     textTransform: 'uppercase', letterSpacing: 0.6,

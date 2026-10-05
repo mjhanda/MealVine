@@ -1,9 +1,7 @@
-import { Day, MealType } from '../types';
-
 export type RootStackParamList = {
   Onboarding: undefined;
   Main: undefined;
-  RecipeDetail: { recipeId: string; day?: Day; mealType?: MealType };
+  RecipeDetail: { recipeId: string };
 };
 
 export type MainTabParamList = {

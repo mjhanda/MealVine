@@ -1,7 +1,4 @@
-const PLURAL_OVERRIDES: Record<string, string> = {
-  oz: 'oz',
-  lb: 'lb',
-};
+const NO_PLURAL_UNITS = ['oz', 'lb', 'tbsp', 'tsp', 'large'];
 
 export const trimNum = (n: number): number => (Number.isInteger(n) ? n : Math.round(n * 100) / 100);
 
@@ -11,8 +8,7 @@ export const scaleAmount = (amount: number, baseServings: number, targetServings
 export const unitLabel = (amount: number, unit: string | null): string => {
   const displayAmount = trimNum(amount);
   if (!unit) return `${displayAmount}`;
-  const isPlural = amount !== 1 && !Object.keys(PLURAL_OVERRIDES).includes(unit);
-  const base = PLURAL_OVERRIDES[unit] || unit;
-  const pluralized = base.endsWith('h') ? `${base}es` : `${base}s`;
-  return `${displayAmount} ${isPlural ? pluralized : base}`;
+  const isPlural = amount !== 1 && !NO_PLURAL_UNITS.includes(unit);
+  const pluralized = unit.endsWith('h') ? `${unit}es` : `${unit}s`;
+  return `${displayAmount} ${isPlural ? pluralized : unit}`;
 };

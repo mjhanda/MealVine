@@ -1,3 +1,5 @@
+import { MealType } from './types';
+
 export const colors = {
   cream: '#FAF6EE',
   forest: '#22392C',
@@ -23,13 +25,21 @@ export const dietMeta: Record<string, { label: string; color: string; bg: string
   fish: { label: 'Seafood', color: colors.blue, bg: colors.blueLight },
 };
 
-export const mealLabels: Record<string, string> = {
+export const mealLabels: Record<MealType, string> = {
   breakfast: 'Breakfast',
   lunch: 'Lunch',
   dinner: 'Dinner',
+  snack: 'Snack',
 };
 
-export const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'] as const;
+export const mealPlural: Record<MealType, string> = {
+  breakfast: 'Breakfasts',
+  lunch: 'Lunches',
+  dinner: 'Dinners',
+  snack: 'Snacks',
+};
+
+export const mealTypeOrder: MealType[] = ['breakfast', 'lunch', 'dinner', 'snack'];
 
 export const categoryOrder = [
   'Produce',

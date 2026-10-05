@@ -3,7 +3,7 @@
 - for this specific sub-task you are an expert React Native / Expo engineer.
 
 ## 1. Project Overview
-- MealApp: a Mealime-style weekly meal planner. Users set household size, diet, and which meals to plan; the app auto-generates a 7-day plan from a curated recipe set and a grocery list from that plan. Single-user, fully offline, no backend.
+- MealApp: a free-form meal planner (not a weekly planner). Users set household size, diet, and meal types, then search a curated 100-recipe catalog (breakfast/lunch/dinner/snacks) and add meals to a plan list; the grocery list is derived from that plan. Single-user, fully offline, no backend.
 
 ## 2. Tech Stack
 - Expo (React Native) + TypeScript. React Navigation. Zustand + AsyncStorage (`persist` middleware) for all local state. No backend, no auth, no network calls.
@@ -11,9 +11,9 @@
 ## 3. Architecture
 - `src/data/recipes.ts` — the recipe catalog; add recipes by appending objects in the existing shape.
 - `src/types.ts` — shared domain types.
-- `src/theme.ts` — colors, spacing, shared constants (days, meal labels, grocery category order).
+- `src/theme.ts` — colors, spacing, shared constants (meal labels/plurals/order, grocery category order).
 - `src/store/` — one Zustand store per concern (preferences, plan, favorites, grocery), each persisted independently.
-- `src/utils/` — pure logic: plan generation/swap (`planGenerator.ts`), grocery aggregation (`grocery.ts`), unit formatting (`units.ts`).
+- `src/utils/` — pure logic: recipe lookup/browse filtering (`recipeCatalog.ts`), grocery aggregation (`grocery.ts`), unit formatting (`units.ts`); plan list + legacy-shape migration lives in `src/store/planStore.ts`.
 - `src/navigation/` — `RootNavigator` (Onboarding vs. Main stack, modal `RecipeDetail`) and `MainTabs` (Plan/Browse/Grocery/Favorites/Settings).
 - `src/screens/` — one screen per route; `src/components/` — shared UI (`RecipeCard`, `DietTag`).
 - `reference/mealplan-app-prototype.jsx` — original web mockup; historical design reference only, not part of the build.

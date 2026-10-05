@@ -12,7 +12,7 @@ import { MainTabParamList } from './types';
 const Tab = createBottomTabNavigator<MainTabParamList>();
 
 const ICONS: Record<keyof MainTabParamList, keyof typeof Feather.glyphMap> = {
-  Plan: 'calendar',
+  Plan: 'clipboard',
   Browse: 'book-open',
   Grocery: 'shopping-cart',
   Favorites: 'heart',

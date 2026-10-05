@@ -1,11 +1,12 @@
 # MealApp
 
-A weekly meal-planning app (Mealime-style): pick your household size, diet, and
-which meals you want planned, and it builds a 7-day plan from a curated recipe
-set — with swap/regenerate, a recipe detail view with live serving-size
-scaling, an auto-generated grocery list grouped by aisle, favorites, and a
-browse/filter screen. Everything runs fully offline; all data is stored
-on-device.
+A meal planner: pick any meals you want to eat — breakfast, lunch, dinner, and
+snacks — from a searchable catalog of 100 curated recipes, and the app builds
+your grocery list automatically from that plan, grouped by aisle. It is a
+free-form list, not a week: add and remove meals as you like, with each entry
+keeping its own serving count. Includes a recipe detail view with live
+serving-size scaling, favorites, search (by title or ingredient), and diet
+filtering. Everything runs fully offline; all data is stored on-device.
 
 See `mealplan-app-project-plan.md` for the full product plan and current
 build status.
@@ -33,22 +34,25 @@ native build step.
 ## Project structure
 
 ```
-App.tsx                  App entry: providers, plan-hydration bootstrap
+App.tsx                  App entry: providers
 src/
-  data/recipes.ts         50 seed recipes (id, diet, ingredients, steps, ...)
-  types.ts                 Shared TypeScript types
-  theme.ts                 Colors, spacing, meal/day/category constants
-  store/                   Zustand stores (preferences, plan, favorites, grocery), each persisted to AsyncStorage
-  utils/                   Plan generation, grocery aggregation, unit formatting
-  navigation/               Root stack + bottom tab navigator
-  screens/                  Onboarding, Plan, RecipeDetail, Grocery, Favorites, Browse, Settings
-  components/               Shared UI (RecipeCard, DietTag)
-reference/                 Original web prototype (superseded by src/, kept for design reference)
+  data/recipes.ts        100 seed recipes (id, diet, mealType, ingredients, steps, ...)
+  types.ts               Shared TypeScript types
+  theme.ts               Colors, spacing, meal/category constants
+  store/                 Zustand stores (preferences, plan, favorites, grocery), each persisted to AsyncStorage
+  utils/                 Recipe catalog/search, grocery aggregation, unit formatting
+  navigation/            Root stack + bottom tab navigator
+  screens/               Onboarding, Plan, Browse, RecipeDetail, Grocery, Favorites, Settings
+  components/            Shared UI (RecipeCard, DietTag)
+reference/               Original web prototype (superseded by src/, kept for design reference)
 ```
+
+The **Plan** tab is a curated list of meals you picked (grouped by breakfast /
+lunch / dinner / snack); the **Grocery** tab is derived from it, so adding or
+removing a meal updates the list live.
 
 ## Known gaps (see project plan Section 0 for why)
 
 - No custom app icon/splash yet (default Expo placeholders).
 - Grocery list doesn't normalize units (e.g. "1 cup" + "2 tbsp" list separately) and has no clear/reset action.
-- Onboarding has no skip-days option yet.
 - Recipes use emoji instead of photos.

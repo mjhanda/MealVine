@@ -2,7 +2,6 @@ import { Feather } from '@expo/vector-icons';
 import React, { useState } from 'react';
 import { Alert, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { usePlanStore } from '../store/planStore';
 import { usePreferencesStore } from '../store/preferencesStore';
 import { colors, mealLabels } from '../theme';
 import { DietPref, MealType } from '../types';
@@ -11,7 +10,7 @@ const DIET_OPTIONS: { id: DietPref; label: string }[] = [
   { id: 'vegetarian', label: 'Vegetarian only' },
   { id: 'mixed', label: 'Vegetarian + lean protein' },
 ];
-const ALL_MEAL_TYPES: MealType[] = ['breakfast', 'lunch', 'dinner'];
+const ALL_MEAL_TYPES: MealType[] = ['breakfast', 'lunch', 'dinner', 'snack'];
 const MIN_HOUSEHOLD = 1;
 const MAX_HOUSEHOLD = 8;
 
@@ -19,7 +18,6 @@ export default function SettingsScreen() {
   const preferences = usePreferencesStore((s) => s);
   const updatePreferences = usePreferencesStore((s) => s.updatePreferences);
   const resetOnboarding = usePreferencesStore((s) => s.resetOnboarding);
-  const regenerate = usePlanStore((s) => s.regenerate);
 
   const [household, setHousehold] = useState(preferences.householdSize);
   const [diet, setDiet] = useState<DietPref>(preferences.diet);
@@ -36,14 +34,11 @@ export default function SettingsScreen() {
 
   const handleSave = () => {
     if (mealTypes.length === 0) {
-      Alert.alert('Pick at least one meal', 'Choose breakfast, lunch, or dinner to plan.');
+      Alert.alert('Pick at least one meal', 'Choose breakfast, lunch, dinner, or snack to plan.');
       return;
     }
     updatePreferences({ householdSize: household, diet, mealTypes });
-    Alert.alert('Regenerate your plan?', 'Your preferences changed. Rebuild this week’s plan to match?', [
-      { text: 'Not now', style: 'cancel' },
-      { text: 'Regenerate', onPress: () => regenerate(mealTypes, diet) },
-    ]);
+    Alert.alert('Saved', 'Your preferences are up to date.');
   };
 
   return (
@@ -82,7 +77,7 @@ export default function SettingsScreen() {
         </View>
 
         <View>
-          <Text style={styles.sectionLabel}>Meals to plan</Text>
+          <Text style={styles.sectionLabel}>Meal types</Text>
           <View style={{ gap: 10, marginTop: 10 }}>
             {ALL_MEAL_TYPES.map((id) => {
               const active = mealTypes.includes(id);
