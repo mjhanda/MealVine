@@ -22,7 +22,8 @@ no network calls, no auth.
 - `src/store/*` — one Zustand store per concern (`preferencesStore`, `planStore`, `favoritesStore`, `groceryStore`), each persisted independently. Don't reach into another store's state directly from a component — read via that store's own hook.
 - `src/utils/recipeCatalog.ts` — recipe lookup and browse filtering (search by title/ingredient, diet, meal type); pure functions, no side effects.
 - `src/utils/grocery.ts` — ingredient aggregation across the plan's meals into grouped grocery lines (each plan entry scales its recipe by its own serving count).
-- `src/store/planStore.ts` — owns the plan list (`MealPlan.items`) and `migrateLegacyPlan()`, which converts the old weekly `entries` shape from previously installed versions on rehydrate.
+- `src/store/persistence.ts` — `persistOptions()` (versioned persist config shared by every store) and `useStorageHealth` (non-persisted record of stores that failed to load).
+- `src/store/planStore.ts` — owns the plan list (`MealPlan.items`); `migratePlan()` upgrades both the v1-app weekly grid (via `migrateLegacyPlan()`) and the unversioned v2 list.
 - `src/navigation/` — `RootNavigator` (Onboarding vs. Main, plus modal `RecipeDetail`) and `MainTabs` (Plan/Browse/Grocery/Favorites/Settings).
 - `src/screens/*` — one screen per route, RN `StyleSheet` for styling, no external UI kit.
 - `reference/mealplan-app-prototype.jsx` — the original web mockup this app was built from. Historical reference only; not part of the build (not imported anywhere).
@@ -54,7 +55,8 @@ Warm, concise, low-friction copy (matches the original mock: "Let's set up your 
 - New persisted state goes in its own file under `src/store/`, following the existing `persist` + `AsyncStorage` pattern — don't add a second state-management approach.
 
 ## 9. Safe Change Rules
-- Don't change the on-disk shape of persisted store state (`Preferences`, `MealPlan`, `GroceryState`, favorites array) without a migration path — existing installs' AsyncStorage data won't match a changed shape and will silently reset or crash on read. (The weekly→list `MealPlan` change in v2 is handled by `migrateLegacyPlan()` in `planStore.ts`; keep that pattern for any future shape change.)
+- Don't change the on-disk shape of persisted store state without a migration. Every store is built with `persistOptions()` from `src/store/persistence.ts`, which takes a `version`, a `partialize` (only data, never `hasHydrated` or actions), and a pure `migrate(persisted, fromVersion)`. To change a shape: bump the store's `*_VERSION`, add a `fromVersion` branch to its `migrate*` function, add a fixture of the old blob to `src/store/__tests__/fixtures.ts`, and test both the pure migration and a real rehydrate in `migrations.test.ts`.
+- `migrate*` must throw `MigrationError` on unusable data rather than guess. `persistOptions` then backs up the raw blob to `<name>:backup:<timestamp>`, starts that store fresh, marks it hydrated (so the app never hangs on the splash spinner), and the root navigator tells the user once.
 - Don't rename recipe `id` values in `src/data/recipes.ts` — they're referenced by id in persisted `MealPlan` and favorites data.
 - Don't remove `reference/mealplan-app-prototype.jsx` casually — it's the design source of truth for colors/copy/flow if screens need to be reconciled with the original mock.
 

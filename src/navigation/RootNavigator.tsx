@@ -1,9 +1,11 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import React from 'react';
-import { ActivityIndicator, View } from 'react-native';
+import React, { useEffect } from 'react';
+import { ActivityIndicator, Alert, View } from 'react-native';
 import OnboardingScreen from '../screens/OnboardingScreen';
 import RecipeDetailScreen from '../screens/RecipeDetailScreen';
+import { useStorageHealth } from '../store/persistence';
+import { usePlanStore } from '../store/planStore';
 import { usePreferencesStore } from '../store/preferencesStore';
 import { colors } from '../theme';
 import MainTabs from './MainTabs';
@@ -12,8 +14,21 @@ import { RootStackParamList } from './types';
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export default function RootNavigator() {
-  const hasHydrated = usePreferencesStore((s) => s.hasHydrated);
+  const prefsHydrated = usePreferencesStore((s) => s.hasHydrated);
+  const planHydrated = usePlanStore((s) => s.hasHydrated);
+  const hasHydrated = prefsHydrated && planHydrated;
   const onboardingComplete = usePreferencesStore((s) => s.onboardingComplete);
+  const failedStores = useStorageHealth((s) => s.failedStores);
+  const dismissStorageFailure = useStorageHealth((s) => s.dismiss);
+
+  useEffect(() => {
+    if (!hasHydrated || failedStores.length === 0) return;
+    Alert.alert(
+      "Some saved data couldn't be loaded",
+      'The app started fresh for those parts. A backup copy was kept on this device.',
+      [{ text: 'OK', onPress: dismissStorageFailure }]
+    );
+  }, [hasHydrated, failedStores, dismissStorageFailure]);
 
   if (!hasHydrated) {
     return (

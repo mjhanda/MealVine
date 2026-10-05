@@ -49,12 +49,16 @@
     ],
     "collectCoverageFrom": [
       "src/utils/**/*.ts",
-      "src/store/**/*.ts"
+      "src/store/**/*.ts",
+      "!**/__tests__/**"
     ],
     "coverageThreshold": {
       "./src/utils/": {
         "lines": 80
       }
-    }
+    },
+    "testMatch": [
+      "**/__tests__/**/*.test.ts?(x)"
+    ]
   }
 }

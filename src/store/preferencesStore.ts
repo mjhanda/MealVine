@@ -1,15 +1,7 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { create } from 'zustand';
-import { createJSONStorage, persist } from 'zustand/middleware';
+import { persist } from 'zustand/middleware';
 import { DietPref, MealType, Preferences } from '../types';
-
-interface PreferencesState extends Preferences {
-  hasHydrated: boolean;
-  setHasHydrated: (value: boolean) => void;
-  completeOnboarding: (prefs: { householdSize: number; diet: DietPref; mealTypes: MealType[] }) => void;
-  updatePreferences: (prefs: Partial<Pick<Preferences, 'householdSize' | 'diet' | 'mealTypes'>>) => void;
-  resetOnboarding: () => void;
-}
+import { isRecord, MigrationError, persistOptions } from './persistence';
 
 const defaults: Preferences = {
   householdSize: 2,
@@ -18,22 +10,41 @@ const defaults: Preferences = {
   onboardingComplete: false,
 };
 
+export const PREFERENCES_VERSION = 1;
+
+// v0 → v1: no shape change; establishes versioning and fills any missing fields with defaults.
+export function migratePreferences(persisted: unknown, _fromVersion: number): Preferences {
+  if (!isRecord(persisted)) throw new MigrationError('preferences: not an object');
+  return { ...defaults, ...(persisted as Partial<Preferences>) };
+}
+
+interface PreferencesState extends Preferences {
+  hasHydrated: boolean;
+  completeOnboarding: (prefs: { householdSize: number; diet: DietPref; mealTypes: MealType[] }) => void;
+  updatePreferences: (prefs: Partial<Pick<Preferences, 'householdSize' | 'diet' | 'mealTypes'>>) => void;
+  resetOnboarding: () => void;
+}
+
 export const usePreferencesStore = create<PreferencesState>()(
   persist(
     (set) => ({
       ...defaults,
       hasHydrated: false,
-      setHasHydrated: (value) => set({ hasHydrated: value }),
       completeOnboarding: (prefs) => set({ ...prefs, onboardingComplete: true }),
       updatePreferences: (prefs) => set((state) => ({ ...state, ...prefs })),
       resetOnboarding: () => set({ ...defaults }),
     }),
-    {
+    persistOptions<PreferencesState, Preferences>({
       name: 'mealplan:preferences',
-      storage: createJSONStorage(() => AsyncStorage),
-      onRehydrateStorage: () => (state) => {
-        state?.setHasHydrated(true);
-      },
-    }
+      version: PREFERENCES_VERSION,
+      partialize: ({ householdSize, diet, mealTypes, onboardingComplete }) => ({
+        householdSize,
+        diet,
+        mealTypes,
+        onboardingComplete,
+      }),
+      migrate: migratePreferences,
+      onHydrated: () => usePreferencesStore.setState({ hasHydrated: true }),
+    })
   )
 );
