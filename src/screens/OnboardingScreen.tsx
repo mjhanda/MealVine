@@ -114,7 +114,7 @@ export default function OnboardingScreen() {
           />
         ))}
       </View>
-      <Text style={styles.eyebrow}>Let's set up your plan</Text>
+      <Text style={styles.eyebrow}>{"Let's set up your plan"}</Text>
       <Text style={styles.title}>{current.title}</Text>
       <View style={{ flex: 1 }}>{current.body}</View>
       <Pressable

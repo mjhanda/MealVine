@@ -43,9 +43,10 @@ Also see `General_Code_Quality_Prompts.md` at the repo root — the standing com
 Warm, concise, low-friction copy (matches the original mock: "Let's set up your plan", now "Start planning"). No jargon, no exclamation-heavy marketing tone.
 
 ## 7. Testing and Quality Bar
-- Run `npx tsc --noEmit` after any non-trivial change — must be clean.
+- Run `npm run typecheck`, `npm run lint`, and `npm test` after any non-trivial change — all must be clean. CI (`.github/workflows/ci.yml`) runs the same three on every push/PR.
 - For UI changes, verify with `npm run web` (fastest feedback loop) before calling work done; note explicitly if you couldn't visually verify (e.g. no browser tool available).
-- No automated test suite exists yet. If you add one, prefer testing `src/utils/` pure functions first (recipe filtering, grocery aggregation) — highest value per effort.
+- Tests use `jest-expo`, colocated in `__tests__/` folders. `src/utils/` must stay at ≥80% line coverage (enforced). Every new pure util gets tests; every persisted-shape change gets a migration test with a fixture blob.
+- `src/data/__tests__/` validates the recipe catalog (`npm run validate`) — adding a recipe that breaks it fails CI.
 
 ## 8. File and Content Placement Rules
 - New screens go in `src/screens/`, registered in `src/navigation/RootNavigator.tsx` or `MainTabs.tsx` as appropriate, with params typed in `src/navigation/types.ts`.
@@ -64,6 +65,8 @@ npm run web       # run in browser (fastest to test)
 npm run ios       # run in iOS Simulator / Expo Go
 npm run android   # run in Android emulator / Expo Go
 npm start         # dev server + QR code for Expo Go on a physical device
-npx tsc --noEmit  # type-check
+npm run typecheck # tsc --noEmit
+npm run lint      # expo lint (ESLint, eslint-config-expo)
+npm test          # jest (add -- --coverage for the coverage gate)
 npx expo export --platform web  # production web build sanity check
 ```
