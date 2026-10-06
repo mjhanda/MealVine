@@ -6,10 +6,12 @@ import { notify } from '../components/dialogs';
 import UndoBar from '../components/UndoBar';
 import CookScreen from '../screens/CookScreen';
 import OnboardingScreen from '../screens/OnboardingScreen';
+import PaywallScreen from '../screens/PaywallScreen';
 import RecipeDetailScreen from '../screens/RecipeDetailScreen';
 import { useStorageHealth } from '../store/persistence';
 import { usePlanStore } from '../store/planStore';
 import { usePreferencesStore } from '../store/preferencesStore';
+import { useHasAccess, useSubscriptionStore } from '../store/subscriptionStore';
 import { colors } from '../theme';
 import MainTabs from './MainTabs';
 import { RootStackParamList } from './types';
@@ -19,7 +21,9 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 export default function RootNavigator() {
   const prefsHydrated = usePreferencesStore((s) => s.hasHydrated);
   const planHydrated = usePlanStore((s) => s.hasHydrated);
-  const hasHydrated = prefsHydrated && planHydrated;
+  const subHydrated = useSubscriptionStore((s) => s.hasHydrated);
+  const hasHydrated = prefsHydrated && planHydrated && subHydrated;
+  const hasAccess = useHasAccess();
   const onboardingComplete = usePreferencesStore((s) => s.onboardingComplete);
   const failedStores = useStorageHealth((s) => s.failedStores);
   const dismissStorageFailure = useStorageHealth((s) => s.dismiss);
@@ -46,6 +50,9 @@ export default function RootNavigator() {
       <Stack.Navigator screenOptions={{ headerShown: false }}>
         {!onboardingComplete ? (
           <Stack.Screen name="Onboarding" component={OnboardingScreen} />
+        ) : !hasAccess ? (
+          // Onboarding first (shows the value), then the trial paywall, then the app.
+          <Stack.Screen name="Paywall" component={PaywallScreen} />
         ) : (
           <>
             <Stack.Screen name="Main" component={MainTabs} />

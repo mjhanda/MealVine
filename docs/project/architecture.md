@@ -12,7 +12,7 @@ System Overview
 Technology Stack
 ----------------
 
--   **Backend:** None. Fully local/offline — no server, no API calls of any kind.
+-   **Backend:** None of our own. Meal data is fully local/offline. The only network use is subscription status and purchases via RevenueCat (`react-native-purchases`) and the App Store / Google Play.
 -   **Frontend:** Expo (React Native) + TypeScript, one codebase for web, iOS, and Android. React Navigation (native-stack + bottom tabs) for routing. Zustand (`persist` middleware) for state, backed by `@react-native-async-storage/async-storage`.
 -   **API Style:** N/A — no client-server API. All data (recipes, preferences, plan, favorites, grocery list) lives on-device.
 -   **Data Model:** Recipe catalog and canonical ingredient catalog bundled as TypeScript data (`src/data/recipes.ts`, `src/data/ingredients.ts`). User data (preferences incl. diet/allergies/dislikes, plan, cooking history, favorites, grocery check-state) persisted as JSON in AsyncStorage via independent, versioned Zustand stores. See `src/types.ts` for the full shape.

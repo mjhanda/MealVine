@@ -10,6 +10,7 @@ import DislikePicker from '../components/preferences/DislikePicker';
 import HouseholdStepper from '../components/preferences/HouseholdStepper';
 import MealTypePicker from '../components/preferences/MealTypePicker';
 import PantryEditor from '../components/preferences/PantryEditor';
+import SubscriptionSection from '../components/preferences/SubscriptionSection';
 import { conflictingPlanItems, resetAllData } from '../store/mealActions';
 import { usePreferencesStore } from '../store/preferencesStore';
 import { colors } from '../theme';
@@ -99,14 +100,18 @@ function SettingsForm({ preferences }: { preferences: Preferences }) {
           <Text style={[styles.saveLabel, { color: hasChanges ? '#fff' : colors.inkSoft }]}>Save changes</Text>
         </Pressable>
 
+        <Section label="Subscription">
+          <SubscriptionSection />
+        </Section>
+
         <Section label="Your data">
           <DataSection />
         </Section>
 
         <Section label="About">
           <Text style={styles.about}>
-            MealVine works fully offline. Everything you enter, including allergies, stays on this device and is
-            never sent anywhere.
+            MealVine works offline. Everything you enter, including allergies, stays on this device. The only
+            network use is checking your subscription with the App Store or Google Play (via RevenueCat).
           </Text>
           <Text style={styles.version}>Version {Constants.expoConfig?.version ?? '—'}</Text>
         </Section>

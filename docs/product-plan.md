@@ -14,7 +14,7 @@ whenever you like and tick them off.
 - **Who it's for:** individuals and households that want weeknight dinners
   (and optionally breakfasts, lunches, snacks) without the "what's for
   dinner + what do I buy" overhead.
-- **Positioning:** fully offline, no account, private by default, and your
+- **Positioning:** works offline, no account, private by default, and your
   data stays exportable. Competitive context (Mealime's 2026-10-21 shutdown) is
   in `TASKS.md` and issue #25.
 - **Name:** "MealApp" is a working title. The shipping name is undecided (#25).

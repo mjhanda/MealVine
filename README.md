@@ -13,7 +13,8 @@ Your plan is a list of meals to cook, and you tick each one off when it's done.
   ingredient, units merged, grouped by store aisle, and room for your own items.
 - **Cook:** step-by-step recipes with servings scaling; mark meals cooked and
   re-plan favorites from "Recently cooked".
-- **Private:** fully offline, no account, all data stored on the device.
+- **Private:** works offline, no account; all meal data stays on the device.
+- **Subscription:** 14-day free trial, then $4.99/month or yearly (RevenueCat; App Store / Google Play billing).
 
 Product context and decisions: [`docs/product-plan.md`](docs/product-plan.md).
 Backlog: GitHub issues (snapshot in [`docs/TASKS.md`](docs/TASKS.md)).
