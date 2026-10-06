@@ -6,7 +6,7 @@ Project Architecture
 System Overview
 ---------------
 
--   **Purpose:** MealApp — a Mealime-style weekly meal planner. Generates a 7-day meal plan from a curated recipe set based on the user's household size, diet, and selected meal types, and derives a grocery list from that plan.
+-   **Purpose:** MealApp — a free-form meal planner. Users pick recipes from a curated catalog (filtered by their diet, allergies, and disliked ingredients) into a plan list — not a calendar — and the app derives an aisle-sorted grocery list from it. Meals are cooked whenever the user likes and marked as cooked.
 -   **Target Users:** Individuals or households planning their own weekly meals and groceries. Single-user per install — no shared/multi-user accounts.
 
 Technology Stack
@@ -15,7 +15,7 @@ Technology Stack
 -   **Backend:** None. Fully local/offline — no server, no API calls of any kind.
 -   **Frontend:** Expo (React Native) + TypeScript, one codebase for web, iOS, and Android. React Navigation (native-stack + bottom tabs) for routing. Zustand (`persist` middleware) for state, backed by `@react-native-async-storage/async-storage`.
 -   **API Style:** N/A — no client-server API. All data (recipes, preferences, plan, favorites, grocery list) lives on-device.
--   **Data Model:** Recipe catalog bundled as a TypeScript array (`src/data/recipes.ts`); user-generated data (preferences, active plan, favorites, grocery check-state) persisted as JSON in AsyncStorage via four independent Zustand stores. See `src/types.ts` for the full shape.
+-   **Data Model:** Recipe catalog and canonical ingredient catalog bundled as TypeScript data (`src/data/recipes.ts`, `src/data/ingredients.ts`). User data (preferences incl. diet/allergies/dislikes, plan, cooking history, favorites, grocery check-state) persisted as JSON in AsyncStorage via independent, versioned Zustand stores. See `src/types.ts` for the full shape.
 
 Infrastructure & Deployment
 ---------------------------
@@ -25,4 +25,4 @@ Infrastructure & Deployment
 
 Notes for future phases (not built yet)
 ----------------------------------------
-The original project plan's Phase 2/3 (remote recipe content updates, optional account + cloud backup, shared household lists) would reintroduce a real backend, auth, and API surface. If any of those are picked up, this file and `project directory/security.md` need a real update before that work starts — the current "N/A" answers above are only true for the local-only MVP.
+The original project plan's Phase 2/3 (remote recipe content updates, optional account + cloud backup, shared household lists) would reintroduce a real backend, auth, and API surface. If any of those are picked up, this file and `docs/project/security.md` need a real update before that work starts — the current "N/A" answers above are only true for the local-only MVP.

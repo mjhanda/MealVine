@@ -1,13 +1,13 @@
 # CLAUDE.md
 
 ## 1. Project Overview
-MealApp — a free-form meal planner (deliberately NOT a weekly planner). Users
-set household size, diet preference, and which meal types they plan, then
-search/browse a curated 100-recipe catalog (breakfast, lunch, dinner, snacks)
-and add meals to their plan. The plan is a flat list of picked meals — each
-entry remembers its serving count — and the grocery list is derived from it.
-Single-user, fully offline, no backend. See `mealplan-app-project-plan.md`
-for full product context and current build status.
+MealApp — a free-form meal planner (deliberately NOT a weekly planner or
+calendar). Users set household size, diet, allergies, disliked ingredients,
+and meal types, then search a curated recipe catalog and add meals to a plan
+list (each entry keeps its own servings). The grocery list is derived from the
+plan; meals are marked cooked whenever the user cooks them.
+Single-user, fully offline, no backend. See `docs/product-plan.md` for product
+context and decisions, and GitHub issues (mirrored in `docs/TASKS.md`) for the backlog.
 
 ## 2. Tech Stack
 Expo (React Native) + TypeScript. React Navigation (native-stack + bottom

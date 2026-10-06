@@ -29,7 +29,7 @@ const toDiet = (value: unknown): DietId => {
 const stringArray = (value: unknown): string[] =>
   Array.isArray(value) ? value.filter((v): v is string => typeof v === 'string') : [];
 
-// v0 → v1: no shape change. v1 → v2: diet ids widen to Mealime's set; adds allergies and dislikes.
+// v0 → v1: no shape change. v1 → v2: diet ids widen to eight diets; adds allergies and dislikes.
 export function migratePreferences(persisted: unknown, _fromVersion: number): Preferences {
   if (!isRecord(persisted)) throw new MigrationError('preferences: not an object');
   const merged = { ...DEFAULT_PREFERENCES, ...(persisted as Partial<Preferences>) };

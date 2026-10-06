@@ -95,5 +95,5 @@ Data Classification & Handling
 Notes
 -----
 
--   Revisit this file when the stack, data handled, or platform changes — in particular, if Phase 2 (remote recipe content updates) or Phase 3 (optional account + cloud backup, shared household lists) from `mealplan-app-project-plan.md` is picked up. Those introduce a real backend, network calls, and possibly auth — every "Not applicable" above tied to "no backend/no network/no accounts" would need to be replaced with real answers at that point.
--   This file was resolved against known, verified facts about the current architecture (see `project directory/architecture.md`) rather than left as `[TBD]`, per the general rule that an unresolved bracket should stay visible until genuinely unknown — these answers were knowable now.
+-   Revisit this file when the stack, data handled, or platform changes — in particular, if Phase 2 (remote recipe content updates) or Phase 3 (optional account + cloud backup, shared household lists) from `docs/product-plan.md` is picked up. Those introduce a real backend, network calls, and possibly auth — every "Not applicable" above tied to "no backend/no network/no accounts" would need to be replaced with real answers at that point.
+-   This file was resolved against known, verified facts about the current architecture (see `docs/project/architecture.md`) rather than left as `[TBD]`, per the general rule that an unresolved bracket should stay visible until genuinely unknown — these answers were knowable now.

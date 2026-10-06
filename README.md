@@ -1,58 +1,69 @@
 # MealApp
 
-A meal planner: pick any meals you want to eat — breakfast, lunch, dinner, and
-snacks — from a searchable catalog of 100 curated recipes, and the app builds
-your grocery list automatically from that plan, grouped by aisle. It is a
-free-form list, not a week: add and remove meals as you like, with each entry
-keeping its own serving count. Includes a recipe detail view with live
-serving-size scaling, favorites, search (by title or ingredient), and diet
-filtering. Everything runs fully offline; all data is stored on-device.
+A personal meal planner: pick meals that fit how you eat, get one
+aisle-sorted grocery list, and cook whenever you like. It's not a calendar.
+Your plan is a list of meals to cook, and you tick each one off when it's done.
 
-See `mealplan-app-project-plan.md` for the full product plan and current
-build status.
+- **Personalized:** eight diets (Classic, Flexitarian, Pescetarian,
+  Vegetarian, Vegan, Low carb, Keto, Paleo), 12 allergens, and any
+  ingredients you won't eat. Allergens and dislikes are never shown.
+- **Plan:** search 100 recipes by title or ingredient; each planned meal keeps
+  its own servings; swap a meal for another of the same type; undo anything.
+- **Shop:** the grocery list builds itself from the plan, with one line per
+  ingredient, units merged, grouped by store aisle, and room for your own items.
+- **Cook:** step-by-step recipes with servings scaling; mark meals cooked and
+  re-plan favorites from "Recently cooked".
+- **Private:** fully offline, no account, all data stored on the device.
+
+Product context and decisions: [`docs/product-plan.md`](docs/product-plan.md).
+Backlog: GitHub issues (snapshot in [`docs/TASKS.md`](docs/TASKS.md)).
 
 ## Tech stack
 
-- **Expo (React Native) + TypeScript** — one codebase for web, iOS, and Android
-- **React Navigation** — stack + bottom tabs
-- **Zustand + AsyncStorage** — local state and persistence (no backend)
-- **@expo/vector-icons** — icons
+- **Expo (React Native) + TypeScript**: one codebase for web, iOS, and Android
+- **React Navigation**: stack + bottom tabs
+- **Zustand + AsyncStorage**: local state with versioned migrations (no backend)
+- **jest-expo + ESLint**: tests and lint, run in CI
 
 ## Run it
 
 ```bash
 npm install
-npm run web      # opens in your browser — fastest way to try it
+npm run web      # opens in your browser, the fastest way to try it
 npm run ios      # requires Xcode / iOS Simulator, or scan the QR from `npm start` with Expo Go
 npm run android  # requires Android Studio, or scan the QR from `npm start` with Expo Go
 ```
 
-`npm start` alone launches the Expo dev server and prints a QR code — scan it
-with the Expo Go app on your phone to test on a real device without any
-native build step.
+`npm start` alone launches the Expo dev server and prints a QR code. Scan it
+with Expo Go on your phone to test on a real device without a native build.
+
+## Check it
+
+```bash
+npm run typecheck   # tsc --noEmit
+npm run lint        # ESLint
+npm test            # jest (unit, migration, and catalog-integrity tests)
+```
 
 ## Project structure
 
 ```
-App.tsx                  App entry: providers
+App.tsx                  App entry: providers, plan↔grocery sync
 src/
-  data/recipes.ts        100 seed recipes (id, diet, mealType, ingredients, steps, ...)
+  data/                  ingredients.ts (canonical catalog), recipes.ts (100 recipes)
   types.ts               Shared TypeScript types
-  theme.ts               Colors, spacing, meal/category constants
-  store/                 Zustand stores (preferences, plan, favorites, grocery), each persisted to AsyncStorage
-  utils/                 Recipe catalog/search, grocery aggregation, unit formatting
-  navigation/            Root stack + bottom tab navigator
+  theme.ts               Colors, spacing, meal types, store aisles
+  store/                 Zustand stores (preferences, plan, history, favorites, grocery, undo)
+  utils/                 Diets/allergens, recipe search, grocery aggregation, units
+  navigation/            Root stack + bottom tabs
   screens/               Onboarding, Plan, Browse, RecipeDetail, Grocery, Favorites, Settings
-  components/            Shared UI (RecipeCard, DietTag)
-reference/               Original web prototype (superseded by src/, kept for design reference)
+  components/            Shared UI (RecipeCard, UndoBar, preference pickers, dialogs)
+docs/                    Product plan, task list, architecture & security notes
+reference/               Original web prototype (design reference only)
 ```
 
-The **Plan** tab is a curated list of meals you picked (grouped by breakfast /
-lunch / dinner / snack); the **Grocery** tab is derived from it, so adding or
-removing a meal updates the list live.
+## Known gaps
 
-## Known gaps (see project plan Section 0 for why)
-
-- No custom app icon/splash yet (default Expo placeholders).
-- Grocery list doesn't normalize units (e.g. "1 cup" + "2 tbsp" list separately) and has no clear/reset action.
-- Recipes use emoji instead of photos.
+Tracked as issues. The biggest: no recipe photos yet (#15), a thin catalog for
+vegan/keto/paleo and no red meat (#16), no cooking mode (#13), and default Expo
+app icon/splash (#21).
