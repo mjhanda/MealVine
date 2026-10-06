@@ -1,7 +1,10 @@
 import { cookedAgo } from '../../utils/dates';
 import { groceryLinesFromPlan } from '../../utils/grocery';
 import { useHistoryStore } from '../historyStore';
-import { cookAgain, markCooked, undoCooked } from '../mealActions';
+import { conflictingPlanItems, cookAgain, markCooked, resetAllData, undoCooked } from '../mealActions';
+import { useFavoritesStore } from '../favoritesStore';
+import { useGroceryStore } from '../groceryStore';
+import { usePreferencesStore } from '../preferencesStore';
 import { usePlanStore } from '../planStore';
 
 beforeEach(() => {
@@ -63,4 +66,31 @@ describe('cookedAgo', () => {
     [8 * day, '1 week ago'],
     [15 * day, '2 weeks ago'],
   ])('%i ms → %s', (ago, label) => expect(cookedAgo(100 * day - ago, 100 * day)).toBe(label));
+});
+
+describe('conflictingPlanItems / resetAllData', () => {
+
+  it('finds planned meals that break the new preferences', () => {
+    const chicken = usePlanStore.getState().addItem('r95', 4);
+    usePlanStore.getState().addItem('r1', 2); // parfait: vegetarian, has dairy + honey
+    expect(conflictingPlanItems({ diet: 'vegetarian', allergies: [], dislikes: [] }).map((i) => i.id)).toEqual([chicken]);
+    expect(conflictingPlanItems({ diet: 'classic', allergies: [], dislikes: [] })).toEqual([]);
+    expect(conflictingPlanItems({ diet: 'classic', allergies: ['dairy'], dislikes: [] }).map((i) => i.recipeId)).toEqual(['r1']);
+  });
+});
+
+describe('resetAllData', () => {
+  it('returns every store to a fresh install', () => {
+    usePlanStore.getState().addItem('r1', 2);
+    markCooked(usePlanStore.getState().addItem('r2', 2));
+    useFavoritesStore.setState({ favorites: ['r1'] });
+    useGroceryStore.setState({ checked: { eggs: true }, manualItems: [{ id: 'm', name: 'Foil', aisle: 'Household' }], pantry: { salt: 'need' } });
+    usePreferencesStore.setState({ onboardingComplete: true, diet: 'vegan', allergies: ['peanut'] });
+    resetAllData();
+    expect(usePlanStore.getState().plan.items).toEqual([]);
+    expect(useHistoryStore.getState().cooked).toEqual([]);
+    expect(useFavoritesStore.getState().favorites).toEqual([]);
+    expect(useGroceryStore.getState()).toMatchObject({ checked: {}, manualItems: [], pantry: {} });
+    expect(usePreferencesStore.getState()).toMatchObject({ onboardingComplete: false, diet: 'classic', allergies: [] });
+  });
 });
