@@ -15,43 +15,48 @@ interface Props {
 
 export default function RecipeCard({ recipe, onPress, right, servings, warning }: Props) {
   return (
-    <Pressable
-      onPress={onPress}
-      style={styles.card}
-      accessibilityRole="button"
-      accessibilityLabel={servings !== undefined ? `${recipe.title}, ${servings} servings` : recipe.title}
-    >
-      <View style={styles.emojiWrap}>
-        <Text style={styles.emoji}>{recipe.emoji}</Text>
-      </View>
-      <View style={styles.body}>
-        <Text style={styles.title} numberOfLines={1}>
-          {recipe.title}
-        </Text>
-        <View style={styles.metaRow}>
-          <ProteinTag protein={recipe.protein} />
-          <View style={styles.timeRow}>
-            <Feather name="clock" size={12} color={colors.inkSoft} />
-            <Text style={styles.timeText}>{recipe.prep + recipe.cook}m</Text>
-          </View>
-          {servings !== undefined && (
+    // The card is a plain container; the recipe area and the `right` actions are sibling
+    // pressables. Nesting them would put a <button> inside a <button> on web (invalid, and
+    // screen readers can't reach the inner actions).
+    <View style={styles.card}>
+      <Pressable
+        onPress={onPress}
+        style={styles.main}
+        accessibilityRole="button"
+        accessibilityLabel={servings !== undefined ? `${recipe.title}, ${servings} servings` : recipe.title}
+      >
+        <View style={styles.emojiWrap}>
+          <Text style={styles.emoji}>{recipe.emoji}</Text>
+        </View>
+        <View style={styles.body}>
+          <Text style={styles.title} numberOfLines={1}>
+            {recipe.title}
+          </Text>
+          <View style={styles.metaRow}>
+            <ProteinTag protein={recipe.protein} />
             <View style={styles.timeRow}>
-              <Feather name="users" size={12} color={colors.inkSoft} />
-              <Text style={styles.timeText}>{servings}</Text>
+              <Feather name="clock" size={12} color={colors.inkSoft} />
+              <Text style={styles.timeText}>{recipe.prep + recipe.cook}m</Text>
+            </View>
+            {servings !== undefined && (
+              <View style={styles.timeRow}>
+                <Feather name="users" size={12} color={colors.inkSoft} />
+                <Text style={styles.timeText}>{servings}</Text>
+              </View>
+            )}
+          </View>
+          {warning && (
+            <View style={styles.warningRow}>
+              <Feather name="alert-triangle" size={12} color={colors.rust} />
+              <Text style={styles.warningText} numberOfLines={1}>
+                {warning}
+              </Text>
             </View>
           )}
         </View>
-        {warning && (
-          <View style={styles.warningRow}>
-            <Feather name="alert-triangle" size={12} color={colors.rust} />
-            <Text style={styles.warningText} numberOfLines={1}>
-              {warning}
-            </Text>
-          </View>
-        )}
-      </View>
+      </Pressable>
       {right}
-    </Pressable>
+    </View>
   );
 }
 
@@ -67,6 +72,7 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     padding: 12,
   },
+  main: { flex: 1, flexDirection: 'row', alignItems: 'center', gap: 12, minWidth: 0 },
   emojiWrap: {
     width: 52,
     height: 52,

@@ -74,3 +74,15 @@ describe('pruneChecked / sortForShopping', () => {
     expect(sortForShopping(lines, { a: true }).map((l) => l.key)).toEqual(['b', 'c', 'a']);
   });
 });
+
+describe('purchase rounding in the grocery list', () => {
+  it('half a cucumber is bought as one', () => {
+    const r83 = recipeById('r83')!; // poke bowl: ½ cucumber
+    expect(line(planOf(['r83', r83.servings]), 'cucumber')).toMatchObject({ amount: 1, name: 'Cucumber' });
+  });
+  it('every count/discrete line across the full catalog is a whole number', () => {
+    groceryLinesFromPlan(planOf(...RECIPES.map((r) => [r.id, r.servings] as [string, number])))
+      .filter((l) => l.unit !== null && !['tsp', 'tbsp', 'cup', 'oz', 'lb'].includes(l.unit) || l.unit === null)
+      .forEach((l) => expect([l.ingredientId, Number.isInteger(l.amount)]).toEqual([l.ingredientId, true]));
+  });
+});

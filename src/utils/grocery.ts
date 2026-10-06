@@ -2,7 +2,7 @@ import { ingredientById } from '../data/ingredients';
 import { aisleOrder } from '../theme';
 import { Aisle, GroceryLine, MealPlan, Unit } from '../types';
 import { recipeById } from './recipeCatalog';
-import { fromBase, scaleAmount, toBase, unitFamily, UnitFamily } from './units';
+import { fromBase, roundForPurchase, scaleAmount, toBase, unitFamily, UnitFamily } from './units';
 
 // Every ingredient uses one unit family across the catalog (enforced by the catalog test),
 // so the ingredient id alone identifies a grocery line.
@@ -41,7 +41,9 @@ function accumulate(plan: MealPlan): Map<string, Accumulator> {
 function toLine(acc: Accumulator): GroceryLine | null {
   const def = ingredientById(acc.ingredientId);
   if (!def) return null;
-  const { amount, unit } = fromBase(acc.base, acc.family, acc.sampleUnit);
+  const converted = fromBase(acc.base, acc.family, acc.sampleUnit);
+  const unit = converted.unit;
+  const amount = roundForPurchase(converted.amount, acc.family);
   const name = unit === null && amount > 1 && def.plural ? def.plural : def.name;
   return {
     key: groceryKey(acc.ingredientId),

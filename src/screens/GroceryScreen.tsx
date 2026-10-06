@@ -7,7 +7,7 @@ import { manualKey, useGroceryStore } from '../store/groceryStore';
 import { usePlanStore } from '../store/planStore';
 import { aisleOrder, colors } from '../theme';
 import { groceryItemsFromPlan, sortForShopping } from '../utils/grocery';
-import { unitLabel } from '../utils/units';
+import { formatQuantity } from '../utils/units';
 
 export default function GroceryScreen() {
   const plan = usePlanStore((s) => s.plan);
@@ -92,14 +92,20 @@ export default function GroceryScreen() {
                   const key = item.key;
                   const isChecked = !!checked[key];
                   return (
-                    <Pressable key={key} onPress={() => toggleCheck(key)} style={styles.row}>
+                    <Pressable
+                      key={key}
+                      onPress={() => toggleCheck(key)}
+                      style={styles.row}
+                      accessibilityRole="checkbox"
+                      accessibilityState={{ checked: isChecked }}
+                    >
                       <View style={[styles.checkbox, isChecked && styles.checkboxChecked]}>
                         {isChecked && <Feather name="check" size={13} color="#fff" />}
                       </View>
                       <Text style={[styles.itemName, isChecked && styles.itemNameChecked]}>
                         {item.name}
                       </Text>
-                      <Text style={styles.itemAmount}>{unitLabel(item.amount, item.unit)}</Text>
+                      <Text style={styles.itemAmount}>{formatQuantity(item.amount, item.unit)}</Text>
                     </Pressable>
                   );
                 })}
@@ -107,15 +113,27 @@ export default function GroceryScreen() {
                   const key = m.key;
                   const isChecked = !!checked[key];
                   return (
-                    <Pressable key={key} onPress={() => toggleCheck(key)} style={styles.row}>
-                      <View style={[styles.checkbox, isChecked && styles.checkboxChecked]}>
-                        {isChecked && <Feather name="check" size={13} color="#fff" />}
-                      </View>
-                      <Text style={[styles.itemName, isChecked && styles.itemNameChecked]}>{m.name}</Text>
-                      <Pressable onPress={() => removeManual(m.id)} hitSlop={8}>
+                    <View key={key} style={styles.row}>
+                      <Pressable
+                        onPress={() => toggleCheck(key)}
+                        style={styles.rowMain}
+                        accessibilityRole="checkbox"
+                        accessibilityState={{ checked: isChecked }}
+                      >
+                        <View style={[styles.checkbox, isChecked && styles.checkboxChecked]}>
+                          {isChecked && <Feather name="check" size={13} color="#fff" />}
+                        </View>
+                        <Text style={[styles.itemName, isChecked && styles.itemNameChecked]}>{m.name}</Text>
+                      </Pressable>
+                      <Pressable
+                        onPress={() => removeManual(m.id)}
+                        hitSlop={10}
+                        accessibilityRole="button"
+                        accessibilityLabel={`Remove ${m.name}`}
+                      >
                         <Feather name="x" size={16} color={colors.inkSoft} />
                       </Pressable>
-                    </Pressable>
+                    </View>
                   );
                 })}
               </View>
@@ -153,6 +171,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row', alignItems: 'center', gap: 10, backgroundColor: colors.card,
     borderWidth: 1, borderColor: colors.line, borderRadius: 12, padding: 12,
   },
+  rowMain: { flex: 1, flexDirection: 'row', alignItems: 'center', gap: 10 },
   checkbox: {
     width: 20, height: 20, borderRadius: 6, borderWidth: 1.5, borderColor: colors.sage,
     alignItems: 'center', justifyContent: 'center',

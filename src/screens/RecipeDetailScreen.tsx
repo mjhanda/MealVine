@@ -11,7 +11,7 @@ import { useEatingPrefs, usePreferencesStore } from '../store/preferencesStore';
 import { colors } from '../theme';
 import { describeConflicts, DIETS, dietsFor, isExcluded, recipeConflicts } from '../utils/diets';
 import { ingredientDisplayName, recipeById } from '../utils/recipeCatalog';
-import { scaleAmount, unitLabel } from '../utils/units';
+import { formatQuantity, scaleAmount } from '../utils/units';
 
 
 type Props = NativeStackScreenProps<RootStackParamList, 'RecipeDetail'>;
@@ -138,7 +138,7 @@ export default function RecipeDetailScreen({ route, navigation }: Props) {
             return (
               <View key={i} style={styles.ingredientRow}>
                 <Text style={styles.ingredientName}>{ingredientDisplayName(ing, amount)}</Text>
-                <Text style={styles.ingredientAmount}>{unitLabel(amount, ing.unit)}</Text>
+                <Text style={styles.ingredientAmount}>{formatQuantity(amount, ing.unit)}</Text>
               </View>
             );
           })}
