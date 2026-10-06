@@ -14,6 +14,8 @@ export type Aisle =
   | 'Spices & Baking'
   | 'Snacks & Nuts'
   | 'Frozen'
+  | 'Beverages'
+  | 'Household'
   | 'Other';
 
 export type AllergenTag =
@@ -111,9 +113,14 @@ export interface ManualGroceryItem {
   aisle: Aisle;
 }
 
+// Per-ingredient override of the catalog's `staple` flag: 'have' = always in my pantry,
+// 'need' = staple I still want on the list. Absent = use the catalog default.
+export type PantryOverride = 'have' | 'need';
+
 export interface GroceryState {
   checked: Record<string, boolean>;
   manualItems: ManualGroceryItem[];
+  pantry: Record<string, PantryOverride>;
 }
 
 export interface GroceryLine {

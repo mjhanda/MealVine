@@ -54,3 +54,22 @@ describe('plan ↔ grocery check-off sync', () => {
     expect(useGroceryStore.getState().checked).toEqual({});
   });
 });
+
+describe('grocery store actions', () => {
+  it('addManual guesses the aisle; updateManual edits name and aisle', () => {
+    useGroceryStore.getState().addManual('Milk');
+    const [m] = useGroceryStore.getState().manualItems;
+    expect(m.aisle).toBe('Dairy & Eggs');
+    useGroceryStore.getState().updateManual(m.id, { name: 'Oat milk', aisle: 'Beverages' });
+    expect(useGroceryStore.getState().manualItems[0]).toMatchObject({ name: 'Oat milk', aisle: 'Beverages' });
+  });
+
+  it('setPantry sets and clears overrides', () => {
+    useGroceryStore.setState({ pantry: {} });
+    useGroceryStore.getState().setPantry('carrot', 'have');
+    useGroceryStore.getState().setPantry('salt', 'need');
+    expect(useGroceryStore.getState().pantry).toEqual({ carrot: 'have', salt: 'need' });
+    useGroceryStore.getState().setPantry('carrot', null);
+    expect(useGroceryStore.getState().pantry).toEqual({ salt: 'need' });
+  });
+});

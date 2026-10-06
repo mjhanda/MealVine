@@ -7,6 +7,7 @@ import DietPicker from '../components/preferences/DietPicker';
 import DislikePicker from '../components/preferences/DislikePicker';
 import HouseholdStepper from '../components/preferences/HouseholdStepper';
 import MealTypePicker from '../components/preferences/MealTypePicker';
+import PantryEditor from '../components/preferences/PantryEditor';
 import { usePreferencesStore } from '../store/preferencesStore';
 import { colors } from '../theme';
 import { AllergenTag, DietId, MealType } from '../types';
@@ -61,6 +62,9 @@ export default function SettingsScreen() {
         </Section>
         <Section label="Meal types">
           <MealTypePicker value={mealTypes} onChange={setMealTypes} />
+        </Section>
+        <Section label="Always in my pantry">
+          <PantryEditor />
         </Section>
 
         <Pressable

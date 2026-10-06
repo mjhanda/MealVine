@@ -56,6 +56,8 @@ export const aisleOrder: Aisle[] = [
   'Spices & Baking',
   'Snacks & Nuts',
   'Frozen',
+  'Beverages',
+  'Household',
   'Other',
 ];
 

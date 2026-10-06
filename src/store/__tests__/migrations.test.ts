@@ -61,11 +61,14 @@ describe('pure migrations', () => {
     const grocery = migrateGrocery(groceryV1.state, 1);
     expect(grocery.checked).toEqual({ 'greek-yogurt': true, salt: true, 'manual__manual-9': true });
     expect(grocery.manualItems).toEqual([{ id: 'manual-9', name: 'Dish soap', aisle: 'Other' }]);
+    expect(grocery.pantry).toEqual({});
   });
 
-  it('grocery v2 passes through', () => {
+  it('grocery v2 → v3 adds an empty pantry; v3 passes through', () => {
     const v2 = { checked: { garlic: true }, manualItems: [{ id: 'm', name: 'Milk', aisle: 'Dairy & Eggs' }] };
-    expect(migrateGrocery(v2, 2)).toEqual(v2);
+    expect(migrateGrocery(v2, 2)).toEqual({ ...v2, pantry: {} });
+    const v3 = { ...v2, pantry: { salt: 'need' } };
+    expect(migrateGrocery(v3, 3)).toEqual(v3);
   });
 
   it('favorites drop non-string ids', () => {
