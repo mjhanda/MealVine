@@ -1,10 +1,10 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import { dietMeta } from '../theme';
-import { Diet } from '../types';
+import { proteinMeta } from '../theme';
+import { Protein } from '../types';
 
-export default function DietTag({ diet }: { diet: Diet }) {
-  const meta = dietMeta[diet];
+export default function ProteinTag({ protein }: { protein: Protein }) {
+  const meta = proteinMeta[protein];
   return (
     <View style={[styles.pill, { backgroundColor: meta.bg }]}>
       <Text style={[styles.label, { color: meta.color }]}>{meta.label}</Text>

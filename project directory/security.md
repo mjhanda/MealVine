@@ -33,7 +33,7 @@ Client-Side Security (web and/or mobile)
 ----------------------------------------
 
 -   **Applicable platform(s):** Both — one Expo/React Native codebase targets Web, iOS, and Android.
--   **Sensitive data storage on device:** No sensitive data is collected or stored. All persisted data (meal preferences, active plan, favorites, grocery check-state) is non-sensitive app-preference data in plain AsyncStorage — this is appropriate for this data; nothing here warrants Keychain/Keystore.
+-   **Sensitive data storage on device:** One health-adjacent field: the user's allergy list (`Preferences.allergies`). It is stored only in on-device AsyncStorage alongside the other preferences (diet, disliked ingredients, plan, history, favorites, grocery check-state), never transmitted (the app makes no network calls) and never logged. Treat it as sensitive: no logging, and any export must be user-initiated with consent.
 -   **Certificate/TLS validation:** Not applicable — the app makes no network requests.
 -   **If web frontend exists:** (yes, via Expo web export)
     -   DOM injection handling (e.g., sanitize before `dangerouslySetInnerHTML` or equivalent): Not applicable — no raw HTML injection anywhere in the app; all content renders through React Native Web components.
@@ -85,8 +85,8 @@ Data Classification & Handling
 ------------------------------
 
 -   **Data collected:** None beyond the user's own on-device app preferences (household size, diet choice, meal plan, favorites, grocery list). Nothing is transmitted anywhere.
--   **PII in scope:** No. No third-party SDKs (analytics, payment/subscription providers) are integrated — if any are added later, re-check this line, since they commonly introduce PII collection implicitly.
--   **Encryption at rest:** Not required — no sensitive data is stored (see Client-Side Security above).
+-   **PII in scope:** Limited. No identity or account data. Allergy preferences are health-adjacent personal data held on-device only. No third-party SDKs (analytics, payment/subscription providers) are integrated — if any are added later, re-check this line, since they commonly collect device identifiers implicitly and must never receive preferences.
+-   **Encryption at rest:** Relies on OS sandboxing and device encryption (iOS Data Protection / Android file-based encryption). App-level encryption of AsyncStorage not added: the only sensitive field is an allergy list with no identity attached. Revisit if accounts, sync, or any identifying data are introduced.
 -   **Encryption in transit:** Not applicable — no network transit occurs.
 -   **Audit logging:** Not applicable — no server-side actions to audit.
 

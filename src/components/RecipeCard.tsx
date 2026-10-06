@@ -3,16 +3,17 @@ import React, { ReactNode } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { colors } from '../theme';
 import { Recipe } from '../types';
-import DietTag from './DietTag';
+import ProteinTag from './ProteinTag';
 
 interface Props {
   recipe: Recipe;
   onPress: () => void;
   right?: ReactNode;
   servings?: number;
+  warning?: string; // e.g. "Contains peanut" — shown when a planned recipe conflicts with preferences
 }
 
-export default function RecipeCard({ recipe, onPress, right, servings }: Props) {
+export default function RecipeCard({ recipe, onPress, right, servings, warning }: Props) {
   return (
     <Pressable
       onPress={onPress}
@@ -28,7 +29,7 @@ export default function RecipeCard({ recipe, onPress, right, servings }: Props) 
           {recipe.title}
         </Text>
         <View style={styles.metaRow}>
-          <DietTag diet={recipe.diet} />
+          <ProteinTag protein={recipe.protein} />
           <View style={styles.timeRow}>
             <Feather name="clock" size={12} color={colors.inkSoft} />
             <Text style={styles.timeText}>{recipe.prep + recipe.cook}m</Text>
@@ -40,6 +41,14 @@ export default function RecipeCard({ recipe, onPress, right, servings }: Props) 
             </View>
           )}
         </View>
+        {warning && (
+          <View style={styles.warningRow}>
+            <Feather name="alert-triangle" size={12} color={colors.rust} />
+            <Text style={styles.warningText} numberOfLines={1}>
+              {warning}
+            </Text>
+          </View>
+        )}
       </View>
       {right}
     </Pressable>
@@ -72,4 +81,6 @@ const styles = StyleSheet.create({
   metaRow: { flexDirection: 'row', gap: 6, alignItems: 'center' },
   timeRow: { flexDirection: 'row', alignItems: 'center', gap: 3 },
   timeText: { fontSize: 12, color: colors.inkSoft },
+  warningRow: { flexDirection: 'row', alignItems: 'center', gap: 4, marginTop: 4 },
+  warningText: { fontSize: 12, color: colors.rust, fontWeight: '600', flexShrink: 1 },
 });

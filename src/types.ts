@@ -1,6 +1,7 @@
 export type MealType = 'breakfast' | 'lunch' | 'dinner' | 'snack';
-export type Diet = 'vegetarian' | 'chicken' | 'turkey' | 'fish';
-export type DietPref = 'vegetarian' | 'mixed';
+// The main protein, shown as a label on recipe cards.
+export type Protein = 'vegetarian' | 'chicken' | 'turkey' | 'fish' | 'beef' | 'pork' | 'lamb';
+export type DietId = 'classic' | 'flexitarian' | 'pescetarian' | 'vegetarian' | 'vegan' | 'low-carb' | 'keto' | 'paleo';
 
 export type Aisle =
   | 'Produce'
@@ -69,7 +70,7 @@ export interface Recipe {
   id: string;
   title: string;
   mealType: MealType;
-  diet: Diet;
+  protein: Protein;
   prep: number;
   cook: number;
   servings: number;
@@ -80,7 +81,9 @@ export interface Recipe {
 
 export interface Preferences {
   householdSize: number;
-  diet: DietPref;
+  diet: DietId;
+  allergies: AllergenTag[];
+  dislikes: string[]; // canonical ingredient ids
   mealTypes: MealType[];
   onboardingComplete: boolean;
 }

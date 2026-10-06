@@ -61,10 +61,15 @@ describe('recipe catalog integrity', () => {
     recipe.ingredients.forEach((ing) => expect(ing.amount).toBeGreaterThan(0));
   });
 
-  it('protein label matches ingredients (no meat or fish in "vegetarian" recipes)', () => {
-    const wrong = RECIPES.filter((r) => r.diet === 'vegetarian')
-      .filter((r) => r.ingredients.some((i) => INGREDIENTS[i.id]?.tags.some((t) => MEAT_TAGS.includes(t))))
-      .map((r) => r.id);
+  it('protein label matches ingredients', () => {
+    const tagsOf = (r: (typeof RECIPES)[number]) => new Set(r.ingredients.flatMap((i) => INGREDIENTS[i.id]?.tags ?? []));
+    const wrong = RECIPES.filter((r) => {
+      const tags = tagsOf(r);
+      if (r.protein === 'vegetarian') return MEAT_TAGS.some((t) => tags.has(t));
+      if (r.protein === 'fish') return !tags.has('fish') && !tags.has('shellfish');
+      if (r.protein === 'chicken' || r.protein === 'turkey') return !tags.has('poultry');
+      return false;
+    }).map((r) => `${r.id} (${r.protein})`);
     expect(wrong).toEqual([]);
   });
 });

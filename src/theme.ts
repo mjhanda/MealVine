@@ -1,4 +1,4 @@
-import { Aisle, MealType } from './types';
+import { Aisle, MealType, Protein } from './types';
 
 export const colors = {
   cream: '#FAF6EE',
@@ -18,10 +18,13 @@ export const colors = {
   blueLight: '#DCE9F1',
 };
 
-export const dietMeta: Record<string, { label: string; color: string; bg: string }> = {
+export const proteinMeta: Record<Protein, { label: string; color: string; bg: string }> = {
   vegetarian: { label: 'Vegetarian', color: colors.sage, bg: colors.sageLight },
   chicken: { label: 'Chicken', color: colors.rust, bg: colors.rustLight },
   turkey: { label: 'Turkey', color: colors.rust, bg: colors.rustLight },
+  beef: { label: 'Beef', color: colors.rust, bg: colors.rustLight },
+  pork: { label: 'Pork', color: colors.rust, bg: colors.rustLight },
+  lamb: { label: 'Lamb', color: colors.rust, bg: colors.rustLight },
   fish: { label: 'Seafood', color: colors.blue, bg: colors.blueLight },
 };
 

@@ -39,6 +39,17 @@ describe('pure migrations', () => {
     expect(() => migrateGrocery([], 0)).toThrow(MigrationError);
   });
 
+  it('preferences v1 → v2: mixed → flexitarian, vegetarian stays, adds empty allergies/dislikes', () => {
+    expect(migratePreferences({ ...preferencesV0.state, diet: 'mixed' }, 1)).toMatchObject({ diet: 'flexitarian', allergies: [], dislikes: [] });
+    expect(migratePreferences(preferencesV0.state, 0).diet).toBe('vegetarian');
+    expect(migratePreferences({ diet: 'nonsense' }, 1).diet).toBe('classic');
+  });
+
+  it('preferences v2 keeps allergies and dislikes, drops junk entries', () => {
+    const p = migratePreferences({ diet: 'keto', allergies: ['peanut', 7], dislikes: ['tofu'] }, 2);
+    expect(p).toMatchObject({ diet: 'keto', allergies: ['peanut'], dislikes: ['tofu'] });
+  });
+
   it('preferences fill missing fields with defaults', () => {
     const prefs = migratePreferences({ householdSize: 5 }, 0);
     expect(prefs.householdSize).toBe(5);

@@ -12,9 +12,10 @@ import { MainTabParamList, RootStackParamList } from '../navigation/types';
 import { useHistoryStore } from '../store/historyStore';
 import { cookAgain, markCooked, undoCooked } from '../store/mealActions';
 import { usePlanStore } from '../store/planStore';
-import { usePreferencesStore } from '../store/preferencesStore';
+import { useEatingPrefs, usePreferencesStore } from '../store/preferencesStore';
 import { colors, mealLabels, mealPlural, mealTypeOrder } from '../theme';
 import { MealType, PlanItem } from '../types';
+import { describeConflicts, recipeConflicts } from '../utils/diets';
 import { recipeById } from '../utils/recipeCatalog';
 
 type Nav = NativeStackNavigationProp<RootStackParamList & MainTabParamList>;
@@ -47,6 +48,7 @@ export default function PlanScreen() {
   const restoreItem = usePlanStore((s) => s.restoreItem);
   const clear = usePlanStore((s) => s.clear);
   const mealTypes = usePreferencesStore((s) => s.mealTypes);
+  const prefs = useEatingPrefs();
   const cooked = useHistoryStore((s) => s.cooked);
   const [undo, setUndo] = useState<UndoState | null>(null);
   const dismissUndo = useCallback(() => setUndo(null), []);
@@ -120,11 +122,13 @@ export default function PlanScreen() {
                 {group.items.map((item) => {
                   const recipe = recipeById(item.recipeId);
                   if (!recipe) return null;
+                  const conflicts = describeConflicts(recipeConflicts(recipe, prefs), prefs);
                   return (
                     <RecipeCard
                       key={item.id}
                       recipe={recipe}
                       servings={item.servings}
+                      warning={conflicts.length ? conflicts.join(' · ') : undefined}
                       onPress={() => openRecipe(recipe.id, item.id)}
                       right={
                         <View style={styles.cardActions}>

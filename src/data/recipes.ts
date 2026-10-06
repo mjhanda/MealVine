@@ -4,7 +4,7 @@ import { Recipe } from '../types';
 // 100 recipes across breakfast, lunch, dinner, and snacks.
 export const RECIPES: Recipe[] = [
   {
-    id: 'r1', title: 'Greek Yogurt Berry Parfait', mealType: 'breakfast', diet: 'vegetarian',
+    id: 'r1', title: 'Greek Yogurt Berry Parfait', mealType: 'breakfast', protein: 'vegetarian',
     prep: 5, cook: 0, servings: 2, emoji: '🫐',
     ingredients: [
       { id: 'greek-yogurt', amount: 2, unit: 'cup' },
@@ -20,7 +20,7 @@ export const RECIPES: Recipe[] = [
     ],
   },
   {
-    id: 'r2', title: 'Veggie Egg Scramble', mealType: 'breakfast', diet: 'vegetarian',
+    id: 'r2', title: 'Veggie Egg Scramble', mealType: 'breakfast', protein: 'vegetarian',
     prep: 8, cook: 7, servings: 2, emoji: '🍳',
     ingredients: [
       { id: 'eggs', amount: 4, unit: null },
@@ -39,7 +39,7 @@ export const RECIPES: Recipe[] = [
     ],
   },
   {
-    id: 'r3', title: 'Overnight Oats with Chia', mealType: 'breakfast', diet: 'vegetarian',
+    id: 'r3', title: 'Overnight Oats with Chia', mealType: 'breakfast', protein: 'vegetarian',
     prep: 5, cook: 0, servings: 2, emoji: '🥣',
     ingredients: [
       { id: 'rolled-oats', amount: 1, unit: 'cup' },
@@ -56,7 +56,7 @@ export const RECIPES: Recipe[] = [
     ],
   },
   {
-    id: 'r4', title: 'Spinach Feta Omelette', mealType: 'breakfast', diet: 'vegetarian',
+    id: 'r4', title: 'Spinach Feta Omelette', mealType: 'breakfast', protein: 'vegetarian',
     prep: 5, cook: 8, servings: 2, emoji: '🧀',
     ingredients: [
       { id: 'eggs', amount: 4, unit: null },
@@ -72,7 +72,7 @@ export const RECIPES: Recipe[] = [
     ],
   },
   {
-    id: 'r5', title: 'Avocado Toast with Egg', mealType: 'breakfast', diet: 'vegetarian',
+    id: 'r5', title: 'Avocado Toast with Egg', mealType: 'breakfast', protein: 'vegetarian',
     prep: 5, cook: 6, servings: 2, emoji: '🥑',
     ingredients: [
       { id: 'whole-grain-bread', amount: 4, unit: 'slice' },
@@ -89,7 +89,7 @@ export const RECIPES: Recipe[] = [
     ],
   },
   {
-    id: 'r6', title: 'Turkey Sausage Breakfast Bowl', mealType: 'breakfast', diet: 'turkey',
+    id: 'r6', title: 'Turkey Sausage Breakfast Bowl', mealType: 'breakfast', protein: 'turkey',
     prep: 8, cook: 10, servings: 2, emoji: '🍳',
     ingredients: [
       { id: 'turkey-sausage', amount: 8, unit: 'oz' },
@@ -106,7 +106,7 @@ export const RECIPES: Recipe[] = [
     ],
   },
   {
-    id: 'r7', title: 'Mediterranean Chickpea Salad', mealType: 'lunch', diet: 'vegetarian',
+    id: 'r7', title: 'Mediterranean Chickpea Salad', mealType: 'lunch', protein: 'vegetarian',
     prep: 12, cook: 0, servings: 2, emoji: '🥗',
     ingredients: [
       { id: 'chickpeas', amount: 1, unit: 'can', prep: 'drained and rinsed' },
@@ -125,7 +125,7 @@ export const RECIPES: Recipe[] = [
     ],
   },
   {
-    id: 'r8', title: 'Grilled Chicken Caesar Salad', mealType: 'lunch', diet: 'chicken',
+    id: 'r8', title: 'Grilled Chicken Caesar Salad', mealType: 'lunch', protein: 'chicken',
     prep: 10, cook: 12, servings: 2, emoji: '🥗',
     ingredients: [
       { id: 'chicken-breast', amount: 12, unit: 'oz' },
@@ -142,7 +142,7 @@ export const RECIPES: Recipe[] = [
     ],
   },
   {
-    id: 'r9', title: 'Quinoa Black Bean Bowl', mealType: 'lunch', diet: 'vegetarian',
+    id: 'r9', title: 'Quinoa Black Bean Bowl', mealType: 'lunch', protein: 'vegetarian',
     prep: 10, cook: 15, servings: 2, emoji: '🍲',
     ingredients: [
       { id: 'quinoa', amount: 1, unit: 'cup' },
@@ -160,7 +160,7 @@ export const RECIPES: Recipe[] = [
     ],
   },
   {
-    id: 'r10', title: 'Turkey & Avocado Wrap', mealType: 'lunch', diet: 'turkey',
+    id: 'r10', title: 'Turkey & Avocado Wrap', mealType: 'lunch', protein: 'turkey',
     prep: 8, cook: 0, servings: 2, emoji: '🌯',
     ingredients: [
       { id: 'whole-wheat-tortilla', amount: 2, unit: null },
@@ -178,7 +178,7 @@ export const RECIPES: Recipe[] = [
     ],
   },
   {
-    id: 'r11', title: 'Caprese Sandwich', mealType: 'lunch', diet: 'vegetarian',
+    id: 'r11', title: 'Caprese Sandwich', mealType: 'lunch', protein: 'vegetarian',
     prep: 8, cook: 0, servings: 2, emoji: '🥪',
     ingredients: [
       { id: 'whole-grain-bread', amount: 4, unit: 'slice' },
@@ -195,7 +195,7 @@ export const RECIPES: Recipe[] = [
     ],
   },
   {
-    id: 'r12', title: 'Lemon Herb Shrimp Salad', mealType: 'lunch', diet: 'fish',
+    id: 'r12', title: 'Lemon Herb Shrimp Salad', mealType: 'lunch', protein: 'fish',
     prep: 10, cook: 6, servings: 2, emoji: '🍤',
     ingredients: [
       { id: 'shrimp', amount: 12, unit: 'oz' },
@@ -213,7 +213,7 @@ export const RECIPES: Recipe[] = [
     ],
   },
   {
-    id: 'r13', title: 'Veggie Buddha Bowl', mealType: 'lunch', diet: 'vegetarian',
+    id: 'r13', title: 'Veggie Buddha Bowl', mealType: 'lunch', protein: 'vegetarian',
     prep: 15, cook: 20, servings: 2, emoji: '🥙',
     ingredients: [
       { id: 'sweet-potato', amount: 1, unit: null },
@@ -231,7 +231,7 @@ export const RECIPES: Recipe[] = [
     ],
   },
   {
-    id: 'r14', title: 'Chicken Lettuce Wraps', mealType: 'lunch', diet: 'chicken',
+    id: 'r14', title: 'Chicken Lettuce Wraps', mealType: 'lunch', protein: 'chicken',
     prep: 12, cook: 10, servings: 2, emoji: '🥬',
     ingredients: [
       { id: 'ground-chicken', amount: 12, unit: 'oz' },
@@ -249,7 +249,7 @@ export const RECIPES: Recipe[] = [
     ],
   },
   {
-    id: 'r15', title: 'Lentil Soup', mealType: 'lunch', diet: 'vegetarian',
+    id: 'r15', title: 'Lentil Soup', mealType: 'lunch', protein: 'vegetarian',
     prep: 10, cook: 30, servings: 3, emoji: '🍜',
     ingredients: [
       { id: 'green-lentils', amount: 1.5, unit: 'cup' },
@@ -267,7 +267,7 @@ export const RECIPES: Recipe[] = [
     ],
   },
   {
-    id: 'r16', title: 'Tuna Salad Stuffed Avocado', mealType: 'lunch', diet: 'fish',
+    id: 'r16', title: 'Tuna Salad Stuffed Avocado', mealType: 'lunch', protein: 'fish',
     prep: 8, cook: 0, servings: 2, emoji: '🥑',
     ingredients: [
       { id: 'tuna', amount: 2, unit: 'can', prep: 'drained' },
@@ -284,7 +284,7 @@ export const RECIPES: Recipe[] = [
     ],
   },
   {
-    id: 'r17', title: 'Baked Salmon with Asparagus', mealType: 'dinner', diet: 'fish',
+    id: 'r17', title: 'Baked Salmon with Asparagus', mealType: 'dinner', protein: 'fish',
     prep: 8, cook: 15, servings: 2, emoji: '🐟',
     ingredients: [
       { id: 'salmon', amount: 12, unit: 'oz' },
@@ -301,7 +301,7 @@ export const RECIPES: Recipe[] = [
     ],
   },
   {
-    id: 'r18', title: 'Vegetable Stir-Fry with Tofu', mealType: 'dinner', diet: 'vegetarian',
+    id: 'r18', title: 'Vegetable Stir-Fry with Tofu', mealType: 'dinner', protein: 'vegetarian',
     prep: 12, cook: 12, servings: 2, emoji: '🥦',
     ingredients: [
       { id: 'firm-tofu', amount: 14, unit: 'oz' },
@@ -319,7 +319,7 @@ export const RECIPES: Recipe[] = [
     ],
   },
   {
-    id: 'r19', title: 'Grilled Chicken with Roasted Veggies', mealType: 'dinner', diet: 'chicken',
+    id: 'r19', title: 'Grilled Chicken with Roasted Veggies', mealType: 'dinner', protein: 'chicken',
     prep: 10, cook: 25, servings: 2, emoji: '🍗',
     ingredients: [
       { id: 'chicken-breast', amount: 14, unit: 'oz' },
@@ -337,7 +337,7 @@ export const RECIPES: Recipe[] = [
     ],
   },
   {
-    id: 'r20', title: 'Zucchini Noodle Primavera', mealType: 'dinner', diet: 'vegetarian',
+    id: 'r20', title: 'Zucchini Noodle Primavera', mealType: 'dinner', protein: 'vegetarian',
     prep: 12, cook: 10, servings: 2, emoji: '🍝',
     ingredients: [
       { id: 'zucchini', amount: 3, unit: null },
@@ -355,7 +355,7 @@ export const RECIPES: Recipe[] = [
     ],
   },
   {
-    id: 'r21', title: 'Turkey Chili', mealType: 'dinner', diet: 'turkey',
+    id: 'r21', title: 'Turkey Chili', mealType: 'dinner', protein: 'turkey',
     prep: 10, cook: 30, servings: 4, emoji: '🌶️',
     ingredients: [
       { id: 'ground-turkey', amount: 1, unit: 'lb' },
@@ -373,7 +373,7 @@ export const RECIPES: Recipe[] = [
     ],
   },
   {
-    id: 'r22', title: 'Eggplant Parmesan', mealType: 'dinner', diet: 'vegetarian',
+    id: 'r22', title: 'Eggplant Parmesan', mealType: 'dinner', protein: 'vegetarian',
     prep: 15, cook: 30, servings: 3, emoji: '🍆',
     ingredients: [
       { id: 'eggplant', amount: 1, unit: null },
@@ -391,7 +391,7 @@ export const RECIPES: Recipe[] = [
     ],
   },
   {
-    id: 'r23', title: 'Lemon Garlic Shrimp Pasta', mealType: 'dinner', diet: 'fish',
+    id: 'r23', title: 'Lemon Garlic Shrimp Pasta', mealType: 'dinner', protein: 'fish',
     prep: 10, cook: 12, servings: 2, emoji: '🍋',
     ingredients: [
       { id: 'shrimp', amount: 14, unit: 'oz' },
@@ -409,7 +409,7 @@ export const RECIPES: Recipe[] = [
     ],
   },
   {
-    id: 'r24', title: 'Stuffed Bell Peppers', mealType: 'dinner', diet: 'vegetarian',
+    id: 'r24', title: 'Stuffed Bell Peppers', mealType: 'dinner', protein: 'vegetarian',
     prep: 15, cook: 35, servings: 3, emoji: '🫑',
     ingredients: [
       { id: 'bell-pepper', amount: 4, unit: null },
@@ -427,7 +427,7 @@ export const RECIPES: Recipe[] = [
     ],
   },
   {
-    id: 'r25', title: 'Chicken Fajita Bowl', mealType: 'dinner', diet: 'chicken',
+    id: 'r25', title: 'Chicken Fajita Bowl', mealType: 'dinner', protein: 'chicken',
     prep: 10, cook: 15, servings: 2, emoji: '🌮',
     ingredients: [
       { id: 'chicken-breast', amount: 14, unit: 'oz' },
@@ -445,7 +445,7 @@ export const RECIPES: Recipe[] = [
     ],
   },
   {
-    id: 'r26', title: 'Vegetable Curry with Chickpeas', mealType: 'dinner', diet: 'vegetarian',
+    id: 'r26', title: 'Vegetable Curry with Chickpeas', mealType: 'dinner', protein: 'vegetarian',
     prep: 12, cook: 20, servings: 3, emoji: '🍛',
     ingredients: [
       { id: 'chickpeas', amount: 2, unit: 'can', prep: 'drained and rinsed' },
@@ -463,7 +463,7 @@ export const RECIPES: Recipe[] = [
     ],
   },
   {
-    id: 'r27', title: 'Baked Cod with Quinoa', mealType: 'dinner', diet: 'fish',
+    id: 'r27', title: 'Baked Cod with Quinoa', mealType: 'dinner', protein: 'fish',
     prep: 8, cook: 18, servings: 2, emoji: '🐟',
     ingredients: [
       { id: 'cod', amount: 12, unit: 'oz' },
@@ -481,7 +481,7 @@ export const RECIPES: Recipe[] = [
     ],
   },
   {
-    id: 'r28', title: 'Portobello Mushroom Steaks', mealType: 'dinner', diet: 'vegetarian',
+    id: 'r28', title: 'Portobello Mushroom Steaks', mealType: 'dinner', protein: 'vegetarian',
     prep: 10, cook: 15, servings: 2, emoji: '🍄',
     ingredients: [
       { id: 'portobello', amount: 4, unit: null },
@@ -499,7 +499,7 @@ export const RECIPES: Recipe[] = [
     ],
   },
   {
-    id: 'r29', title: 'Turkey Meatballs with Zoodles', mealType: 'dinner', diet: 'turkey',
+    id: 'r29', title: 'Turkey Meatballs with Zoodles', mealType: 'dinner', protein: 'turkey',
     prep: 15, cook: 20, servings: 3, emoji: '🍝',
     ingredients: [
       { id: 'ground-turkey', amount: 1, unit: 'lb' },
@@ -517,7 +517,7 @@ export const RECIPES: Recipe[] = [
     ],
   },
   {
-    id: 'r30', title: 'Roasted Vegetable Bowl with Chicken', mealType: 'dinner', diet: 'chicken',
+    id: 'r30', title: 'Roasted Vegetable Bowl with Chicken', mealType: 'dinner', protein: 'chicken',
     prep: 12, cook: 25, servings: 2, emoji: '🍗',
     ingredients: [
       { id: 'chicken-breast', amount: 14, unit: 'oz' },
@@ -535,7 +535,7 @@ export const RECIPES: Recipe[] = [
     ],
   },
   {
-    id: 'r31', title: 'Peanut Butter Banana Smoothie', mealType: 'breakfast', diet: 'vegetarian',
+    id: 'r31', title: 'Peanut Butter Banana Smoothie', mealType: 'breakfast', protein: 'vegetarian',
     prep: 5, cook: 0, servings: 2, emoji: '🥤',
     ingredients: [
       { id: 'banana', amount: 2, unit: null },
@@ -552,7 +552,7 @@ export const RECIPES: Recipe[] = [
     ],
   },
   {
-    id: 'r32', title: 'Cottage Cheese & Pineapple Bowl', mealType: 'breakfast', diet: 'vegetarian',
+    id: 'r32', title: 'Cottage Cheese & Pineapple Bowl', mealType: 'breakfast', protein: 'vegetarian',
     prep: 5, cook: 0, servings: 2, emoji: '🍍',
     ingredients: [
       { id: 'cottage-cheese', amount: 2, unit: 'cup' },
@@ -567,7 +567,7 @@ export const RECIPES: Recipe[] = [
     ],
   },
   {
-    id: 'r33', title: 'Smoked Salmon Bagel', mealType: 'breakfast', diet: 'fish',
+    id: 'r33', title: 'Smoked Salmon Bagel', mealType: 'breakfast', protein: 'fish',
     prep: 8, cook: 0, servings: 2, emoji: '🥯',
     ingredients: [
       { id: 'bagel', amount: 2, unit: null },
@@ -584,7 +584,7 @@ export const RECIPES: Recipe[] = [
     ],
   },
   {
-    id: 'r34', title: 'Veggie Breakfast Burrito', mealType: 'breakfast', diet: 'vegetarian',
+    id: 'r34', title: 'Veggie Breakfast Burrito', mealType: 'breakfast', protein: 'vegetarian',
     prep: 10, cook: 10, servings: 2, emoji: '🌯',
     ingredients: [
       { id: 'eggs', amount: 4, unit: null },
@@ -602,7 +602,7 @@ export const RECIPES: Recipe[] = [
     ],
   },
   {
-    id: 'r35', title: 'Greek Chicken Pita', mealType: 'lunch', diet: 'chicken',
+    id: 'r35', title: 'Greek Chicken Pita', mealType: 'lunch', protein: 'chicken',
     prep: 10, cook: 12, servings: 2, emoji: '🥙',
     ingredients: [
       { id: 'chicken-breast', amount: 12, unit: 'oz' },
@@ -620,7 +620,7 @@ export const RECIPES: Recipe[] = [
     ],
   },
   {
-    id: 'r36', title: 'Southwest Turkey Salad', mealType: 'lunch', diet: 'turkey',
+    id: 'r36', title: 'Southwest Turkey Salad', mealType: 'lunch', protein: 'turkey',
     prep: 10, cook: 10, servings: 2, emoji: '🥗',
     ingredients: [
       { id: 'ground-turkey', amount: 10, unit: 'oz' },
@@ -638,7 +638,7 @@ export const RECIPES: Recipe[] = [
     ],
   },
   {
-    id: 'r37', title: 'Caprese Quinoa Salad', mealType: 'lunch', diet: 'vegetarian',
+    id: 'r37', title: 'Caprese Quinoa Salad', mealType: 'lunch', protein: 'vegetarian',
     prep: 12, cook: 15, servings: 2, emoji: '🥗',
     ingredients: [
       { id: 'quinoa', amount: 1, unit: 'cup' },
@@ -656,7 +656,7 @@ export const RECIPES: Recipe[] = [
     ],
   },
   {
-    id: 'r38', title: 'Tuna Niçoise Salad', mealType: 'lunch', diet: 'fish',
+    id: 'r38', title: 'Tuna Niçoise Salad', mealType: 'lunch', protein: 'fish',
     prep: 12, cook: 10, servings: 2, emoji: '🥗',
     ingredients: [
       { id: 'tuna', amount: 2, unit: 'can', prep: 'drained' },
@@ -674,7 +674,7 @@ export const RECIPES: Recipe[] = [
     ],
   },
   {
-    id: 'r39', title: 'Falafel Wrap', mealType: 'lunch', diet: 'vegetarian',
+    id: 'r39', title: 'Falafel Wrap', mealType: 'lunch', protein: 'vegetarian',
     prep: 12, cook: 12, servings: 2, emoji: '🧆',
     ingredients: [
       { id: 'falafel', amount: 8, unit: null },
@@ -692,7 +692,7 @@ export const RECIPES: Recipe[] = [
     ],
   },
   {
-    id: 'r40', title: 'White Bean Tuscan Soup', mealType: 'lunch', diet: 'vegetarian',
+    id: 'r40', title: 'White Bean Tuscan Soup', mealType: 'lunch', protein: 'vegetarian',
     prep: 10, cook: 25, servings: 3, emoji: '🍲',
     ingredients: [
       { id: 'white-beans', amount: 2, unit: 'can', prep: 'drained and rinsed' },
@@ -710,7 +710,7 @@ export const RECIPES: Recipe[] = [
     ],
   },
   {
-    id: 'r41', title: 'Baked Chicken with Sweet Potato Mash', mealType: 'dinner', diet: 'chicken',
+    id: 'r41', title: 'Baked Chicken with Sweet Potato Mash', mealType: 'dinner', protein: 'chicken',
     prep: 10, cook: 30, servings: 2, emoji: '🍗',
     ingredients: [
       { id: 'chicken-breast', amount: 14, unit: 'oz' },
@@ -727,7 +727,7 @@ export const RECIPES: Recipe[] = [
     ],
   },
   {
-    id: 'r42', title: 'Miso Glazed Salmon', mealType: 'dinner', diet: 'fish',
+    id: 'r42', title: 'Miso Glazed Salmon', mealType: 'dinner', protein: 'fish',
     prep: 10, cook: 12, servings: 2, emoji: '🐟',
     ingredients: [
       { id: 'salmon', amount: 12, unit: 'oz' },
@@ -745,7 +745,7 @@ export const RECIPES: Recipe[] = [
     ],
   },
   {
-    id: 'r43', title: 'Black Bean Sweet Potato Tacos', mealType: 'dinner', diet: 'vegetarian',
+    id: 'r43', title: 'Black Bean Sweet Potato Tacos', mealType: 'dinner', protein: 'vegetarian',
     prep: 12, cook: 20, servings: 3, emoji: '🌮',
     ingredients: [
       { id: 'sweet-potato', amount: 2, unit: null },
@@ -763,7 +763,7 @@ export const RECIPES: Recipe[] = [
     ],
   },
   {
-    id: 'r44', title: 'Turkey Taco Skillet', mealType: 'dinner', diet: 'turkey',
+    id: 'r44', title: 'Turkey Taco Skillet', mealType: 'dinner', protein: 'turkey',
     prep: 8, cook: 20, servings: 3, emoji: '🌮',
     ingredients: [
       { id: 'ground-turkey', amount: 1, unit: 'lb' },
@@ -781,7 +781,7 @@ export const RECIPES: Recipe[] = [
     ],
   },
   {
-    id: 'r45', title: 'Shrimp and Broccoli Stir-Fry', mealType: 'dinner', diet: 'fish',
+    id: 'r45', title: 'Shrimp and Broccoli Stir-Fry', mealType: 'dinner', protein: 'fish',
     prep: 10, cook: 10, servings: 2, emoji: '🍤',
     ingredients: [
       { id: 'shrimp', amount: 14, unit: 'oz' },
@@ -799,7 +799,7 @@ export const RECIPES: Recipe[] = [
     ],
   },
   {
-    id: 'r46', title: 'Caprese Stuffed Chicken', mealType: 'dinner', diet: 'chicken',
+    id: 'r46', title: 'Caprese Stuffed Chicken', mealType: 'dinner', protein: 'chicken',
     prep: 12, cook: 22, servings: 2, emoji: '🍗',
     ingredients: [
       { id: 'chicken-breast', amount: 14, unit: 'oz' },
@@ -817,7 +817,7 @@ export const RECIPES: Recipe[] = [
     ],
   },
   {
-    id: 'r47', title: 'Vegetable Fried Rice with Tofu', mealType: 'dinner', diet: 'vegetarian',
+    id: 'r47', title: 'Vegetable Fried Rice with Tofu', mealType: 'dinner', protein: 'vegetarian',
     prep: 10, cook: 15, servings: 2, emoji: '🍚',
     ingredients: [
       { id: 'firm-tofu', amount: 14, unit: 'oz' },
@@ -835,7 +835,7 @@ export const RECIPES: Recipe[] = [
     ],
   },
   {
-    id: 'r48', title: 'White Bean and Kale Stew', mealType: 'dinner', diet: 'vegetarian',
+    id: 'r48', title: 'White Bean and Kale Stew', mealType: 'dinner', protein: 'vegetarian',
     prep: 10, cook: 25, servings: 3, emoji: '🍲',
     ingredients: [
       { id: 'white-beans', amount: 2, unit: 'can', prep: 'drained and rinsed' },
@@ -853,7 +853,7 @@ export const RECIPES: Recipe[] = [
     ],
   },
   {
-    id: 'r49', title: 'Chicken Tikka Masala (Light)', mealType: 'dinner', diet: 'chicken',
+    id: 'r49', title: 'Chicken Tikka Masala (Light)', mealType: 'dinner', protein: 'chicken',
     prep: 12, cook: 22, servings: 3, emoji: '🍛',
     ingredients: [
       { id: 'chicken-breast', amount: 1, unit: 'lb' },
@@ -871,7 +871,7 @@ export const RECIPES: Recipe[] = [
     ],
   },
   {
-    id: 'r50', title: 'Coconut Curry Cod', mealType: 'dinner', diet: 'fish',
+    id: 'r50', title: 'Coconut Curry Cod', mealType: 'dinner', protein: 'fish',
     prep: 10, cook: 18, servings: 2, emoji: '🐟',
     ingredients: [
       { id: 'cod', amount: 12, unit: 'oz' },
@@ -889,7 +889,7 @@ export const RECIPES: Recipe[] = [
     ],
   },
   {
-    id: 'r51', title: 'Hummus & Veggie Sticks', mealType: 'snack', diet: 'vegetarian',
+    id: 'r51', title: 'Hummus & Veggie Sticks', mealType: 'snack', protein: 'vegetarian',
     prep: 10, cook: 0, servings: 2, emoji: '🥕',
     ingredients: [
       { id: 'hummus', amount: 1, unit: 'cup' },
@@ -905,7 +905,7 @@ export const RECIPES: Recipe[] = [
     ],
   },
   {
-    id: 'r52', title: 'Apple Slices with Almond Butter', mealType: 'snack', diet: 'vegetarian',
+    id: 'r52', title: 'Apple Slices with Almond Butter', mealType: 'snack', protein: 'vegetarian',
     prep: 5, cook: 0, servings: 2, emoji: '🍎',
     ingredients: [
       { id: 'apple', amount: 2, unit: null },
@@ -917,7 +917,7 @@ export const RECIPES: Recipe[] = [
     ],
   },
   {
-    id: 'r53', title: 'Roasted Spiced Chickpeas', mealType: 'snack', diet: 'vegetarian',
+    id: 'r53', title: 'Roasted Spiced Chickpeas', mealType: 'snack', protein: 'vegetarian',
     prep: 10, cook: 20, servings: 4, emoji: '🍢',
     ingredients: [
       { id: 'chickpeas', amount: 2, unit: 'can', prep: 'drained and rinsed' },
@@ -934,7 +934,7 @@ export const RECIPES: Recipe[] = [
     ],
   },
   {
-    id: 'r54', title: 'Turkey & Cheese Pinwheels', mealType: 'snack', diet: 'turkey',
+    id: 'r54', title: 'Turkey & Cheese Pinwheels', mealType: 'snack', protein: 'turkey',
     prep: 10, cook: 0, servings: 4, emoji: '🌯',
     ingredients: [
       { id: 'flour-tortilla', amount: 4, unit: null },
@@ -950,7 +950,7 @@ export const RECIPES: Recipe[] = [
     ],
   },
   {
-    id: 'r55', title: 'Soy-Spiced Edamame', mealType: 'snack', diet: 'vegetarian',
+    id: 'r55', title: 'Soy-Spiced Edamame', mealType: 'snack', protein: 'vegetarian',
     prep: 5, cook: 8, servings: 2, emoji: '🫛',
     ingredients: [
       { id: 'edamame-pods', amount: 1, unit: 'lb' },
@@ -965,7 +965,7 @@ export const RECIPES: Recipe[] = [
     ],
   },
   {
-    id: 'r56', title: 'Banana Peanut Butter Bites', mealType: 'snack', diet: 'vegetarian',
+    id: 'r56', title: 'Banana Peanut Butter Bites', mealType: 'snack', protein: 'vegetarian',
     prep: 15, cook: 0, servings: 6, emoji: '🍌',
     ingredients: [
       { id: 'banana', amount: 2, unit: null },
@@ -982,7 +982,7 @@ export const RECIPES: Recipe[] = [
     ],
   },
   {
-    id: 'r57', title: 'Greek Yogurt Honey Bites', mealType: 'snack', diet: 'vegetarian',
+    id: 'r57', title: 'Greek Yogurt Honey Bites', mealType: 'snack', protein: 'vegetarian',
     prep: 5, cook: 0, servings: 2, emoji: '🍯',
     ingredients: [
       { id: 'greek-yogurt', amount: 1.5, unit: 'cup' },
@@ -996,7 +996,7 @@ export const RECIPES: Recipe[] = [
     ],
   },
   {
-    id: 'r58', title: 'Roasted Beet & Feta Bites', mealType: 'snack', diet: 'vegetarian',
+    id: 'r58', title: 'Roasted Beet & Feta Bites', mealType: 'snack', protein: 'vegetarian',
     prep: 10, cook: 25, servings: 4, emoji: '🧀',
     ingredients: [
       { id: 'beet', amount: 3, unit: null },
@@ -1012,7 +1012,7 @@ export const RECIPES: Recipe[] = [
     ],
   },
   {
-    id: 'r59', title: 'Grilled Chicken Skewers', mealType: 'snack', diet: 'chicken',
+    id: 'r59', title: 'Grilled Chicken Skewers', mealType: 'snack', protein: 'chicken',
     prep: 10, cook: 12, servings: 2, emoji: '🍗',
     ingredients: [
       { id: 'chicken-breast', amount: 10, unit: 'oz' },
@@ -1028,7 +1028,7 @@ export const RECIPES: Recipe[] = [
     ],
   },
   {
-    id: 'r60', title: 'Cucumber Cream Cheese Rounds', mealType: 'snack', diet: 'vegetarian',
+    id: 'r60', title: 'Cucumber Cream Cheese Rounds', mealType: 'snack', protein: 'vegetarian',
     prep: 10, cook: 0, servings: 4, emoji: '🥒',
     ingredients: [
       { id: 'cucumber', amount: 2, unit: null },
@@ -1043,7 +1043,7 @@ export const RECIPES: Recipe[] = [
     ],
   },
   {
-    id: 'r61', title: 'Mixed Nut & Dried Fruit Trail Mix', mealType: 'snack', diet: 'vegetarian',
+    id: 'r61', title: 'Mixed Nut & Dried Fruit Trail Mix', mealType: 'snack', protein: 'vegetarian',
     prep: 5, cook: 0, servings: 6, emoji: '🥜',
     ingredients: [
       { id: 'mixed-nuts', amount: 1, unit: 'cup' },
@@ -1056,7 +1056,7 @@ export const RECIPES: Recipe[] = [
     ],
   },
   {
-    id: 'r62', title: 'Baked Parmesan Crackers', mealType: 'snack', diet: 'vegetarian',
+    id: 'r62', title: 'Baked Parmesan Crackers', mealType: 'snack', protein: 'vegetarian',
     prep: 5, cook: 15, servings: 6, emoji: '🥨',
     ingredients: [
       { id: 'crackers', amount: 10, unit: null },
@@ -1071,7 +1071,7 @@ export const RECIPES: Recipe[] = [
     ],
   },
   {
-    id: 'r63', title: 'Lemony Shrimp Cocktail', mealType: 'snack', diet: 'fish',
+    id: 'r63', title: 'Lemony Shrimp Cocktail', mealType: 'snack', protein: 'fish',
     prep: 10, cook: 10, servings: 2, emoji: '🍤',
     ingredients: [
       { id: 'shrimp', amount: 8, unit: 'oz' },
@@ -1085,7 +1085,7 @@ export const RECIPES: Recipe[] = [
     ],
   },
   {
-    id: 'r64', title: 'Avocado & Hummus Rice Cakes', mealType: 'snack', diet: 'vegetarian',
+    id: 'r64', title: 'Avocado & Hummus Rice Cakes', mealType: 'snack', protein: 'vegetarian',
     prep: 5, cook: 0, servings: 2, emoji: '🥑',
     ingredients: [
       { id: 'rice-cakes', amount: 6, unit: null },
@@ -1101,7 +1101,7 @@ export const RECIPES: Recipe[] = [
     ],
   },
   {
-    id: 'r65', title: 'Turkey Jalapeño Roll-Ups', mealType: 'snack', diet: 'turkey',
+    id: 'r65', title: 'Turkey Jalapeño Roll-Ups', mealType: 'snack', protein: 'turkey',
     prep: 10, cook: 0, servings: 4, emoji: '🌶️',
     ingredients: [
       { id: 'deli-turkey', amount: 6, unit: 'oz' },
@@ -1116,7 +1116,7 @@ export const RECIPES: Recipe[] = [
     ],
   },
   {
-    id: 'r66', title: 'Chicken Satay Bites', mealType: 'snack', diet: 'chicken',
+    id: 'r66', title: 'Chicken Satay Bites', mealType: 'snack', protein: 'chicken',
     prep: 10, cook: 10, servings: 2, emoji: '🍡',
     ingredients: [
       { id: 'chicken-thighs', amount: 8, unit: 'oz' },
@@ -1131,7 +1131,7 @@ export const RECIPES: Recipe[] = [
     ],
   },
   {
-    id: 'r67', title: 'Caprese Skewers', mealType: 'snack', diet: 'vegetarian',
+    id: 'r67', title: 'Caprese Skewers', mealType: 'snack', protein: 'vegetarian',
     prep: 10, cook: 0, servings: 4, emoji: '🍅',
     ingredients: [
       { id: 'cherry-tomatoes', amount: 1, unit: 'cup' },
@@ -1146,7 +1146,7 @@ export const RECIPES: Recipe[] = [
     ],
   },
   {
-    id: 'r68', title: 'Cottage Cheese & Honey Bites', mealType: 'snack', diet: 'vegetarian',
+    id: 'r68', title: 'Cottage Cheese & Honey Bites', mealType: 'snack', protein: 'vegetarian',
     prep: 5, cook: 0, servings: 2, emoji: '🥣',
     ingredients: [
       { id: 'cottage-cheese', amount: 1.5, unit: 'cup' },
@@ -1160,7 +1160,7 @@ export const RECIPES: Recipe[] = [
     ],
   },
   {
-    id: 'r69', title: 'Banana Oat Pancakes', mealType: 'breakfast', diet: 'vegetarian',
+    id: 'r69', title: 'Banana Oat Pancakes', mealType: 'breakfast', protein: 'vegetarian',
     prep: 5, cook: 12, servings: 2, emoji: '🥞',
     ingredients: [
       { id: 'banana', amount: 1, unit: null },
@@ -1176,7 +1176,7 @@ export const RECIPES: Recipe[] = [
     ],
   },
   {
-    id: 'r70', title: 'Baked Egg & Turkey Muffins', mealType: 'breakfast', diet: 'turkey',
+    id: 'r70', title: 'Baked Egg & Turkey Muffins', mealType: 'breakfast', protein: 'turkey',
     prep: 10, cook: 25, servings: 4, emoji: '🥚',
     ingredients: [
       { id: 'eggs', amount: 6, unit: null },
@@ -1193,7 +1193,7 @@ export const RECIPES: Recipe[] = [
     ],
   },
   {
-    id: 'r71', title: 'Smoky Black Bean Breakfast Bowl', mealType: 'breakfast', diet: 'vegetarian',
+    id: 'r71', title: 'Smoky Black Bean Breakfast Bowl', mealType: 'breakfast', protein: 'vegetarian',
     prep: 10, cook: 10, servings: 2, emoji: '🍳',
     ingredients: [
       { id: 'eggs', amount: 4, unit: null },
@@ -1210,7 +1210,7 @@ export const RECIPES: Recipe[] = [
     ],
   },
   {
-    id: 'r72', title: 'Blueberry Smoothie Bowl', mealType: 'breakfast', diet: 'vegetarian',
+    id: 'r72', title: 'Blueberry Smoothie Bowl', mealType: 'breakfast', protein: 'vegetarian',
     prep: 10, cook: 0, servings: 2, emoji: '🫐',
     ingredients: [
       { id: 'blueberries', amount: 1.5, unit: 'cup' },
@@ -1226,7 +1226,7 @@ export const RECIPES: Recipe[] = [
     ],
   },
   {
-    id: 'r73', title: 'Chicken Breakfast Hash', mealType: 'breakfast', diet: 'chicken',
+    id: 'r73', title: 'Chicken Breakfast Hash', mealType: 'breakfast', protein: 'chicken',
     prep: 10, cook: 15, servings: 2, emoji: '🥔',
     ingredients: [
       { id: 'potato', amount: 2, unit: null },
@@ -1243,7 +1243,7 @@ export const RECIPES: Recipe[] = [
     ],
   },
   {
-    id: 'r74', title: 'Cinnamon Peach Oatmeal', mealType: 'breakfast', diet: 'vegetarian',
+    id: 'r74', title: 'Cinnamon Peach Oatmeal', mealType: 'breakfast', protein: 'vegetarian',
     prep: 5, cook: 5, servings: 2, emoji: '🍑',
     ingredients: [
       { id: 'rolled-oats', amount: 0.75, unit: 'cup' },
@@ -1259,7 +1259,7 @@ export const RECIPES: Recipe[] = [
     ],
   },
   {
-    id: 'r75', title: 'Rainbow Frittata', mealType: 'breakfast', diet: 'vegetarian',
+    id: 'r75', title: 'Rainbow Frittata', mealType: 'breakfast', protein: 'vegetarian',
     prep: 10, cook: 25, servings: 4, emoji: '🍳',
     ingredients: [
       { id: 'eggs', amount: 6, unit: null },
@@ -1277,7 +1277,7 @@ export const RECIPES: Recipe[] = [
     ],
   },
   {
-    id: 'r76', title: 'Crispy Turkey & Egg Wraps', mealType: 'breakfast', diet: 'turkey',
+    id: 'r76', title: 'Crispy Turkey & Egg Wraps', mealType: 'breakfast', protein: 'turkey',
     prep: 8, cook: 10, servings: 2, emoji: '🌯',
     ingredients: [
       { id: 'flour-tortilla', amount: 2, unit: null },
@@ -1293,7 +1293,7 @@ export const RECIPES: Recipe[] = [
     ],
   },
   {
-    id: 'r77', title: 'Coconut Chia Pudding', mealType: 'breakfast', diet: 'vegetarian',
+    id: 'r77', title: 'Coconut Chia Pudding', mealType: 'breakfast', protein: 'vegetarian',
     prep: 10, cook: 0, servings: 2, emoji: '🥥',
     ingredients: [
       { id: 'chia-seeds', amount: 3, unit: 'tbsp' },
@@ -1308,7 +1308,7 @@ export const RECIPES: Recipe[] = [
     ],
   },
   {
-    id: 'r78', title: 'Salmon & Spinach Omelette', mealType: 'breakfast', diet: 'fish',
+    id: 'r78', title: 'Salmon & Spinach Omelette', mealType: 'breakfast', protein: 'fish',
     prep: 5, cook: 8, servings: 2, emoji: '🐟',
     ingredients: [
       { id: 'eggs', amount: 4, unit: null },
@@ -1323,7 +1323,7 @@ export const RECIPES: Recipe[] = [
     ],
   },
   {
-    id: 'r79', title: 'Hummus & Veggie Flatbread', mealType: 'breakfast', diet: 'vegetarian',
+    id: 'r79', title: 'Hummus & Veggie Flatbread', mealType: 'breakfast', protein: 'vegetarian',
     prep: 10, cook: 5, servings: 2, emoji: '🫓',
     ingredients: [
       { id: 'flatbread', amount: 2, unit: null },
@@ -1339,7 +1339,7 @@ export const RECIPES: Recipe[] = [
     ],
   },
   {
-    id: 'r80', title: 'Cantaloupe & Feta Salad', mealType: 'breakfast', diet: 'vegetarian',
+    id: 'r80', title: 'Cantaloupe & Feta Salad', mealType: 'breakfast', protein: 'vegetarian',
     prep: 8, cook: 0, servings: 2, emoji: '🍈',
     ingredients: [
       { id: 'cantaloupe', amount: 2, unit: 'cup' },
@@ -1355,7 +1355,7 @@ export const RECIPES: Recipe[] = [
     ],
   },
   {
-    id: 'r81', title: 'Chicken Quesadillas with Black Beans', mealType: 'lunch', diet: 'chicken',
+    id: 'r81', title: 'Chicken Quesadillas with Black Beans', mealType: 'lunch', protein: 'chicken',
     prep: 8, cook: 10, servings: 2, emoji: '🌮',
     ingredients: [
       { id: 'flour-tortilla', amount: 2, unit: null },
@@ -1371,7 +1371,7 @@ export const RECIPES: Recipe[] = [
     ],
   },
   {
-    id: 'r82', title: 'Turkey Cobb Salad', mealType: 'lunch', diet: 'turkey',
+    id: 'r82', title: 'Turkey Cobb Salad', mealType: 'lunch', protein: 'turkey',
     prep: 12, cook: 8, servings: 2, emoji: '🥗',
     ingredients: [
       { id: 'romaine', amount: 0.5, unit: 'head' },
@@ -1389,7 +1389,7 @@ export const RECIPES: Recipe[] = [
     ],
   },
   {
-    id: 'r83', title: 'Tuna Poke Bowl', mealType: 'lunch', diet: 'fish',
+    id: 'r83', title: 'Tuna Poke Bowl', mealType: 'lunch', protein: 'fish',
     prep: 12, cook: 0, servings: 2, emoji: '🐟',
     ingredients: [
       { id: 'tuna', amount: 1, unit: 'can', prep: 'drained' },
@@ -1406,7 +1406,7 @@ export const RECIPES: Recipe[] = [
     ],
   },
   {
-    id: 'r84', title: 'Smoky Red Lentil Dal', mealType: 'lunch', diet: 'vegetarian',
+    id: 'r84', title: 'Smoky Red Lentil Dal', mealType: 'lunch', protein: 'vegetarian',
     prep: 10, cook: 25, servings: 4, emoji: '🍛',
     ingredients: [
       { id: 'red-lentils', amount: 0.75, unit: 'cup' },
@@ -1423,7 +1423,7 @@ export const RECIPES: Recipe[] = [
     ],
   },
   {
-    id: 'r85', title: 'Cold Chicken Soba Salad', mealType: 'lunch', diet: 'chicken',
+    id: 'r85', title: 'Cold Chicken Soba Salad', mealType: 'lunch', protein: 'chicken',
     prep: 10, cook: 10, servings: 2, emoji: '🍜',
     ingredients: [
       { id: 'soba', amount: 8, unit: 'oz' },
@@ -1441,7 +1441,7 @@ export const RECIPES: Recipe[] = [
     ],
   },
   {
-    id: 'r86', title: 'Hummus Chickpea Pitas', mealType: 'lunch', diet: 'vegetarian',
+    id: 'r86', title: 'Hummus Chickpea Pitas', mealType: 'lunch', protein: 'vegetarian',
     prep: 10, cook: 0, servings: 2, emoji: '🫓',
     ingredients: [
       { id: 'pita', amount: 2, unit: null },
@@ -1460,7 +1460,7 @@ export const RECIPES: Recipe[] = [
     ],
   },
   {
-    id: 'r87', title: 'Za\'atar Chicken Wraps', mealType: 'lunch', diet: 'chicken',
+    id: 'r87', title: 'Za\'atar Chicken Wraps', mealType: 'lunch', protein: 'chicken',
     prep: 10, cook: 10, servings: 2, emoji: '🌯',
     ingredients: [
       { id: 'flour-tortilla', amount: 2, unit: null },
@@ -1477,7 +1477,7 @@ export const RECIPES: Recipe[] = [
     ],
   },
   {
-    id: 'r88', title: 'Grilled Salmon Rice Bowl', mealType: 'lunch', diet: 'fish',
+    id: 'r88', title: 'Grilled Salmon Rice Bowl', mealType: 'lunch', protein: 'fish',
     prep: 10, cook: 12, servings: 2, emoji: '🍚',
     ingredients: [
       { id: 'salmon', amount: 10, unit: 'oz' },
@@ -1495,7 +1495,7 @@ export const RECIPES: Recipe[] = [
     ],
   },
   {
-    id: 'r89', title: 'Chicken Pesto Pasta', mealType: 'lunch', diet: 'chicken',
+    id: 'r89', title: 'Chicken Pesto Pasta', mealType: 'lunch', protein: 'chicken',
     prep: 8, cook: 12, servings: 2, emoji: '🍝',
     ingredients: [
       { id: 'whole-wheat-penne', amount: 8, unit: 'oz' },
@@ -1511,7 +1511,7 @@ export const RECIPES: Recipe[] = [
     ],
   },
   {
-    id: 'r90', title: 'Turkey Noodle Soup', mealType: 'lunch', diet: 'turkey',
+    id: 'r90', title: 'Turkey Noodle Soup', mealType: 'lunch', protein: 'turkey',
     prep: 10, cook: 20, servings: 4, emoji: '🥣',
     ingredients: [
       { id: 'turkey-breast', amount: 10, unit: 'oz', prep: 'diced' },
@@ -1528,7 +1528,7 @@ export const RECIPES: Recipe[] = [
     ],
   },
   {
-    id: 'r91', title: 'Rosemary Chicken with Root Vegetables', mealType: 'dinner', diet: 'chicken',
+    id: 'r91', title: 'Rosemary Chicken with Root Vegetables', mealType: 'dinner', protein: 'chicken',
     prep: 15, cook: 35, servings: 4, emoji: '🍗',
     ingredients: [
       { id: 'chicken-thighs', amount: 2, unit: 'lb' },
@@ -1547,7 +1547,7 @@ export const RECIPES: Recipe[] = [
     ],
   },
   {
-    id: 'r92', title: 'Turkey Meatballs & Orzo', mealType: 'dinner', diet: 'turkey',
+    id: 'r92', title: 'Turkey Meatballs & Orzo', mealType: 'dinner', protein: 'turkey',
     prep: 15, cook: 25, servings: 4, emoji: '🍲',
     ingredients: [
       { id: 'ground-turkey', amount: 1, unit: 'lb' },
@@ -1564,7 +1564,7 @@ export const RECIPES: Recipe[] = [
     ],
   },
   {
-    id: 'r93', title: 'Sesame Ginger Chicken & Broccoli', mealType: 'dinner', diet: 'chicken',
+    id: 'r93', title: 'Sesame Ginger Chicken & Broccoli', mealType: 'dinner', protein: 'chicken',
     prep: 10, cook: 12, servings: 2, emoji: '🥦',
     ingredients: [
       { id: 'chicken-breast', amount: 12, unit: 'oz' },
@@ -1582,7 +1582,7 @@ export const RECIPES: Recipe[] = [
     ],
   },
   {
-    id: 'r94', title: 'Stuffed Zucchini Boats', mealType: 'dinner', diet: 'vegetarian',
+    id: 'r94', title: 'Stuffed Zucchini Boats', mealType: 'dinner', protein: 'vegetarian',
     prep: 15, cook: 30, servings: 4, emoji: '🥒',
     ingredients: [
       { id: 'zucchini', amount: 4, unit: null },
@@ -1599,7 +1599,7 @@ export const RECIPES: Recipe[] = [
     ],
   },
   {
-    id: 'r95', title: 'One-Pot Chicken & Rice', mealType: 'dinner', diet: 'chicken',
+    id: 'r95', title: 'One-Pot Chicken & Rice', mealType: 'dinner', protein: 'chicken',
     prep: 10, cook: 25, servings: 4, emoji: '🥘',
     ingredients: [
       { id: 'chicken-breast', amount: 1, unit: 'lb' },
@@ -1616,7 +1616,7 @@ export const RECIPES: Recipe[] = [
     ],
   },
   {
-    id: 'r96', title: 'Red Lentil Coconut Curry', mealType: 'dinner', diet: 'vegetarian',
+    id: 'r96', title: 'Red Lentil Coconut Curry', mealType: 'dinner', protein: 'vegetarian',
     prep: 10, cook: 20, servings: 4, emoji: '🍛',
     ingredients: [
       { id: 'red-lentils', amount: 1, unit: 'cup' },
@@ -1634,7 +1634,7 @@ export const RECIPES: Recipe[] = [
     ],
   },
   {
-    id: 'r97', title: 'Crispy-Skin Salmon with Dill Yogurt Sauce', mealType: 'dinner', diet: 'fish',
+    id: 'r97', title: 'Crispy-Skin Salmon with Dill Yogurt Sauce', mealType: 'dinner', protein: 'fish',
     prep: 10, cook: 18, servings: 2, emoji: '🐟',
     ingredients: [
       { id: 'salmon', amount: 12, unit: 'oz' },
@@ -1651,7 +1651,7 @@ export const RECIPES: Recipe[] = [
     ],
   },
   {
-    id: 'r98', title: 'Turkey & Black Bean Enchilada Skillet', mealType: 'dinner', diet: 'turkey',
+    id: 'r98', title: 'Turkey & Black Bean Enchilada Skillet', mealType: 'dinner', protein: 'turkey',
     prep: 15, cook: 25, servings: 4, emoji: '🫔',
     ingredients: [
       { id: 'ground-turkey', amount: 12, unit: 'oz' },
@@ -1668,7 +1668,7 @@ export const RECIPES: Recipe[] = [
     ],
   },
   {
-    id: 'r99', title: 'Ginger Miso Cod & Bok Choy', mealType: 'dinner', diet: 'fish',
+    id: 'r99', title: 'Ginger Miso Cod & Bok Choy', mealType: 'dinner', protein: 'fish',
     prep: 10, cook: 15, servings: 2, emoji: '🍱',
     ingredients: [
       { id: 'cod', amount: 12, unit: 'oz' },
@@ -1686,7 +1686,7 @@ export const RECIPES: Recipe[] = [
     ],
   },
   {
-    id: 'r100', title: 'Layered Veggie Lasagna', mealType: 'dinner', diet: 'vegetarian',
+    id: 'r100', title: 'Layered Veggie Lasagna', mealType: 'dinner', protein: 'vegetarian',
     prep: 20, cook: 35, servings: 4, emoji: '🍝',
     ingredients: [
       { id: 'lasagna-noodles', amount: 10, unit: 'oz' },

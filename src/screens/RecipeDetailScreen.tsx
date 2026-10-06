@@ -3,12 +3,13 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React, { useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import DietTag from '../components/DietTag';
+import ProteinTag from '../components/ProteinTag';
 import { RootStackParamList } from '../navigation/types';
 import { useFavoritesStore } from '../store/favoritesStore';
 import { MAX_SERVINGS, MIN_SERVINGS, usePlanStore } from '../store/planStore';
-import { usePreferencesStore } from '../store/preferencesStore';
+import { useEatingPrefs, usePreferencesStore } from '../store/preferencesStore';
 import { colors } from '../theme';
+import { describeConflicts, DIETS, dietsFor, isExcluded, recipeConflicts } from '../utils/diets';
 import { ingredientDisplayName, recipeById } from '../utils/recipeCatalog';
 import { scaleAmount, unitLabel } from '../utils/units';
 
@@ -18,6 +19,7 @@ type Props = NativeStackScreenProps<RootStackParamList, 'RecipeDetail'>;
 export default function RecipeDetailScreen({ route, navigation }: Props) {
   const recipe = recipeById(route.params.recipeId);
   const householdSize = usePreferencesStore((s) => s.householdSize);
+  const prefs = useEatingPrefs();
   const [draftServings, setDraftServings] = useState(householdSize);
   const favorites = useFavoritesStore((s) => s.favorites);
   const toggleFavorite = useFavoritesStore((s) => s.toggleFavorite);
@@ -44,6 +46,9 @@ export default function RecipeDetailScreen({ route, navigation }: Props) {
   }
 
   const isFav = favorites.includes(recipe.id);
+  const conflicts = recipeConflicts(recipe, prefs);
+  const conflictText = describeConflicts(conflicts, prefs);
+  const fits = dietsFor(recipe).map((d) => DIETS[d].label);
   const inPlanCount = plan.items.filter((item) => item.recipeId === recipe.id).length;
 
   return (
@@ -61,12 +66,24 @@ export default function RecipeDetailScreen({ route, navigation }: Props) {
         <Text style={styles.emoji}>{recipe.emoji}</Text>
         <Text style={styles.title}>{recipe.title}</Text>
         <View style={styles.metaRow}>
-          <DietTag diet={recipe.diet} />
+          <ProteinTag protein={recipe.protein} />
           <View style={styles.timeRow}>
             <Feather name="clock" size={13} color={colors.inkSoft} />
             <Text style={styles.timeText}>{recipe.prep + recipe.cook} min</Text>
           </View>
         </View>
+
+        <Text style={styles.fitsText}>Fits: {fits.join(' · ')}</Text>
+
+        {conflictText.length > 0 && (
+          <View style={[styles.banner, isExcluded(conflicts) && styles.bannerDanger]} accessibilityRole="alert">
+            <Feather name="alert-triangle" size={15} color={isExcluded(conflicts) ? colors.rust : colors.inkSoft} />
+            <Text style={styles.bannerText}>
+              {conflictText.join(' · ')}
+              {conflicts.allergens.length > 0 ? ' — check with your allergies before cooking.' : ''}
+            </Text>
+          </View>
+        )}
 
         <View style={styles.servingsRow}>
           <View style={styles.servingsLabelRow}>
@@ -156,6 +173,13 @@ const styles = StyleSheet.create({
   metaRow: { flexDirection: 'row', justifyContent: 'center', gap: 8, marginTop: 10, alignItems: 'center' },
   timeRow: { flexDirection: 'row', alignItems: 'center', gap: 4 },
   timeText: { fontSize: 12, color: colors.inkSoft },
+  fitsText: { fontSize: 12, color: colors.inkSoft, textAlign: 'center', marginTop: 10 },
+  banner: {
+    flexDirection: 'row', gap: 8, alignItems: 'flex-start', marginTop: 16, padding: 12, borderRadius: 12,
+    backgroundColor: colors.card, borderWidth: 1, borderColor: colors.line,
+  },
+  bannerDanger: { backgroundColor: colors.rustLight, borderColor: colors.rust },
+  bannerText: { flex: 1, fontSize: 13, color: colors.ink, lineHeight: 18 },
   servingsRow: {
     flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 24,
     backgroundColor: colors.card, borderWidth: 1, borderColor: colors.line, borderRadius: 14, padding: 14,

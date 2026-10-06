@@ -7,9 +7,10 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import RecipeCard from '../components/RecipeCard';
 import { RootStackParamList } from '../navigation/types';
 import { usePlanStore } from '../store/planStore';
-import { usePreferencesStore } from '../store/preferencesStore';
+import { useEatingPrefs, usePreferencesStore } from '../store/preferencesStore';
 import { colors, mealLabels, mealTypeOrder } from '../theme';
 import { MealType } from '../types';
+import { DIETS } from '../utils/diets';
 import { filterRecipes } from '../utils/recipeCatalog';
 
 type Nav = NativeStackNavigationProp<RootStackParamList>;
@@ -17,7 +18,7 @@ type Nav = NativeStackNavigationProp<RootStackParamList>;
 export default function BrowseScreen() {
   const navigation = useNavigation<Nav>();
   const mealTypes = usePreferencesStore((s) => s.mealTypes);
-  const diet = usePreferencesStore((s) => s.diet);
+  const prefs = useEatingPrefs();
   const householdSize = usePreferencesStore((s) => s.householdSize);
   const plan = usePlanStore((s) => s.plan);
   const addItem = usePlanStore((s) => s.addItem);
@@ -35,8 +36,8 @@ export default function BrowseScreen() {
   }, [mealTypes]);
 
   const recipes = useMemo(
-    () => filterRecipes(filter, showAllDiets ? 'mixed' : diet, search),
-    [filter, diet, showAllDiets, search]
+    () => filterRecipes({ mealType: filter, query: search, prefs, showAllDiets }),
+    [filter, prefs, showAllDiets, search]
   );
 
   const inPlanCounts = useMemo(() => {
@@ -47,7 +48,7 @@ export default function BrowseScreen() {
     return counts;
   }, [plan.items]);
 
-  const showDietNote = diet === 'vegetarian' && !showAllDiets;
+  const isClassic = prefs.diet === 'classic';
 
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
@@ -93,13 +94,18 @@ export default function BrowseScreen() {
         })}
       </ScrollView>
 
-      {showDietNote && (
+      {!isClassic && (
         <View style={styles.dietNoteRow}>
-          <Text style={styles.dietNote}>Showing vegetarian recipes only</Text>
-          <Pressable onPress={() => setShowAllDiets(true)} hitSlop={8}>
-            <Text style={styles.dietNoteLink}>Show all</Text>
+          <Text style={styles.dietNote}>
+            {showAllDiets ? 'Showing all diets' : `Showing ${DIETS[prefs.diet].label.toLowerCase()} recipes`}
+          </Text>
+          <Pressable onPress={() => setShowAllDiets((v) => !v)} hitSlop={8} accessibilityRole="button">
+            <Text style={styles.dietNoteLink}>{showAllDiets ? `Only ${DIETS[prefs.diet].label.toLowerCase()}` : 'Show all diets'}</Text>
           </Pressable>
         </View>
+      )}
+      {(prefs.allergies.length > 0 || prefs.dislikes.length > 0) && (
+        <Text style={styles.exclusionNote}>Recipes with your allergies or avoided ingredients are hidden.</Text>
       )}
 
       <ScrollView contentContainerStyle={{ padding: 20, paddingTop: 12, gap: 10 }}>
@@ -139,13 +145,14 @@ const styles = StyleSheet.create({
     borderRadius: 12, borderWidth: 1, borderColor: colors.line, backgroundColor: colors.card,
   },
   searchInput: { flex: 1, fontSize: 13.5, color: colors.ink },
-  filterRow: { marginTop: 12, paddingHorizontal: 20, flexGrow: 0 },
+  filterRow: { marginTop: 12, paddingHorizontal: 20, flexGrow: 0, flexShrink: 0 },
   filterPill: { paddingHorizontal: 14, paddingVertical: 8, borderRadius: 20 },
   filterPillInactive: { backgroundColor: colors.card, borderWidth: 1, borderColor: colors.line },
   filterLabel: { fontWeight: '700', fontSize: 13 },
   dietNoteRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: 20, marginTop: 12 },
   dietNote: { fontSize: 12.5, color: colors.inkSoft },
   dietNoteLink: { fontSize: 12.5, color: colors.forest, fontWeight: '700' },
+  exclusionNote: { fontSize: 12, color: colors.inkSoft, paddingHorizontal: 20, marginTop: 6 },
   addBtn: {
     width: 34, height: 34, borderRadius: 17, backgroundColor: colors.forest,
     alignItems: 'center', justifyContent: 'center',
