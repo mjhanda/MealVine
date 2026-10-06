@@ -1,11 +1,14 @@
 import { Feather, Ionicons } from '@expo/vector-icons';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React, { useState } from 'react';
-import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import ProteinTag from '../components/ProteinTag';
+import RatingButtons from '../components/RatingButtons';
 import { RootStackParamList } from '../navigation/types';
 import { useFavoritesStore } from '../store/favoritesStore';
+import { useHistoryStore } from '../store/historyStore';
+import { useRecipeNotesStore } from '../store/recipeNotesStore';
 import { MAX_SERVINGS, MIN_SERVINGS, usePlanStore } from '../store/planStore';
 import { useEatingPrefs, usePreferencesStore } from '../store/preferencesStore';
 import { colors } from '../theme';
@@ -20,6 +23,9 @@ export default function RecipeDetailScreen({ route, navigation }: Props) {
   const recipe = recipeById(route.params.recipeId);
   const householdSize = usePreferencesStore((s) => s.householdSize);
   const prefs = useEatingPrefs();
+  const note = useRecipeNotesStore((s) => s.notes[route.params.recipeId] ?? '');
+  const setNote = useRecipeNotesStore((s) => s.setNote);
+  const timesCooked = useHistoryStore((s) => s.cooked.filter((e) => e.recipeId === route.params.recipeId).length);
   const [draftServings, setDraftServings] = useState(householdSize);
   const favorites = useFavoritesStore((s) => s.favorites);
   const toggleFavorite = useFavoritesStore((s) => s.toggleFavorite);
@@ -164,6 +170,23 @@ export default function RecipeDetailScreen({ route, navigation }: Props) {
             </View>
           ))}
         </View>
+
+        <Text style={styles.sectionHeader}>Your notes</Text>
+        <TextInput
+          value={note}
+          onChangeText={(text) => setNote(recipe.id, text)}
+          placeholder="Tweaks for next time — e.g. half the chili, add lime"
+          placeholderTextColor={colors.inkSoft}
+          multiline
+          style={styles.noteInput}
+          accessibilityLabel="Your notes for this recipe"
+        />
+        <View style={styles.ratingRow}>
+          <Text style={styles.ratingLabel}>
+            {timesCooked ? `Cooked ${timesCooked}× · how was it?` : 'How was it?'}
+          </Text>
+          <RatingButtons recipeId={recipe.id} />
+        </View>
       </ScrollView>
     </SafeAreaView>
   );
@@ -228,5 +251,11 @@ const styles = StyleSheet.create({
     alignItems: 'center', justifyContent: 'center',
   },
   stepBadgeText: { color: '#fff', fontSize: 12, fontWeight: '700' },
+  noteInput: {
+    minHeight: 72, padding: 12, borderRadius: 12, borderWidth: 1, borderColor: colors.line,
+    backgroundColor: colors.card, fontSize: 14, color: colors.ink, textAlignVertical: 'top',
+  },
+  ratingRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 16 },
+  ratingLabel: { fontSize: 13.5, color: colors.inkSoft, fontWeight: '600' },
   stepText: { flex: 1, fontSize: 14, color: colors.ink, lineHeight: 21, paddingTop: 2 },
 });

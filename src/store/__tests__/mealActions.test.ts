@@ -5,6 +5,7 @@ import { conflictingPlanItems, cookAgain, markCooked, resetAllData, undoCooked }
 import { useFavoritesStore } from '../favoritesStore';
 import { useGroceryStore } from '../groceryStore';
 import { usePreferencesStore } from '../preferencesStore';
+import { useRecipeNotesStore } from '../recipeNotesStore';
 import { usePlanStore } from '../planStore';
 
 beforeEach(() => {
@@ -86,7 +87,9 @@ describe('resetAllData', () => {
     useFavoritesStore.setState({ favorites: ['r1'] });
     useGroceryStore.setState({ checked: { eggs: true }, manualItems: [{ id: 'm', name: 'Foil', aisle: 'Household' }], pantry: { salt: 'need' } });
     usePreferencesStore.setState({ onboardingComplete: true, diet: 'vegan', allergies: ['peanut'] });
+    useRecipeNotesStore.setState({ notes: { r1: 'less honey' }, ratings: { r1: 'up' } });
     resetAllData();
+    expect(useRecipeNotesStore.getState()).toMatchObject({ notes: {}, ratings: {} });
     expect(usePlanStore.getState().plan.items).toEqual([]);
     expect(useHistoryStore.getState().cooked).toEqual([]);
     expect(useFavoritesStore.getState().favorites).toEqual([]);

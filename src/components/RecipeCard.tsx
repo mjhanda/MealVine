@@ -11,9 +11,11 @@ interface Props {
   right?: ReactNode;
   servings?: number;
   warning?: string; // e.g. "Contains peanut" — shown when a planned recipe conflicts with preferences
+  timesCooked?: number;
+  liked?: boolean;
 }
 
-export default function RecipeCard({ recipe, onPress, right, servings, warning }: Props) {
+export default function RecipeCard({ recipe, onPress, right, servings, warning, timesCooked, liked }: Props) {
   return (
     // The card is a plain container; the recipe area and the `right` actions are sibling
     // pressables. Nesting them would put a <button> inside a <button> on web (invalid, and
@@ -38,6 +40,13 @@ export default function RecipeCard({ recipe, onPress, right, servings, warning }
               <Feather name="clock" size={12} color={colors.inkSoft} />
               <Text style={styles.timeText}>{recipe.prep + recipe.cook}m</Text>
             </View>
+            {!!timesCooked && (
+              <View style={styles.timeRow} accessibilityLabel={`Cooked ${timesCooked} times`}>
+                <Feather name="check-circle" size={12} color={colors.sage} />
+                <Text style={styles.timeText}>{timesCooked}×</Text>
+              </View>
+            )}
+            {liked && <Feather name="thumbs-up" size={12} color={colors.sage} accessibilityLabel="You liked this" />}
             {servings !== undefined && (
               <View style={styles.timeRow}>
                 <Feather name="users" size={12} color={colors.inkSoft} />

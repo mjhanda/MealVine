@@ -6,6 +6,7 @@ import { useGroceryStore } from './groceryStore';
 import { useHistoryStore } from './historyStore';
 import { usePlanStore } from './planStore';
 import { usePreferencesStore } from './preferencesStore';
+import { useRecipeNotesStore } from './recipeNotesStore';
 
 // Cross-store actions live here so screens never reach into two stores' internals themselves.
 
@@ -43,5 +44,6 @@ export function resetAllData(): void {
   useHistoryStore.setState({ cooked: [] });
   useFavoritesStore.setState({ favorites: [] });
   useGroceryStore.setState({ checked: {}, manualItems: [], pantry: {} });
+  useRecipeNotesStore.setState({ notes: {}, ratings: {} });
   usePreferencesStore.getState().resetOnboarding();
 }

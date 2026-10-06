@@ -7,12 +7,15 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import RecipeCard from '../components/RecipeCard';
 import { MainTabParamList, RootStackParamList } from '../navigation/types';
 import { useFavoritesStore } from '../store/favoritesStore';
+import { useHistoryStore } from '../store/historyStore';
+import { useRecipeNotesStore } from '../store/recipeNotesStore';
 import { usePlanStore } from '../store/planStore';
 import { useEatingPrefs, usePreferencesStore } from '../store/preferencesStore';
 import { useUndoStore } from '../store/undoStore';
 import { colors, mealLabels, mealTypeOrder } from '../theme';
 import { MealType } from '../types';
 import { DIETS } from '../utils/diets';
+import { cookStats } from '../utils/history';
 import { filterRecipes, recipeById, RecipeFilter, RelaxableFilter, relaxSuggestions } from '../utils/recipeCatalog';
 
 type Nav = NativeStackNavigationProp<RootStackParamList & MainTabParamList>;
@@ -77,6 +80,9 @@ export default function BrowseScreen() {
   const [favoritesOnly, setFavoritesOnly] = useState(false);
   const [hidePlanned, setHidePlanned] = useState(false);
   const favorites = useFavoritesStore((s) => s.favorites);
+  const history = useHistoryStore((s) => s.cooked);
+  const stats = useMemo(() => cookStats(history), [history]);
+  const ratings = useRecipeNotesStore((s) => s.ratings);
 
   const chips: { id: MealType | 'all'; label: string }[] = useMemo(() => {
     const selected = mealTypes.length > 0 ? mealTypes : mealTypeOrder;
@@ -254,6 +260,8 @@ export default function BrowseScreen() {
             <RecipeCard
               key={recipe.id}
               recipe={recipe}
+              timesCooked={stats.get(recipe.id)?.times}
+              liked={ratings[recipe.id] === 'up'}
               onPress={() => navigation.navigate('RecipeDetail', { recipeId: recipe.id })}
               right={
                 swapRecipe ? (

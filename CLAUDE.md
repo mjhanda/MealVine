@@ -24,7 +24,8 @@ no network calls, no auth.
 - `src/store/*` — one Zustand store per concern (`preferencesStore`, `planStore`, `favoritesStore`, `groceryStore`), each persisted independently. Don't reach into another store's state directly from a component — read via that store's own hook.
 - `src/utils/recipeCatalog.ts` — recipe lookup and browse filtering (search by title/ingredient, diet, meal type); pure functions, no side effects.
 - `src/utils/grocery.ts` — ingredient aggregation across the plan's meals into one line per canonical ingredient (each plan entry scales its recipe by its own serving count; amounts convert within a unit family via `src/utils/units.ts`), grouped by aisle.
-- `src/store/historyStore.ts` — cooked meals (`CookedEntry`, newest first, capped at 500).
+- `src/store/historyStore.ts` — cooked meals (`CookedEntry`, newest first, capped at 500). `src/utils/history.ts` derives per-recipe cook counts.
+- `src/store/recipeNotesStore.ts` — private per-recipe notes and thumbs up/down ratings.
 - `src/store/mealActions.ts` — the only place allowed to touch two stores in one action (`markCooked`, `undoCooked`, `cookAgain`). `src/store/planGrocerySync.ts` similarly keeps grocery check-offs pruned to the plan; it's started once in `App.tsx`.
 - `src/store/undoStore.ts` + `src/components/UndoBar.tsx` — one app-wide undo slot rendered once in `RootNavigator`, so undo survives navigation. Any reversible user action (remove, cook, swap) calls `useUndoStore.getState().show(message, undoFn)` instead of confirming first.
 - `src/screens/CookScreen.tsx` + `src/utils/cooking.ts` + `src/store/timerStore.ts` — cooking mode. Step durations and per-step ingredients are *derived* from step text (no per-step authoring); write steps that name their ingredients and times ("Simmer the rice 18 minutes"). Timer alerts go through `src/services/timerNotifications.ts` (native only).

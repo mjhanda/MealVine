@@ -4,10 +4,12 @@ import { useKeepAwake } from 'expo-keep-awake';
 import React, { useEffect, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import RatingButtons from '../components/RatingButtons';
 import { RootStackParamList } from '../navigation/types';
 import { markCooked, undoCooked } from '../store/mealActions';
 import { usePlanStore } from '../store/planStore';
 import { usePreferencesStore } from '../store/preferencesStore';
+import { useRecipeNotesStore } from '../store/recipeNotesStore';
 import { useTimerStore } from '../store/timerStore';
 import { useUndoStore } from '../store/undoStore';
 import { colors, radius, spacing } from '../theme';
@@ -38,6 +40,7 @@ export default function CookScreen({ route, navigation }: Props) {
   const stopTimer = useTimerStore((s) => s.stop);
   const showUndo = useUndoStore((s) => s.show);
   const [index, setIndex] = useState(0);
+  const note = useRecipeNotesStore((s) => s.notes[route.params.recipeId] ?? '');
   const now = useNow(timer !== null);
 
   if (!recipe) {
@@ -98,6 +101,12 @@ export default function CookScreen({ route, navigation }: Props) {
       )}
 
       <ScrollView contentContainerStyle={styles.body}>
+        {index === 0 && note.trim().length > 0 && (
+          <View style={styles.noteCard}>
+            <Feather name="edit-3" size={14} color={colors.forest} />
+            <Text style={styles.noteText}>{note}</Text>
+          </View>
+        )}
         <Text style={styles.stepLabel}>Step {index + 1}</Text>
         <Text style={styles.step}>{step}</Text>
 
@@ -129,6 +138,12 @@ export default function CookScreen({ route, navigation }: Props) {
         )}
       </ScrollView>
 
+      {isLast && (
+        <View style={styles.rateRow}>
+          <Text style={styles.rateLabel}>How was it?</Text>
+          <RatingButtons recipeId={recipe.id} size={20} />
+        </View>
+      )}
       <View style={styles.nav}>
         <Pressable
           onPress={() => setIndex(index - 1)}
@@ -184,6 +199,13 @@ const styles = StyleSheet.create({
   ingRow: { flexDirection: 'row', justifyContent: 'space-between', gap: spacing.md },
   ingName: { flex: 1, fontSize: 16, color: colors.ink },
   ingAmount: { fontSize: 16, fontWeight: '700', color: colors.inkSoft },
+  noteCard: {
+    flexDirection: 'row', gap: spacing.sm, padding: spacing.md, borderRadius: radius.md,
+    backgroundColor: colors.goldLight, alignItems: 'flex-start',
+  },
+  noteText: { flex: 1, fontSize: 15, color: colors.ink, lineHeight: 21 },
+  rateRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: spacing.lg, paddingTop: spacing.md },
+  rateLabel: { fontSize: 15, fontWeight: '700', color: colors.forest },
   nav: { flexDirection: 'row', gap: spacing.md, padding: spacing.xl },
   navBtn: { flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 6, paddingVertical: 18, borderRadius: radius.md },
   navBack: { backgroundColor: colors.card, borderWidth: 1, borderColor: colors.line },
