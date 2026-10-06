@@ -6,6 +6,7 @@ import FavoritesScreen from '../screens/FavoritesScreen';
 import GroceryScreen from '../screens/GroceryScreen';
 import PlanScreen from '../screens/PlanScreen';
 import SettingsScreen from '../screens/SettingsScreen';
+import { usePlanStore } from '../store/planStore';
 import { colors } from '../theme';
 import { MainTabParamList } from './types';
 
@@ -20,6 +21,7 @@ const ICONS: Record<keyof MainTabParamList, keyof typeof Feather.glyphMap> = {
 };
 
 export default function MainTabs() {
+  const planCount = usePlanStore((s) => s.plan.items.length);
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
@@ -32,7 +34,14 @@ export default function MainTabs() {
         ),
       })}
     >
-      <Tab.Screen name="Plan" component={PlanScreen} />
+      <Tab.Screen
+        name="Plan"
+        component={PlanScreen}
+        options={{
+          tabBarBadge: planCount > 0 ? planCount : undefined,
+          tabBarBadgeStyle: { backgroundColor: colors.gold, color: colors.ink, fontSize: 11 },
+        }}
+      />
       <Tab.Screen name="Browse" component={BrowseScreen} />
       <Tab.Screen name="Grocery" component={GroceryScreen} />
       <Tab.Screen name="Favorites" component={FavoritesScreen} />

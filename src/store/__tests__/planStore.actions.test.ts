@@ -31,3 +31,26 @@ describe('updateServings', () => {
     expect(onion.amount).toBe(3);
   });
 });
+
+describe('replaceRecipe / restoreItem', () => {
+  it('swaps the recipe in place, keeping id, position, and servings', () => {
+    const a = usePlanStore.getState().addItem('r1', 2);
+    const b = usePlanStore.getState().addItem('r2', 5);
+    usePlanStore.getState().addItem('r3', 2);
+    usePlanStore.getState().replaceRecipe(b, 'r95');
+    expect(usePlanStore.getState().plan.items.map((i) => [i.id, i.recipeId, i.servings])).toEqual([
+      [a, 'r1', 2],
+      [b, 'r95', 5],
+      [expect.any(String), 'r3', 2],
+    ]);
+  });
+
+  it('restoreItem re-adds a removed entry once', () => {
+    const a = usePlanStore.getState().addItem('r1', 2);
+    const item = usePlanStore.getState().plan.items[0];
+    usePlanStore.getState().removeItem(a);
+    usePlanStore.getState().restoreItem(item);
+    usePlanStore.getState().restoreItem(item);
+    expect(usePlanStore.getState().plan.items).toEqual([item]);
+  });
+});

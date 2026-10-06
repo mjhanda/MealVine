@@ -52,6 +52,8 @@ interface PlanState extends PersistedPlan {
   // Puts a previously removed entry back (undo); no-op if an entry with that id exists.
   restoreItem: (item: PlanItem) => void;
   updateServings: (id: string, servings: number) => void;
+  // Swaps the recipe of an entry in place (same id, position, and servings).
+  replaceRecipe: (id: string, recipeId: string) => void;
   clear: () => void;
 }
 
@@ -88,6 +90,13 @@ export const usePlanStore = create<PlanState>()(
             items: state.plan.items.map((item) =>
               item.id === id ? { ...item, servings: clampServings(servings) } : item
             ),
+          },
+        })),
+      replaceRecipe: (id, recipeId) =>
+        set((state) => ({
+          plan: {
+            ...state.plan,
+            items: state.plan.items.map((item) => (item.id === id ? { ...item, recipeId } : item)),
           },
         })),
       clear: () => set({ plan: { items: [] } }),

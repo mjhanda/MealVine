@@ -7,7 +7,8 @@ export type RootStackParamList = {
 
 export type MainTabParamList = {
   Plan: undefined;
-  Browse: undefined;
+  // swapItemId set = choosing a replacement for that plan entry.
+  Browse: { swapItemId?: string } | undefined;
   Grocery: undefined;
   Favorites: undefined;
   Settings: undefined;

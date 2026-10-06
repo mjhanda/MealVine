@@ -3,6 +3,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React, { useEffect } from 'react';
 import { ActivityIndicator, View } from 'react-native';
 import { notify } from '../components/dialogs';
+import UndoBar from '../components/UndoBar';
 import OnboardingScreen from '../screens/OnboardingScreen';
 import RecipeDetailScreen from '../screens/RecipeDetailScreen';
 import { useStorageHealth } from '../store/persistence';
@@ -51,6 +52,7 @@ export default function RootNavigator() {
           </>
         )}
       </Stack.Navigator>
+      <UndoBar />
     </NavigationContainer>
   );
 }

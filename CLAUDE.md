@@ -26,6 +26,7 @@ no network calls, no auth.
 - `src/utils/grocery.ts` — ingredient aggregation across the plan's meals into one line per canonical ingredient (each plan entry scales its recipe by its own serving count; amounts convert within a unit family via `src/utils/units.ts`), grouped by aisle.
 - `src/store/historyStore.ts` — cooked meals (`CookedEntry`, newest first, capped at 500).
 - `src/store/mealActions.ts` — the only place allowed to touch two stores in one action (`markCooked`, `undoCooked`, `cookAgain`). `src/store/planGrocerySync.ts` similarly keeps grocery check-offs pruned to the plan; it's started once in `App.tsx`.
+- `src/store/undoStore.ts` + `src/components/UndoBar.tsx` — one app-wide undo slot rendered once in `RootNavigator`, so undo survives navigation. Any reversible user action (remove, cook, swap) calls `useUndoStore.getState().show(message, undoFn)` instead of confirming first.
 - `src/components/dialogs.ts` — `confirmAction`/`notify`. Use these, never `Alert.alert` directly: react-native-web ignores Alert buttons, so confirmations silently fail on web.
 - `src/store/persistence.ts` — `persistOptions()` (versioned persist config shared by every store) and `useStorageHealth` (non-persisted record of stores that failed to load).
 - `src/store/planStore.ts` — owns the plan list (`MealPlan.items`); `migratePlan()` upgrades both the v1-app weekly grid (via `migrateLegacyPlan()`) and the unversioned v2 list.

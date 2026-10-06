@@ -1,18 +1,18 @@
 import { Feather } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import React, { useCallback, useMemo, useRef, useState } from 'react';
+import React, { useMemo } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { confirmAction } from '../components/dialogs';
 import RecentlyCooked from '../components/RecentlyCooked';
 import RecipeCard from '../components/RecipeCard';
-import UndoBar from '../components/UndoBar';
 import { MainTabParamList, RootStackParamList } from '../navigation/types';
 import { useHistoryStore } from '../store/historyStore';
 import { cookAgain, markCooked, undoCooked } from '../store/mealActions';
 import { usePlanStore } from '../store/planStore';
 import { useEatingPrefs, usePreferencesStore } from '../store/preferencesStore';
+import { useUndoStore } from '../store/undoStore';
 import { colors, mealLabels, mealPlural, mealTypeOrder } from '../theme';
 import { MealType, PlanItem } from '../types';
 import { describeConflicts, recipeConflicts } from '../utils/diets';
@@ -35,12 +35,6 @@ function buildGroups(mealTypes: MealType[], items: PlanItem[]): PlanGroup[] {
     .filter((group) => group.items.length > 0);
 }
 
-interface UndoState {
-  id: number;
-  message: string;
-  undo: () => void;
-}
-
 export default function PlanScreen() {
   const navigation = useNavigation<Nav>();
   const plan = usePlanStore((s) => s.plan);
@@ -50,11 +44,7 @@ export default function PlanScreen() {
   const mealTypes = usePreferencesStore((s) => s.mealTypes);
   const prefs = useEatingPrefs();
   const cooked = useHistoryStore((s) => s.cooked);
-  const [undo, setUndo] = useState<UndoState | null>(null);
-  const dismissUndo = useCallback(() => setUndo(null), []);
-  const undoSeq = useRef(0);
-  const showUndo = (message: string, undoFn: () => void) =>
-    setUndo({ id: ++undoSeq.current, message, undo: undoFn });
+  const showUndo = useUndoStore((s) => s.show);
 
   const groups = useMemo(() => buildGroups(mealTypes, plan.items), [mealTypes, plan.items]);
   const total = plan.items.length;
@@ -133,6 +123,15 @@ export default function PlanScreen() {
                       right={
                         <View style={styles.cardActions}>
                           <Pressable
+                            onPress={() => navigation.navigate('Browse', { swapItemId: item.id })}
+                            style={styles.removeBtn}
+                            hitSlop={4}
+                            accessibilityRole="button"
+                            accessibilityLabel={`Swap ${recipe.title} for another recipe`}
+                          >
+                            <Feather name="repeat" size={16} color={colors.inkSoft} />
+                          </Pressable>
+                          <Pressable
                             onPress={() => handleCooked(item, recipe.title)}
                             style={styles.cookedBtn}
                             hitSlop={6}
@@ -162,7 +161,7 @@ export default function PlanScreen() {
 
         {total > 0 && (
           <Text style={styles.footerText}>
-            Tap ✓ when you&apos;ve cooked a meal. Tip: use the {mealLabels.snack.toLowerCase()}s in Browse to
+            Tap ✓ when you&apos;ve cooked a meal, or ⟳ to swap it. Tip: use the {mealLabels.snack.toLowerCase()}s in Browse to
             round out your day.
           </Text>
         )}
@@ -178,7 +177,6 @@ export default function PlanScreen() {
         />
       </ScrollView>
 
-      <UndoBar id={undo?.id ?? null} message={undo?.message ?? ''} onUndo={() => undo?.undo()} onDismiss={dismissUndo} />
     </SafeAreaView>
   );
 }
@@ -207,7 +205,7 @@ const styles = StyleSheet.create({
     letterSpacing: 0.6, marginBottom: 8,
   },
   cardList: { gap: 10 },
-  cardActions: { flexDirection: 'row', alignItems: 'center', gap: 6 },
+  cardActions: { flexDirection: 'row', alignItems: 'center', gap: 2 },
   cookedBtn: {
     width: 36, height: 36, borderRadius: 18, backgroundColor: colors.sageLight,
     alignItems: 'center', justifyContent: 'center',
