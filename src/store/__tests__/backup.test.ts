@@ -90,7 +90,7 @@ describe('backup export / import', () => {
 
   it.each([
     ['not json', '{oops', 'not valid JSON'],
-    ['wrong format', JSON.stringify({ hello: 1 }), "isn't a MealVine backup"],
+    ['wrong format', JSON.stringify({ hello: 1 }), "isn't a Dishcart backup"],
     ['newer backup format', JSON.stringify({ format: BACKUP_FORMAT, backupVersion: 99, stores: {} }), 'newer version'],
     ['newer store version', JSON.stringify({ format: BACKUP_FORMAT, backupVersion: 1, stores: { plan: { version: 99, state: {} } } }), 'newer version'],
     ['damaged store', JSON.stringify({ format: BACKUP_FORMAT, backupVersion: 1, stores: { history: { version: 1, state: { nope: 1 } } } }), 'damaged'],

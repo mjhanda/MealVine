@@ -1,14 +1,13 @@
 import { useState } from 'react';
-import { Platform } from 'react-native';
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { OFFLINE_GRACE_DAYS } from '../config/purchases';
-import { EntitlementSnapshot, hasAccess, SubscriptionStatus } from '../utils/subscription';
+import { EntitlementSnapshot, isAdFree, SubscriptionStatus } from '../utils/subscription';
 import { isRecord, MigrationError, persistOptions } from './persistence';
 
-// What the app knows about the subscription. Only the last *verified* expiry is persisted (for
+// What the app knows about the ad-free subscription. Only the last *verified* expiry is persisted (for
 // offline grace); the live status always comes from the store via src/services/purchases.ts.
-// Deliberately NOT part of backups — an imported file must never grant access.
+// Deliberately NOT part of backups — an imported file must never remove ads.
 
 interface PersistedSubscription {
   entitledUntil: number | null;
@@ -61,15 +60,12 @@ export const useSubscriptionStore = create<SubscriptionState>()(
   )
 );
 
-// Dev builds and web (not a store target) run without a working store.
-const ALLOW_UNAVAILABLE = __DEV__ || Platform.OS === 'web';
-
-// Whether the app is unlocked right now. `now` is captured per mount; the grace window is days
-// long, so it doesn't need to tick.
-export function useHasAccess(): boolean {
+// True when ads should be hidden. `now` is captured per mount; the grace window is days long,
+// so it doesn't need to tick.
+export function useAdFree(): boolean {
   const status = useSubscriptionStore((s) => s.status);
   const entitledUntil = useSubscriptionStore((s) => s.entitledUntil);
   const everEntitled = useSubscriptionStore((s) => s.everEntitled);
   const [now] = useState(Date.now);
-  return hasAccess({ status, entitledUntil, everEntitled, allowUnavailable: ALLOW_UNAVAILABLE, now, graceDays: OFFLINE_GRACE_DAYS });
+  return isAdFree({ status, entitledUntil, everEntitled, now, graceDays: OFFLINE_GRACE_DAYS });
 }

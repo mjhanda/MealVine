@@ -3,6 +3,7 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React, { useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import AdSlot from '../ads/AdSlot';
 import ProteinTag from '../components/ProteinTag';
 import RatingButtons from '../components/RatingButtons';
 import { RootStackParamList } from '../navigation/types';
@@ -185,6 +186,10 @@ export default function RecipeDetailScreen({ route, navigation }: Props) {
           ))}
         </View>
 
+        <View style={styles.adWrap}>
+          <AdSlot placement="recipe-detail" />
+        </View>
+
         <Text style={styles.sectionHeader}>Your notes</Text>
         <TextInput
           value={note}
@@ -265,6 +270,7 @@ const styles = StyleSheet.create({
     alignItems: 'center', justifyContent: 'center',
   },
   stepBadgeText: { color: '#fff', fontSize: 12, fontWeight: '700' },
+  adWrap: { marginTop: 24 },
   noteInput: {
     minHeight: 72, padding: 12, borderRadius: 12, borderWidth: 1, borderColor: colors.line,
     backgroundColor: colors.card, fontSize: 14, color: colors.ink, textAlignVertical: 'top',

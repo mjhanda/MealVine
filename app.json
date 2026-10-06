@@ -1,14 +1,14 @@
 {
   "expo": {
-    "name": "MealVine",
-    "slug": "mealvine",
+    "name": "Dishcart",
+    "slug": "dishcart",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.bionicsun.mealvine",
+      "bundleIdentifier": "com.bionicsun.dishcart",
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false
       }
@@ -21,7 +21,7 @@
         "monochromeImage": "./assets/android-icon-monochrome.png"
       },
       "predictiveBackGestureEnabled": false,
-      "package": "com.bionicsun.mealvine"
+      "package": "com.bionicsun.dishcart"
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -29,6 +29,6 @@
     "plugins": [
       "expo-sharing"
     ],
-    "scheme": "mealvine"
+    "scheme": "dishcart"
   }
 }

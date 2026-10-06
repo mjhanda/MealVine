@@ -34,30 +34,28 @@ export function entitlementFrom(info: CustomerInfoLike, entitlementId: string): 
   };
 }
 
-interface AccessInput {
+interface AdFreeInput {
   status: SubscriptionStatus;
   entitledUntil: number | null; // last verified expiry, persisted
   everEntitled: boolean; // persisted: has this device ever had a verified active entitlement
-  allowUnavailable: boolean; // dev builds and web: let the app run without a store
   now: number;
   graceDays: number;
 }
 
-// Decides whether the app is usable. Live answers from the store win; when the store can't be
-// reached, a recently verified subscription keeps working for a short grace period. While the
-// first answer is loading, a previously entitled device isn't blocked (no paywall flash).
-export function hasAccess({ status, entitledUntil, everEntitled, allowUnavailable, now, graceDays }: AccessInput): boolean {
+// Whether to hide ads. Live answers from the store win; when the store can't be reached (or
+// hasn't answered yet), a recently verified subscriber stays ad-free through a short grace
+// period, so paying users never see ads just because they're offline.
+export function isAdFree({ status, entitledUntil, everEntitled, now, graceDays }: AdFreeInput): boolean {
   switch (status) {
     case 'active':
       return true;
     case 'inactive':
-      return false;
     case 'unavailable':
-      return allowUnavailable;
+      return false;
     case 'loading':
     case 'offline':
       if (!everEntitled) return false;
-      if (entitledUntil === null) return true; // non-expiring entitlement
+      if (entitledUntil === null) return true; // non-expiring entitlement (e.g. lifetime code)
       return now < entitledUntil + graceDays * DAY_MS;
   }
 }
@@ -81,25 +79,3 @@ export function periodLabel(iso: string | null): string {
   return n === 1 ? one : `${n} ${many}`;
 }
 
-export interface IntroLike {
-  price: number;
-  periodUnit: string;
-  periodNumberOfUnits: number;
-  cycles: number;
-}
-
-// A free intro phase → "14-day free trial"; a paid intro or none → null.
-export function trialLabel(intro: IntroLike | null): string | null {
-  if (!intro || intro.price > 0) return null;
-  const total = intro.periodNumberOfUnits * Math.max(1, intro.cycles);
-  const unit = UNIT_LABEL[intro.periodUnit.toUpperCase()];
-  if (!unit) return null;
-  return `${total}-${unit[0]} free trial`;
-}
-
-// "$29.99/year" vs "$4.99/month" → "Save 50%". Null if not a saving.
-export function annualSavings(monthlyPrice: number, annualPrice: number): string | null {
-  if (monthlyPrice <= 0 || annualPrice <= 0) return null;
-  const pct = Math.round((1 - annualPrice / (monthlyPrice * 12)) * 100);
-  return pct >= 5 ? `Save ${pct}%` : null;
-}

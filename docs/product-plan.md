@@ -1,4 +1,4 @@
-# MealVine — Product Plan
+# Dishcart — Product Plan
 
 Last updated 2026-10-05. Work items live in GitHub issues (mirrored in
 [`docs/TASKS.md`](TASKS.md)); this file covers what the product is, what's
@@ -17,10 +17,11 @@ whenever you like and tick them off.
 - **Positioning:** works offline, no account, private by default, and your
   data stays exportable. Competitive context (Mealime's 2026-10-21 shutdown) is
   in `TASKS.md` and issue #25.
-- **Name / publisher:** **MealVine**, published by **Bionic Sun LLC** on the App Store and Google Play
-  (`com.bionicsun.mealvine`). No competitor's name or branding may appear in the app or store listing.
-- **Business model:** subscription, $4.99/month plus a yearly plan, 14-day free trial, then a hard
-  paywall (shown after onboarding). RevenueCat handles purchases and entitlement (`pro`).
+- **Name / publisher:** **Dishcart**, published by **Bionic Sun LLC** on the App Store and Google Play
+  (`com.bionicsun.dishcart`). No competitor's name or branding may appear in the app or store listing.
+- **Business model:** free with ads; **$0.99/month** subscription removes ads (RevenueCat entitlement
+  `ad_free`); store-issued codes also remove ads. No trial, no annual plan. Ad network not chosen yet;
+  ad slots render nothing until one is registered (`src/ads/`).
 
 ## 2. Core loop and what's built
 
@@ -61,12 +62,12 @@ architecture and security notes.
 | 2026-10-05 | Allergen tags are conservative | A missed tag is a safety bug; an extra tag only hides a recipe. Disclaimer shown wherever allergies are set. |
 | 2026-10-05 | v1 "veg + lean protein" maps to Flexitarian | It was exactly "no red meat, no pork". |
 | 2026-10-05 | Undo instead of confirm for reversible actions | Faster, and less nagging; confirmations only for bulk-destructive actions. |
-| 2026-10-05 | Name MealVine, publisher Bionic Sun LLC, both stores | Owner decision (#25). Trademark caution: an app called "MealTwine" exists. |
-| 2026-10-05 | $4.99/mo + yearly subscription, 14-day trial, hard paywall, RevenueCat | Owner decision. Trade-off accepted: one third-party SDK with network access, so store privacy labels declare purchase history + an anonymous ID; meal data stays on-device. |
+| 2026-10-05 | Name MealVine → **Dishcart**; publisher Bionic Sun LLC; both stores | Owner decision (#25). |
+| 2026-10-05 | ~~$4.99/mo + yearly, 14-day trial, hard paywall~~ → **free with ads, $0.99/mo removes ads**, no annual | Owner decision. RevenueCat for the subscription (anonymous ID + purchase history declared). Codes must be store-issued (App Store guideline 3.1.1). Ads deferred behind a provider interface so no ad SDK ships until a network is chosen and privacy docs are updated. |
 
 ## 5. Open decisions (owner)
 
-- **Yearly price** (recommendation: $29.99, "save 50%") and **launch date**.
+- **Ad network** (recommendation: Google AdMob) and **launch date**.
 - **#15 Photos:** self-shot, licensed, or AI-generated with disclosure; bundled vs CDN.
 - **Red meat and pork recipes (#16):** none exist today, so Classic is
   effectively Flexitarian. Adding them is needed for a general audience.

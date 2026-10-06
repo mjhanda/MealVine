@@ -1,5 +1,5 @@
 import Constants, { ExecutionEnvironment } from 'expo-constants';
-import { Platform } from 'react-native';
+import { AppState, Linking, Platform } from 'react-native';
 import Purchases, { CustomerInfo, LOG_LEVEL, PURCHASES_ERROR_CODE, PurchasesPackage } from 'react-native-purchases';
 import { ENTITLEMENT_ID, revenueCatApiKey } from '../config/purchases';
 import { useSubscriptionStore } from '../store/subscriptionStore';
@@ -27,6 +27,10 @@ export function initPurchases(): void {
   Purchases.configure({ apiKey });
   configured = true;
   Purchases.addCustomerInfoUpdateListener(applyInfo);
+  // Codes redeemed in the Play Store (or App Store settings) take effect when the user comes back.
+  AppState.addEventListener('change', (state) => {
+    if (state === 'active') refreshSubscription();
+  });
   refreshSubscription();
 }
 
@@ -78,4 +82,15 @@ export async function restore(): Promise<PurchaseOutcome & { found?: boolean }> 
 export async function manageSubscription(): Promise<void> {
   if (!configured) return;
   await Purchases.showManageSubscriptions().catch((e) => console.warn('[purchases] manage failed', e));
+}
+
+// Store-issued codes only (Apple Offer Codes / Google Play promo codes) — App Store guideline
+// 3.1.1 forbids unlocking features with the app's own codes. iOS shows Apple's redemption sheet;
+// Android opens the Play Store's redeem page, and the foreground refresh picks up the result.
+export async function redeemCode(): Promise<void> {
+  if (Platform.OS === 'ios' && configured) {
+    await Purchases.presentCodeRedemptionSheet().catch((e) => console.warn('[purchases] redeem sheet failed', e));
+    return;
+  }
+  if (Platform.OS === 'android') await Linking.openURL('https://play.google.com/redeem');
 }

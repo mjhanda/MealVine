@@ -1,12 +1,12 @@
 # CLAUDE.md
 
 ## 1. Project Overview
-MealVine — a free-form meal planner (deliberately NOT a weekly planner or
+Dishcart — a free-form meal planner (deliberately NOT a weekly planner or
 calendar). Users set household size, diet, allergies, disliked ingredients,
 and meal types, then search a curated recipe catalog and add meals to a plan
 list (each entry keeps its own servings). The grocery list is derived from the
 plan; meals are marked cooked whenever the user cooks them.
-Single-user, offline-first, no backend of our own (RevenueCat handles subscriptions). See `docs/product-plan.md` for product
+Single-user, offline-first, no backend of our own (RevenueCat handles the ad-free subscription). See `docs/product-plan.md` for product
 context and decisions, and GitHub issues (mirrored in `docs/TASKS.md`) for the backlog.
 
 ## 2. Tech Stack
@@ -30,7 +30,7 @@ no network calls, no auth.
 - `src/store/undoStore.ts` + `src/components/UndoBar.tsx` — one app-wide undo slot rendered once in `RootNavigator`, so undo survives navigation. Any reversible user action (remove, cook, swap) calls `useUndoStore.getState().show(message, undoFn)` instead of confirming first.
 - `src/screens/CookScreen.tsx` + `src/utils/cooking.ts` + `src/store/timerStore.ts` — cooking mode. Step durations and per-step ingredients are *derived* from step text (no per-step authoring); write steps that name their ingredients and times ("Simmer the rice 18 minutes"). Timer alerts go through `src/services/timerNotifications.ts` (native only).
 - Backup: `src/utils/backup.ts` (pure format, parse, merge/replace) + `src/store/backupActions.ts` (snapshots every persisted store via its own `persist.getOptions()`) + `src/services/backupFiles.ts` (file save/pick). **Any new persisted store must be added to `STORES` and `MIGRATORS` in `backupActions.ts`**, or it won't be backed up.
-- Subscription: `src/config/purchases.ts` (entitlement `pro`, trial length, env-var SDK keys), `src/services/purchases.ts` (the ONLY RevenueCat caller), `src/store/subscriptionStore.ts` (live status + persisted last-verified expiry for a 3-day offline grace; `useHasAccess()`), `src/utils/subscription.ts` (pure access rules and paywall labels), `src/screens/PaywallScreen.tsx`. Flow: onboarding → paywall (14-day trial via store intro offer) → app. Web, Expo Go, and dev builds without keys run unlocked (`status: 'unavailable'`); release builds without keys show the paywall. Purchases need a dev build (`eas build --profile development`), not Expo Go. The subscription store is intentionally excluded from backups.
+- Monetization: free with ads; a $0.99/month subscription (entitlement `ad_free`) removes them. `src/config/purchases.ts` (entitlement, env-var SDK keys), `src/services/purchases.ts` (the ONLY RevenueCat caller; purchase, restore, store-issued code redemption), `src/store/subscriptionStore.ts` (live status + persisted last-verified expiry for a 3-day offline grace; `useAdFree()`), `src/utils/subscription.ts` (pure rules), `src/screens/RemoveAdsScreen.tsx`. Ads: `src/ads/` — screens only ever render `<AdSlot placement=…/>`; a network plugs in as an `AdProvider` via `registerAdProvider()` (none registered yet, so release builds show no ads; dev builds show dashed placeholders). Never add placements in onboarding, cooking mode, or settings. Never implement custom unlock codes (App Store 3.1.1). The subscription store is excluded from backups.
 - `src/components/dialogs.ts` — `confirmAction`/`notify`. Use these, never `Alert.alert` directly: react-native-web ignores Alert buttons, so confirmations silently fail on web.
 - `src/store/persistence.ts` — `persistOptions()` (versioned persist config shared by every store) and `useStorageHealth` (non-persisted record of stores that failed to load).
 - `src/store/planStore.ts` — owns the plan list (`MealPlan.items`); `migratePlan()` upgrades both the v1-app weekly grid (via `migrateLegacyPlan()`) and the unversioned v2 list.

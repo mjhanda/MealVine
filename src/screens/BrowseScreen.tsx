@@ -4,6 +4,8 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import React, { useMemo, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import AdSlot from '../ads/AdSlot';
+import { feedAdAfter } from '../ads/placement';
 import RecipeCard from '../components/RecipeCard';
 import { MainTabParamList, RootStackParamList } from '../navigation/types';
 import { useFavoritesStore } from '../store/favoritesStore';
@@ -258,39 +260,41 @@ export default function BrowseScreen() {
             ))}
           </View>
         )}
-        {recipes.map((recipe) => {
+        {recipes.map((recipe, index) => {
           const inPlan = (inPlanCounts.get(recipe.id) || 0) > 0;
           return (
-            <RecipeCard
-              key={recipe.id}
-              recipe={recipe}
-              timesCooked={stats.get(recipe.id)?.times}
-              liked={ratings[recipe.id] === 'up'}
-              onPress={() => navigation.navigate('RecipeDetail', { recipeId: recipe.id })}
-              right={
-                swapRecipe ? (
-                  <Pressable
-                    onPress={() => handleSwap(recipe.id, recipe.title)}
-                    style={styles.addBtn}
-                    hitSlop={8}
-                    accessibilityRole="button"
-                    accessibilityLabel={`Swap in ${recipe.title}`}
-                  >
-                    <Feather name="repeat" size={16} color="#fff" />
-                  </Pressable>
-                ) : (
-                  <Pressable
-                    onPress={() => handleToggle(recipe.id, recipe.title)}
-                    style={[styles.addBtn, inPlan && styles.addBtnInPlan]}
-                    hitSlop={8}
-                    accessibilityRole="button"
-                    accessibilityLabel={inPlan ? `Remove ${recipe.title} from plan` : `Add ${recipe.title} to plan`}
-                  >
-                    <Feather name={inPlan ? 'check' : 'plus'} size={18} color="#fff" />
-                  </Pressable>
-                )
-              }
-            />
+            <React.Fragment key={recipe.id}>
+              <RecipeCard
+                recipe={recipe}
+                timesCooked={stats.get(recipe.id)?.times}
+                liked={ratings[recipe.id] === 'up'}
+                onPress={() => navigation.navigate('RecipeDetail', { recipeId: recipe.id })}
+                right={
+                  swapRecipe ? (
+                    <Pressable
+                      onPress={() => handleSwap(recipe.id, recipe.title)}
+                      style={styles.addBtn}
+                      hitSlop={8}
+                      accessibilityRole="button"
+                      accessibilityLabel={`Swap in ${recipe.title}`}
+                    >
+                      <Feather name="repeat" size={16} color="#fff" />
+                    </Pressable>
+                  ) : (
+                    <Pressable
+                      onPress={() => handleToggle(recipe.id, recipe.title)}
+                      style={[styles.addBtn, inPlan && styles.addBtnInPlan]}
+                      hitSlop={8}
+                      accessibilityRole="button"
+                      accessibilityLabel={inPlan ? `Remove ${recipe.title} from plan` : `Add ${recipe.title} to plan`}
+                    >
+                      <Feather name={inPlan ? 'check' : 'plus'} size={18} color="#fff" />
+                    </Pressable>
+                  )
+                }
+              />
+              {!swapRecipe && feedAdAfter(index, recipes.length) && <AdSlot placement="browse-feed" />}
+            </React.Fragment>
           );
         })}
       </ScrollView>

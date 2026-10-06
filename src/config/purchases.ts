@@ -4,17 +4,16 @@ import { Platform } from 'react-native';
 // (EXPO_PUBLIC_RC_IOS_KEY / EXPO_PUBLIC_RC_ANDROID_KEY, see .env.example) so dev/test/prod
 // keys can differ per build. Never put the RevenueCat *secret* key anywhere in this repo.
 
-// The single entitlement every MealVine subscription grants.
-export const ENTITLEMENT_ID = 'pro';
+// Dishcart is free with ads. The only subscription ($0.99/month, no trial, no annual plan)
+// grants this entitlement, which removes ads. Store-issued offer/promo codes grant it too.
+export const ENTITLEMENT_ID = 'ad_free';
 
 // Keeps access working through short offline stretches after the last verified expiry.
 export const OFFLINE_GRACE_DAYS = 3;
 
-export const TRIAL_DAYS = 14;
-
 export const TERMS_URL = 'https://www.apple.com/legal/internet-services/itunes/dev/stdeula/';
 // TODO(#21): replace with the hosted privacy policy once it's published.
-export const PRIVACY_URL = 'https://github.com/mjhanda/MealVine/blob/main/docs/release/privacy-policy.md';
+export const PRIVACY_URL = 'https://github.com/mjhanda/Dishcart/blob/main/docs/release/privacy-policy.md';
 
 export function revenueCatApiKey(): string | null {
   const key = Platform.select({

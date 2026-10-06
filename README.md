@@ -1,4 +1,4 @@
-# MealVine
+# Dishcart
 
 A personal meal planner: pick meals that fit how you eat, get one
 aisle-sorted grocery list, and cook whenever you like. It's not a calendar.
@@ -14,7 +14,7 @@ Your plan is a list of meals to cook, and you tick each one off when it's done.
 - **Cook:** step-by-step recipes with servings scaling; mark meals cooked and
   re-plan favorites from "Recently cooked".
 - **Private:** works offline, no account; all meal data stays on the device.
-- **Subscription:** 14-day free trial, then $4.99/month or yearly (RevenueCat; App Store / Google Play billing).
+- **Free with ads:** $0.99/month removes them (RevenueCat; App Store / Google Play billing); store promo codes work too.
 
 Product context and decisions: [`docs/product-plan.md`](docs/product-plan.md).
 Backlog: GitHub issues (snapshot in [`docs/TASKS.md`](docs/TASKS.md)).

@@ -4,15 +4,16 @@
 > submission (both stores require a link). Replace every `[bracketed]` value.
 > Last reviewed against the code on 2026-10-05.
 
-**MealVine** · **Bionic Sun LLC** · Effective **[date]**
+**Dishcart** · **Bionic Sun LLC** · Effective **[date]**
 
 ## The short version
 
-Everything you enter in MealVine (your plan, recipes, grocery list, notes,
+Everything you enter in Dishcart (your plan, recipes, grocery list, notes,
 and preferences, including allergies) stays on your device. There is no
-account. The only network activity is checking your subscription, which is
-handled by Apple or Google and our subscription provider, RevenueCat. We
-never sell your data and the app contains no ads or analytics.
+account. Dishcart is free; an optional subscription removes ads. The only
+network activity is checking that subscription, through Apple or Google and
+our subscription provider, RevenueCat. We never sell your data and the app
+contains no analytics.
 
 ## What the app stores, and where
 
@@ -27,11 +28,12 @@ Your allergy list counts as health-related information. It is used only on
 your device to hide recipes, and it never leaves your device unless you
 export a backup yourself (see below).
 
-## Subscriptions
+## Ad-free subscription
 
-MealVine is a subscription ($4.99/month or a yearly plan) with a 14-day free
-trial. Payment is processed entirely by the App Store or Google Play; we
-never see your payment details.
+Dishcart is free to use. An optional **$0.99/month** subscription removes
+ads. Payment is processed entirely by the App Store or Google Play; we never
+see your payment details. Promotional codes are redeemed through Apple's or
+Google's own redemption screens.
 
 To know whether your subscription is active, the app uses **RevenueCat**, a
 subscription service. RevenueCat receives a random, anonymous app user ID
@@ -43,6 +45,15 @@ https://www.revenuecat.com/privacy
 
 You can manage or cancel your subscription in your App Store or Google Play
 account settings.
+
+## Advertising
+
+[As of this version the app shows no ads and includes no advertising
+software. **Before an ad network is added, this section must be rewritten**
+to name the network, the data it collects (typically device advertising
+identifiers, coarse location, and ad interaction data), how to opt out, and
+the consent prompts shown (Apple App Tracking Transparency; GDPR consent in
+the EU/UK). Ads are never shown to ad-free subscribers.]
 
 ## What else leaves your device
 

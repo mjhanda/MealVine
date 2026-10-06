@@ -1,6 +1,6 @@
 export type RootStackParamList = {
   Onboarding: undefined;
-  Paywall: undefined;
+  RemoveAds: undefined;
   Main: undefined;
   // planItemId set = opened from the plan: servings edit that entry instead of adding a new one.
   RecipeDetail: { recipeId: string; planItemId?: string };

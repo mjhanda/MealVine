@@ -6,21 +6,33 @@ Status as of 2026-10-05. ✅ done in repo · 🟡 drafted, needs owner · ⛔ bl
 
 | | Item | Decision |
 |---|---|---|
-| ✅ | App name | **MealVine**. ⚠️ A meal-planning app named "MealTwine" exists; run a proper USPTO search (classes 9 and 42) before launch. |
+| ✅ | App name | **Dishcart** (replaced MealVine). Quick web/app-store check found no app by that name; still run a USPTO search (classes 9 and 42) before launch. |
 | ✅ | Publisher | **Bionic Sun LLC** |
-| ✅ | Bundle ID / package | **com.bionicsun.mealvine** (set in `app.json`) |
-| ✅ | Price model | Subscription via **RevenueCat**: **$4.99/month** + yearly plan, **14-day free trial**, then hard paywall (shown right after onboarding). Entitlement id `pro`. |
+| ✅ | Bundle ID / package | **com.bionicsun.dishcart** (set in `app.json`) |
+| ✅ | Business model | **Free with ads.** One subscription, **$0.99/month**, removes ads (entitlement `ad_free`). No trial, no annual plan. Store-issued codes (Apple Offer Codes, Google Play promo codes) also remove ads. |
 | ✅ | Platforms | Apple App Store and Google Play |
-| ⛔ | **Recipe photos** | Still open (#15); emoji-only listings won't convert. |
-| ⛔ | **Yearly price** | Not set yet; $29.99/yr (save 50%) is the recommendation. |
+| ⛔ | **Ad network** | Not chosen. Slots are built (`src/ads/`) and render nothing in release builds until a provider is registered. See "Adding ads" below. |
+| ⛔ | **Recipe photos** | Still open (#15). |
 
-## Subscription setup (owner + Claude)
+## Ad-free subscription setup
 
-- [ ] **RevenueCat project "MealVine"** with iOS (app_store) + Android (play_store) apps, entitlement `pro`, offering `default` with `$rc_monthly` and `$rc_annual` packages. (Claude can do this via the RevenueCat MCP once you OK it.)
-- [ ] **App Store Connect:** create the app (com.bionicsun.mealvine), a subscription group "MealVine", products `mealvine_monthly` ($4.99) and `mealvine_yearly`, each with a **14-day free introductory offer**; In-App Purchase key (.p8) → RevenueCat. Paid Applications agreement, tax, and banking must be signed for subscriptions to work.
-- [ ] **Google Play Console:** create the app, subscriptions `mealvine_monthly` / `mealvine_yearly` with base plans + a **14-day free trial** offer; service-account JSON → RevenueCat; RTDN Pub/Sub topic.
-- [ ] Put the public SDK keys in `.env` (`EXPO_PUBLIC_RC_IOS_KEY`, `EXPO_PUBLIC_RC_ANDROID_KEY`) and in EAS env vars for builds.
-- [ ] Sandbox test on devices (dev build, not Expo Go): trial start, renewal, cancel, restore, offline grace (3 days past verified expiry).
+- [ ] **RevenueCat project "Dishcart"**: iOS (app_store) + Android (play_store) apps, entitlement `ad_free`, offering `default` with one `$rc_monthly` package. (Claude can create this via the RevenueCat MCP once you OK it.)
+- [ ] **App Store Connect:** app `com.bionicsun.dishcart`; subscription group "Dishcart Ad-Free"; product `dishcart_adfree_monthly` at **$0.99** (lowest tier); App Store Connect In-App Purchase key (.p8) → RevenueCat. Sign the Paid Applications agreement, tax, and banking.
+- [ ] **Google Play Console:** subscription `dishcart_adfree_monthly`, base plan monthly $0.99; service-account JSON → RevenueCat; RTDN Pub/Sub topic.
+- [ ] **Codes:** Apple → Subscriptions → Offer Codes (free months of ad-free; up to 150k codes per quarter). Google → Monetize → Promo codes for the subscription. Users redeem in-app via Settings → Ads → Redeem a code. (Custom codes are not allowed: App Store guideline 3.1.1.)
+- [ ] Public SDK keys in `.env` / EAS env vars (`EXPO_PUBLIC_RC_IOS_KEY`, `EXPO_PUBLIC_RC_ANDROID_KEY`).
+- [ ] Sandbox test on devices (dev build): subscribe, restore, redeem code, cancel, offline grace.
+
+## Adding ads (when you pick a network)
+
+Recommended: **Google AdMob** via `react-native-google-mobile-ads` (Expo config plugin, works with dev builds).
+
+1. Create AdMob app IDs (iOS + Android) and banner ad unit IDs per placement (`browse-feed`, `recipe-detail`, `plan-footer`).
+2. Implement `src/ads/admob.ts` exporting an `AdProvider` (`init` runs consent then SDK start; `Banner` renders a `BannerAd`). Register it once in `App.tsx` with `registerAdProvider(...)`. No screen changes needed.
+3. Consent: Google UMP form (GDPR/UK), then Apple **App Tracking Transparency** prompt on iOS (`NSUserTrackingUsageDescription`) if serving personalized ads; otherwise request non-personalized ads only.
+4. Add `app-ads.txt` to the developer website.
+5. **Rewrite the privacy policy's Advertising section and both stores' privacy answers** (AdMob collects device IDs, coarse location, usage/ad data; Apple labels become "Data Used to Track You" if personalized).
+6. Families/kids policies: keep ads non-personalized if the app could be seen as child-directed (it isn't today).
 
 ## Built / drafted
 
@@ -44,15 +56,15 @@ Status as of 2026-10-05. ✅ done in repo · 🟡 drafted, needs owner · ⛔ bl
 
 ## Privacy questionnaire answers
 
-**Apple App Privacy** (because of RevenueCat): **Purchases → Purchase History** and **Identifiers → User ID** (RevenueCat's anonymous app user ID), both *linked to the user? No*, *used for tracking? No*, purpose **App Functionality**. Everything else: not collected. Re-check against RevenueCat's current "Apple App Privacy" guide before submitting.
+**Apple App Privacy** (RevenueCat only, while no ad network is installed): **Purchases → Purchase History** and **Identifiers → User ID** (RevenueCat's anonymous app user ID), both *linked to the user? No*, *used for tracking? No*, purpose **App Functionality**. Everything else: not collected. Re-check against RevenueCat's current "Apple App Privacy" guide before submitting.
 
 **Google Play Data safety:** Collected: **Financial info → Purchase history** and **App info & performance / Device or other IDs** as required by RevenueCat's Play guidance; purpose App functionality; not shared for advertising; encrypted in transit: yes. Meal data, preferences, and allergies: not collected (on-device only). Deletion: Settings → Reset all data (on-device); subscription records on request via the support email.
 
-**Permissions requested:** Notifications only (for cooking timers, asked on first timer start).
+**Permissions requested:** Notifications only (for cooking timers, asked on first timer start). Adding personalized ads adds App Tracking Transparency on iOS.
 
 ## Store listing draft
 
-**Short description (80 chars):** Pick meals, get one aisle-sorted grocery list, cook step by step. Try 14 days free.
+**Short description (80 chars):** Pick meals, get one aisle-sorted grocery list, cook step by step. Free.
 
 **Full description:**
 
@@ -67,5 +79,4 @@ Status as of 2026-10-05. ✅ done in repo · 🟡 drafted, needs owner · ⛔ bl
 > • Notes and ratings so your favorites get better every time
 > • No account. No ads. Works offline. Your data stays on your phone, and you can export it anytime.
 >
-> Try MealVine free for 14 days, then $4.99/month (or save with yearly). Cancel anytime in your
-> App Store / Google Play settings.
+> Dishcart is free. Go ad-free for $0.99/month — cancel anytime in your App Store / Google Play settings.

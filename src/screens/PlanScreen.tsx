@@ -5,6 +5,7 @@ import React, { useMemo } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { confirmAction } from '../components/dialogs';
+import AdSlot from '../ads/AdSlot';
 import RecentlyCooked from '../components/RecentlyCooked';
 import RecipeCard from '../components/RecipeCard';
 import { MainTabParamList, RootStackParamList } from '../navigation/types';
@@ -165,6 +166,8 @@ export default function PlanScreen() {
             round out your day.
           </Text>
         )}
+
+        <AdSlot placement="plan-footer" />
 
         <RecentlyCooked
           entries={cooked}
