@@ -41,3 +41,23 @@ export async function shareText(title: string, message: string): Promise<void> {
   }
   await Share.share({ title, message });
 }
+
+// Two-choice prompt (plus Cancel). Web has no multi-button dialog, so it asks the first
+// option as a yes/no, then the second.
+export function chooseAction(
+  title: string,
+  message: string,
+  first: { label: string; onPress: () => void },
+  second: { label: string; onPress: () => void; destructive?: boolean }
+): void {
+  if (Platform.OS === 'web') {
+    if (window.confirm(`${title}\n\n${message}\n\nOK = ${first.label}`)) first.onPress();
+    else if (window.confirm(`${second.label}?`)) second.onPress();
+    return;
+  }
+  Alert.alert(title, message, [
+    { text: 'Cancel', style: 'cancel' },
+    { text: first.label, onPress: first.onPress },
+    { text: second.label, style: second.destructive ? 'destructive' : 'default', onPress: second.onPress },
+  ]);
+}

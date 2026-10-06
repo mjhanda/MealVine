@@ -4,6 +4,7 @@ import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { confirmAction, notify } from '../components/dialogs';
 import AllergyPicker from '../components/preferences/AllergyPicker';
+import DataSection from '../components/preferences/DataSection';
 import DietPicker from '../components/preferences/DietPicker';
 import DislikePicker from '../components/preferences/DislikePicker';
 import HouseholdStepper from '../components/preferences/HouseholdStepper';
@@ -97,6 +98,10 @@ function SettingsForm({ preferences }: { preferences: Preferences }) {
         >
           <Text style={[styles.saveLabel, { color: hasChanges ? '#fff' : colors.inkSoft }]}>Save changes</Text>
         </Pressable>
+
+        <Section label="Your data">
+          <DataSection />
+        </Section>
 
         <Section label="About">
           <Text style={styles.about}>
