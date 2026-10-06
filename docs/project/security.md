@@ -1,7 +1,7 @@
 Security Rules
 ==============
 
-> Baseline security and code-quality rules for MealApp. Filled in against the current architecture: a fully offline, single-user, local-only Expo/React Native app with no backend, no accounts, and no network calls. Most standard web/API security domains below are genuinely Not Applicable at this stage — that's a fact about the current architecture, not an unresolved placeholder. Revisit this file (see Notes) before any Phase 2/3 work that adds a backend, auth, or remote content updates.
+> Baseline security and code-quality rules for MealVine. Filled in against the current architecture: a fully offline, single-user, local-only Expo/React Native app with no backend, no accounts, and no network calls. Most standard web/API security domains below are genuinely Not Applicable at this stage — that's a fact about the current architecture, not an unresolved placeholder. Revisit this file (see Notes) before any Phase 2/3 work that adds a backend, auth, or remote content updates.
 
 * * * * *
 

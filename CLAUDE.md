@@ -1,7 +1,7 @@
 # CLAUDE.md
 
 ## 1. Project Overview
-MealApp — a free-form meal planner (deliberately NOT a weekly planner or
+MealVine — a free-form meal planner (deliberately NOT a weekly planner or
 calendar). Users set household size, diet, allergies, disliked ingredients,
 and meal types, then search a curated recipe catalog and add meals to a plan
 list (each entry keeps its own servings). The grocery list is derived from the

@@ -1,4 +1,4 @@
-# MealApp
+# MealVine
 
 A personal meal planner: pick meals that fit how you eat, get one
 aisle-sorted grocery list, and cook whenever you like. It's not a calendar.

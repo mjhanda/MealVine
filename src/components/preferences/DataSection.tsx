@@ -28,7 +28,7 @@ export default function DataSection() {
       text = await pickBackupFile();
     } catch (e) {
       console.warn('[backup] could not read file', e);
-      notify("Couldn't open that file", 'Pick a MealApp backup (.json) file.');
+      notify("Couldn't open that file", 'Pick a MealVine backup (.json) file.');
       return;
     }
     if (text === null) return;

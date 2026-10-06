@@ -3,7 +3,7 @@ import { CookedEntry, GroceryState, MealPlan, Preferences } from '../types';
 // A backup is each store's persisted state plus the version it was saved at, so importing an
 // old backup runs the exact same migrations as upgrading the app does.
 
-export const BACKUP_FORMAT = 'mealapp-backup';
+export const BACKUP_FORMAT = 'mealvine-backup';
 export const BACKUP_VERSION = 1;
 
 export interface AppData {
@@ -46,21 +46,21 @@ export function parseBackup(text: string, currentVersions: Record<StoreName, num
   try {
     raw = JSON.parse(text);
   } catch {
-    return { ok: false, error: "This file isn't a MealApp backup (it's not valid JSON)." };
+    return { ok: false, error: "This file isn't a MealVine backup (it's not valid JSON)." };
   }
   const file = raw as Partial<BackupFile>;
   if (!file || file.format !== BACKUP_FORMAT || typeof file.stores !== 'object' || file.stores === null) {
-    return { ok: false, error: "This file isn't a MealApp backup." };
+    return { ok: false, error: "This file isn't a MealVine backup." };
   }
   if ((file.backupVersion ?? 0) > BACKUP_VERSION) {
-    return { ok: false, error: 'This backup was made by a newer version of MealApp. Update the app, then try again.' };
+    return { ok: false, error: 'This backup was made by a newer version of MealVine. Update the app, then try again.' };
   }
   const data: Partial<AppData> = {};
   for (const name of STORE_NAMES) {
     const snap = file.stores[name];
     if (!snap) continue;
     if (typeof snap.version !== 'number' || snap.version > currentVersions[name]) {
-      return { ok: false, error: `The ${name} section was made by a newer version of MealApp.` };
+      return { ok: false, error: `The ${name} section was made by a newer version of MealVine.` };
     }
     try {
       (data as Record<StoreName, unknown>)[name] = migrators[name](snap.state, snap.version);

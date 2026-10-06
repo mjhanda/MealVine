@@ -6,7 +6,7 @@ Project Architecture
 System Overview
 ---------------
 
--   **Purpose:** MealApp — a free-form meal planner. Users pick recipes from a curated catalog (filtered by their diet, allergies, and disliked ingredients) into a plan list — not a calendar — and the app derives an aisle-sorted grocery list from it. Meals are cooked whenever the user likes and marked as cooked.
+-   **Purpose:** MealVine — a free-form meal planner. Users pick recipes from a curated catalog (filtered by their diet, allergies, and disliked ingredients) into a plan list — not a calendar — and the app derives an aisle-sorted grocery list from it. Meals are cooked whenever the user likes and marked as cooked.
 -   **Target Users:** Individuals or households planning their own weekly meals and groceries. Single-user per install — no shared/multi-user accounts.
 
 Technology Stack

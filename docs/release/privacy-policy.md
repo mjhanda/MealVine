@@ -4,11 +4,11 @@
 > submission (both stores require a link). Replace every `[bracketed]` value.
 > Last reviewed against the code on 2026-10-05.
 
-**[App name]** · **[Publisher / legal entity]** · Effective **[date]**
+**MealVine** · **Bionic Sun LLC** · Effective **[date]**
 
 ## The short version
 
-[App name] doesn't collect, transmit, sell, or share any of your data. There
+MealVine doesn't collect, transmit, sell, or share any of your data. There
 is no account, and the app never connects to our servers or anyone else's.
 Everything you enter stays on your device.
 

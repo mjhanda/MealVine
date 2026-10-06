@@ -1,4 +1,4 @@
-# Security Rules — MealApp
+# Security Rules — MealVine
 
 Generated per `docs/project/security_bootstrap_instruction.md`, from `docs/project/architecture.md`
 and `docs/project/security.md`. Read those two files for full detail; this
@@ -6,7 +6,7 @@ is the operative, Claude-Code-facing summary.
 
 ## Architecture context (why this isn't treated as a standard web/API app)
 
-`architecture.md` establishes that MealApp is a fully offline, single-user
+`architecture.md` establishes that MealVine is a fully offline, single-user
 Expo (React Native + TypeScript) app: no backend, no API, no accounts, no
 network calls of any kind. The default web/API security priorities (HTTP
 boundary, auth/authz, CORS, session management) do not apply — they're

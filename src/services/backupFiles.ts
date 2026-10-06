@@ -3,7 +3,7 @@ import { File, Paths } from 'expo-file-system';
 import * as Sharing from 'expo-sharing';
 import { Platform } from 'react-native';
 
-export const backupFileName = (now: Date = new Date()) => `mealapp-backup-${now.toISOString().slice(0, 10)}.json`;
+export const backupFileName = (now: Date = new Date()) => `mealvine-backup-${now.toISOString().slice(0, 10)}.json`;
 
 // Hands the backup to the user: a download on web, the OS share sheet (Files, AirDrop,
 // email, Drive…) on iOS/Android.
@@ -21,7 +21,7 @@ export async function saveBackupFile(json: string): Promise<void> {
   const file = new File(Paths.cache, name);
   file.create({ overwrite: true });
   file.write(json);
-  await Sharing.shareAsync(file.uri, { mimeType: 'application/json', dialogTitle: 'Save your MealApp backup' });
+  await Sharing.shareAsync(file.uri, { mimeType: 'application/json', dialogTitle: 'Save your MealVine backup' });
 }
 
 // Returns the picked file's text, or null if the user cancelled.

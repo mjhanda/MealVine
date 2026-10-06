@@ -105,7 +105,7 @@ function SettingsForm({ preferences }: { preferences: Preferences }) {
 
         <Section label="About">
           <Text style={styles.about}>
-            MealApp works fully offline. Everything you enter, including allergies, stays on this device and is
+            MealVine works fully offline. Everything you enter, including allergies, stays on this device and is
             never sent anywhere.
           </Text>
           <Text style={styles.version}>Version {Constants.expoConfig?.version ?? '—'}</Text>
