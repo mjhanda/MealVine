@@ -1,8 +1,20 @@
-# MealApp — Task List (Mealime parity → publishable)
+# Dishcart — Task List (Mealime parity → launch)
 
-Written 2026-10-05. Each task follows `.github/ISSUE_TEMPLATE/ai-task.yml`
-and is mirrored as a GitHub issue. This file is the planning snapshot; once
-work starts, the issues are the source of truth.
+Written 2026-10-05 (as "MealApp"); T26–T35 added after the Dishcart / ads
+decisions. Each task follows `.github/ISSUE_TEMPLATE/ai-task.yml` and is
+mirrored as a GitHub issue in **mjhanda/DishCart** (issue #N = TN). This file
+is the planning snapshot; the issues are the source of truth.
+
+### Status (2026-10-05)
+
+- **Done:** T01–T14, T18, T19, T22, T24 (code in `main`).
+- **Partly done:** T20 (CI workflow waits for the `workflow` token scope),
+  T21 (config/docs done; needs assets, accounts), T23 (needs device pass),
+  T25 (name/publisher/price decided; launch date open).
+- **Open:** T15–T17, T26–T35.
+
+> T25's original context (paid app, "Mealime alternative" positioning) is
+> superseded: **Dishcart is free with ads; $0.99/month removes ads.**
 
 ## Product north star
 
@@ -49,6 +61,7 @@ which answers the main complaint about how Mealime shut down. See T25.
 - **M1, personal-use parity:** T01–T09, T20, T22, T25. Target 2026-10-19.
 - **M2, full Mealime parity:** T10–T14, T19. Target 2026-11-02.
 - **M3, publishable:** T15–T18, T21, T23–T25. Target 2026-11-30.
+- **M4, launch:** T26–T35 (accounts, store products, ads, QA, legal). Target 2026-12-14.
 
 ---
 
@@ -610,3 +623,212 @@ which answers the main complaint about how Mealime shut down. See T25.
 - **Priority:** P1 - High
 - **Target date:** 2026-10-12
 - **Additional Notes:** Don't use "Mealime" in the app name, icon, or store title. Using it in keywords or comparison copy needs a trademark check first.
+
+## T26 — RevenueCat project for the ad-free subscription
+
+- **Summary:** Create the RevenueCat project that backs the $0.99/month ad-free subscription: apps, entitlement, product, offering, and public SDK keys.
+- **Requester:** Owner
+- **Assignee(s) / AI agent:** Claude Code (via the RevenueCat MCP, approved by the owner on 2026-10-05)
+- **Reviewer(s):** Owner
+- **End user(s):** All users (ad removal)
+- **Context:** App code expects entitlement `ad_free`, offering `default` (current), one `$rc_monthly` package (`src/config/purchases.ts`, `src/screens/RemoveAdsScreen.tsx`). Keys go in `.env` / EAS env as `EXPO_PUBLIC_RC_IOS_KEY` / `EXPO_PUBLIC_RC_ANDROID_KEY`.
+- **Data Classification:** Credentials / secrets
+- **Notes on data handling:** Only *public* SDK keys go into the app or env files; the RevenueCat secret key never enters the repo. `.env` is gitignored.
+- **In scope:** Project "Dishcart"; App Store app (`com.bionicsun.dishcart`) and Play Store app (`com.bionicsun.dishcart`); entitlement `ad_free`; product `dishcart_adfree_monthly` on each store app attached to the entitlement; offering `default` with `$rc_monthly`; public keys recorded locally.
+- **Out of scope:** Store credentials (.p8 key, Play service account) — T27/T28; paywall templates (the app has its own screen).
+- **Acceptance Criteria:**
+  - [ ] Project, both store apps, entitlement, products, offering, and package exist and are linked
+  - [ ] Public SDK keys are in the local `.env` (not committed)
+  - [ ] Store credentials step documented for the owner
+- **Test Strategy:** Read back the configuration via the MCP; sandbox purchase in T32.
+- **Dependencies / Blockers:** None (store-side products are created in T27/T28; RevenueCat products can exist first)
+- **Priority:** P0 - Critical
+- **Target date:** 2026-10-05
+- **Additional Notes:** Free on RevenueCat until $2.5k monthly tracked revenue.
+
+## T27 — App Store Connect: app record, ad-free subscription, agreements
+
+- **Summary:** Everything on Apple's side so the ad-free subscription can be bought and tested.
+- **Requester:** Owner
+- **Assignee(s) / AI agent:** Owner (account access); Claude Code registers credentials in RevenueCat
+- **Reviewer(s):** Owner
+- **End user(s):** iOS users
+- **Context:** Bionic Sun LLC Apple Developer account. Product ID must match T26: `dishcart_adfree_monthly`.
+- **Data Classification:** Credentials / secrets
+- **Notes on data handling:** The In-App Purchase key (.p8) is a secret: upload it to RevenueCat directly or share it out-of-band; never commit it (`*.p8` is gitignored).
+- **In scope:** App record (name "Dishcart", bundle `com.bionicsun.dishcart`); subscription group "Dishcart Ad-Free"; auto-renewable subscription `dishcart_adfree_monthly` at $0.99, 1 month, localized display name/description, review screenshot; Paid Applications agreement, tax, and banking; In-App Purchase key (Key ID, Issuer ID, .p8) → RevenueCat; sandbox tester account.
+- **Out of scope:** App Store listing/screenshots (T34), submission (T21).
+- **Acceptance Criteria:**
+  - [ ] Subscription is "Ready to Submit" with price $0.99
+  - [ ] Agreements, tax, banking active
+  - [ ] RevenueCat shows the App Store app credentials as valid
+- **Test Strategy:** RevenueCat credential validation; sandbox purchase in T32.
+- **Dependencies / Blockers:** T26
+- **Priority:** P0 - Critical
+- **Target date:** 2026-10-19
+- **Additional Notes:** The first subscription must be submitted *with* an app version for review.
+
+## T28 — Google Play Console: app, ad-free subscription, RevenueCat access
+
+- **Summary:** Everything on Google's side so the ad-free subscription can be bought and tested.
+- **Requester:** Owner
+- **Assignee(s) / AI agent:** Owner (account access); Claude Code registers credentials in RevenueCat
+- **Reviewer(s):** Owner
+- **End user(s):** Android users
+- **Context:** Package `com.bionicsun.dishcart`; product ID `dishcart_adfree_monthly` (T26).
+- **Data Classification:** Credentials / secrets
+- **Notes on data handling:** The service-account JSON key is a secret; upload it to RevenueCat directly.
+- **In scope:** Play developer account (Bionic Sun LLC, organization verification); app record; an internal-testing release (Play requires an uploaded build before subscriptions can be created); subscription `dishcart_adfree_monthly` with a monthly base plan at $0.99; Google Cloud service account with Play access → RevenueCat; Real-time developer notifications (Pub/Sub) → RevenueCat; license testers.
+- **Out of scope:** Store listing (T34), production rollout (T21).
+- **Acceptance Criteria:**
+  - [ ] Subscription active with a $0.99 monthly base plan
+  - [ ] RevenueCat validates the service account and receives RTDN
+- **Test Strategy:** RevenueCat validation; license-tester purchase in T32.
+- **Dependencies / Blockers:** T26; an Android build from T32
+- **Priority:** P0 - Critical
+- **Target date:** 2026-10-26
+- **Additional Notes:** New personal Play accounts need 12 testers for 14 days before production; an organization account (LLC) avoids that requirement.
+
+## T29 — Promo codes for ad-free
+
+- **Summary:** Set up store-issued codes that grant ad-free, redeemable in-app via Settings → Ads → Redeem a code.
+- **Requester:** Owner
+- **Assignee(s) / AI agent:** Owner
+- **Reviewer(s):** —
+- **End user(s):** Friends, press, giveaways, support cases
+- **Context:** App Store guideline 3.1.1 forbids custom unlock codes, so codes must come from Apple/Google. The app already opens Apple's redemption sheet (iOS) and the Play redeem page (Android).
+- **Data Classification:** No sensitive data involved
+- **Notes on data handling:** Treat unused code batches like gift cards (don't post publicly).
+- **In scope:** Apple Offer Codes on `dishcart_adfree_monthly` (e.g. 1–12 free months); Google Play promo codes for the subscription; a short internal doc on generating and tracking batches.
+- **Out of scope:** Custom code systems (not allowed).
+- **Acceptance Criteria:**
+  - [ ] A test code on each platform redeems in-app and removes ads
+- **Test Strategy:** Redeem on devices during T32.
+- **Dependencies / Blockers:** T27, T28
+- **Priority:** P2 - Medium
+- **Target date:** 2026-11-02
+- **Additional Notes:** Apple offer codes: up to 150,000 per app per quarter.
+
+## T30 — Ad network integration (recommendation: Google AdMob)
+
+- **Summary:** Choose an ad network and plug it into the existing `AdProvider` interface so free users see ads in the three placements.
+- **Requester:** Owner
+- **Assignee(s) / AI agent:** Owner (network choice, account, ad units); Claude Code (integration)
+- **Reviewer(s):** Owner
+- **End user(s):** Free users
+- **Context:** `src/ads/` is built: placements `browse-feed` (every 8th recipe), `recipe-detail`, `plan-footer`; nothing renders until `registerAdProvider()` is called. Never in onboarding, cooking mode, or settings.
+- **Data Classification:** PII / customer data
+- **Notes on data handling:** Ad SDKs collect device advertising IDs, coarse location, and interaction data. Never pass diet/allergy preferences to ad targeting. Privacy policy and store privacy answers must change in the same PR.
+- **In scope:** AdMob account and app IDs; banner ad units per placement; `react-native-google-mobile-ads` + config plugin; `src/ads/admob.ts` AdProvider; Google UMP consent (EEA/UK); App Tracking Transparency on iOS (or non-personalized ads only); `app-ads.txt` on the developer site; privacy policy "Advertising" section; Apple/Google privacy answers; test ads in dev builds.
+- **Out of scope:** Interstitials/rewarded ads (intrusive; revisit only with data).
+- **Acceptance Criteria:**
+  - [ ] Free users see test ads in all three placements; ad-free users see none
+  - [ ] Consent flow shown where required; personalized ads only with consent/ATT
+  - [ ] Privacy policy and both stores' privacy answers updated
+- **Test Strategy:** Dev build with AdMob test IDs; unit test that AdSlot renders nothing for ad-free users; consent tested with a VPN/EEA debug geography.
+- **Dependencies / Blockers:** Owner choice of network; T32 dev build
+- **Priority:** P1 - High
+- **Target date:** 2026-11-16
+- **Additional Notes:** At $0.99/month (≈ $0.84 net after the 15% small-business commission), ads are likely the primary revenue.
+
+## T31 — Trademark search for "Dishcart"
+
+- **Summary:** Clear the name before investing in branding and store listings.
+- **Requester:** Owner
+- **Assignee(s) / AI agent:** Owner (attorney or USPTO search)
+- **Reviewer(s):** —
+- **End user(s):** n/a
+- **Context:** Only a web/app-store check was done (no app named Dishcart found; unrelated "Dish" brands exist, e.g. DISH Network).
+- **Data Classification:** No sensitive data involved
+- **Notes on data handling:** —
+- **In scope:** USPTO search (classes 9 and 42, plus 35 for retail-adjacent); domain and social handle availability; decide whether to file.
+- **Out of scope:** International filings.
+- **Acceptance Criteria:**
+  - [ ] Written go/no-go on the name
+- **Test Strategy:** n/a
+- **Dependencies / Blockers:** None
+- **Priority:** P1 - High
+- **Target date:** 2026-10-19
+- **Additional Notes:** Do this before T34 (icon/brand assets).
+
+## T32 — Development build and device QA
+
+- **Summary:** Build installable dev/preview apps and test everything the web build can't: purchases, codes, timers, keep-awake, share sheet, backup files, screen readers.
+- **Requester:** Owner
+- **Assignee(s) / AI agent:** Claude Code (EAS builds, test plan); Owner (devices, store test accounts)
+- **Reviewer(s):** Owner
+- **End user(s):** All users
+- **Context:** Purchases need a dev build (not Expo Go). Several features were only verified on web (see commit notes for T13, T24, the subscription work, and #23).
+- **Data Classification:** Credentials / secrets
+- **Notes on data handling:** EAS credentials stay in EAS; sandbox/tester accounts only.
+- **In scope:** `eas build --profile development` for iOS + Android; test script covering: onboarding; plan/swap/cook/undo; grocery pantry/share; cooking-mode timer with app backgrounded (notification) and keep-awake; backup export → reinstall → import; sandbox subscribe → ads disappear; restore on a second device; redeem code; cancel → ads return after expiry; offline grace; VoiceOver/TalkBack walkthrough and largest text size (closes #23).
+- **Out of scope:** Store submission (T21).
+- **Acceptance Criteria:**
+  - [ ] Every item in the test script passes on one iPhone and one Android phone, with results recorded in the issue
+- **Test Strategy:** Manual script; bugs filed as new issues.
+- **Dependencies / Blockers:** T26 (keys); T27/T28 for purchase steps; EAS account
+- **Priority:** P0 - Critical
+- **Target date:** 2026-10-26
+- **Additional Notes:** —
+
+## T33 — Publish the privacy policy and support contact
+
+- **Summary:** Both stores require a public privacy-policy URL and a support contact; the app's Privacy link currently points at the private GitHub repo.
+- **Requester:** Owner
+- **Assignee(s) / AI agent:** Owner (hosting, email); Claude Code (page + `PRIVACY_URL`)
+- **Reviewer(s):** Owner
+- **End user(s):** All users, store reviewers
+- **Context:** Draft: `docs/release/privacy-policy.md` (placeholders: contact email, effective date). `PRIVACY_URL` in `src/config/purchases.ts` has a TODO.
+- **Data Classification:** No sensitive data involved
+- **Notes on data handling:** —
+- **In scope:** Support email (e.g. support@ a Bionic Sun domain); host the policy publicly (company site or a public GitHub Pages repo); fill placeholders; update `PRIVACY_URL`; a simple support page with that email.
+- **Out of scope:** Terms of service beyond Apple's standard EULA.
+- **Acceptance Criteria:**
+  - [ ] Policy and support page reachable without login
+  - [ ] App's Privacy link opens it
+- **Test Strategy:** Open the links from the app on a device.
+- **Dependencies / Blockers:** T30 if ads launch at the same time (policy must cover them)
+- **Priority:** P1 - High
+- **Target date:** 2026-10-26
+- **Additional Notes:** —
+
+## T34 — App icon, splash, and store screenshots
+
+- **Summary:** Replace Expo placeholder icon/splash and produce store screenshots for Dishcart.
+- **Requester:** Owner
+- **Assignee(s) / AI agent:** Owner (design); Claude Code (wiring assets, capturing screenshots from builds)
+- **Reviewer(s):** Owner
+- **End user(s):** Store visitors
+- **Context:** `assets/` are Expo defaults. Screenshot content listed in `docs/release/STORE_CHECKLIST.md`. Depends on photo decision (#15) for appealing screenshots.
+- **Data Classification:** No sensitive data involved
+- **Notes on data handling:** Use licensed or original artwork only.
+- **In scope:** 1024×1024 icon (no transparency for iOS); Android adaptive icon (foreground/background/monochrome); splash; screenshots for 6.7"/6.5" iPhone and Android phone; feature graphic (Play).
+- **Out of scope:** App preview videos.
+- **Acceptance Criteria:**
+  - [ ] Assets in `assets/` and referenced from `app.json`
+  - [ ] Screenshot sets ready for both stores
+- **Test Strategy:** Visual check on devices (home screen, splash).
+- **Dependencies / Blockers:** T31 (name cleared), #15
+- **Priority:** P1 - High
+- **Target date:** 2026-11-23
+- **Additional Notes:** —
+
+## T35 — Retire the old element-dot/MealApp repository
+
+- **Summary:** After the move to mjhanda/DishCart is verified, archive the old repo so nobody works in two places.
+- **Requester:** Owner
+- **Assignee(s) / AI agent:** Claude Code
+- **Reviewer(s):** Owner
+- **End user(s):** Contributors
+- **Context:** Full history was pushed to mjhanda/DishCart on 2026-10-05 and issues were recreated there. The old repo still has the original issue threads.
+- **Data Classification:** No sensitive data involved
+- **Notes on data handling:** —
+- **In scope:** Add a README pointer to the new repo; archive element-dot/MealApp (reversible); remove the `old-origin` remote locally.
+- **Out of scope:** Deleting the old repo.
+- **Acceptance Criteria:**
+  - [ ] Old repo archived with a pointer to the new one
+- **Test Strategy:** n/a
+- **Dependencies / Blockers:** Owner confirms the new repo is complete; repo renamed to DishCart
+- **Priority:** P3 - Low
+- **Target date:** 2026-10-12
+- **Additional Notes:** —
