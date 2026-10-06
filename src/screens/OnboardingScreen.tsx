@@ -109,7 +109,7 @@ const styles = StyleSheet.create({
   progressRow: { flexDirection: 'row', gap: 6, marginBottom: 28 },
   progressSegment: { flex: 1, height: 4, borderRadius: 4 },
   topRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 },
-  eyebrow: { fontSize: 15, color: colors.gold, fontWeight: '600' },
+  eyebrow: { fontSize: 15, color: colors.goldText, fontWeight: '600' },
   back: { fontSize: 14, color: colors.forest, fontWeight: '700' },
   title: { fontSize: 24, fontWeight: '600', color: colors.forest, lineHeight: 30 },
   hint: { fontSize: 13.5, color: colors.inkSoft, marginTop: 6 },

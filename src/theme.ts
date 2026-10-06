@@ -16,16 +16,22 @@ export const colors = {
   card: '#FFFFFF',
   blue: '#3E6E8E',
   blueLight: '#DCE9F1',
+  // Text-safe shades: the base gold/sage/rust/blue fail WCAG AA (4.5:1) as small text on the
+  // light backgrounds. Use these for any text; keep the base colors for fills, icons, borders.
+  goldText: '#7D5F25',
+  sageText: '#586D52',
+  rustText: '#9A4B31',
+  blueText: '#3C6B8A',
 };
 
 export const proteinMeta: Record<Protein, { label: string; color: string; bg: string }> = {
-  vegetarian: { label: 'Vegetarian', color: colors.sage, bg: colors.sageLight },
-  chicken: { label: 'Chicken', color: colors.rust, bg: colors.rustLight },
-  turkey: { label: 'Turkey', color: colors.rust, bg: colors.rustLight },
-  beef: { label: 'Beef', color: colors.rust, bg: colors.rustLight },
-  pork: { label: 'Pork', color: colors.rust, bg: colors.rustLight },
-  lamb: { label: 'Lamb', color: colors.rust, bg: colors.rustLight },
-  fish: { label: 'Seafood', color: colors.blue, bg: colors.blueLight },
+  vegetarian: { label: 'Vegetarian', color: colors.sageText, bg: colors.sageLight },
+  chicken: { label: 'Chicken', color: colors.rustText, bg: colors.rustLight },
+  turkey: { label: 'Turkey', color: colors.rustText, bg: colors.rustLight },
+  beef: { label: 'Beef', color: colors.rustText, bg: colors.rustLight },
+  pork: { label: 'Pork', color: colors.rustText, bg: colors.rustLight },
+  lamb: { label: 'Lamb', color: colors.rustText, bg: colors.rustLight },
+  fish: { label: 'Seafood', color: colors.blueText, bg: colors.blueLight },
 };
 
 export const mealLabels: Record<MealType, string> = {

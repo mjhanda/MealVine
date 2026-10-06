@@ -46,6 +46,7 @@ Also see `General_Code_Quality_Prompts.md` at the repo root — the standing com
 
 ## 5. UI and Design System Rules
 - Colors, spacing, and category ordering come from `src/theme.ts` — don't hardcode hex values or magic spacing numbers in screens/components.
+- Text in gold/sage/rust/blue uses the `*Text` shades (`goldText`, `sageText`, `rustText`, `blueText`); the base shades fail WCAG AA as small text. `src/__tests__/a11y.test.ts` enforces contrast and that every `Pressable` has an `accessibilityRole` (icon-only ones also need `accessibilityLabel`). Tap targets must be ≥ 44pt including `hitSlop`.
 - Layout uses plain RN `StyleSheet.create`, no styled-components/NativeWind/etc. Keep it that way unless the user asks to add a styling library.
 - Recipes are represented with emoji (`recipe.emoji`), not photos, for v1 — don't add an image pipeline without checking with the user first (bundle size / CDN tradeoff called out in the project plan).
 

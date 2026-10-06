@@ -18,7 +18,7 @@ export default function ManualItemEditor({ item, onSave, onDelete, onClose }: Pr
 
   return (
     <Modal visible transparent animationType="fade" onRequestClose={onClose}>
-      <Pressable style={styles.backdrop} onPress={onClose} accessibilityLabel="Close editor" />
+      <Pressable style={styles.backdrop} onPress={onClose} accessibilityRole="button" accessibilityLabel="Close editor" />
       <View style={styles.sheet}>
         <Text style={styles.title}>Edit item</Text>
         <TextInput value={name} onChangeText={setName} style={styles.input} autoFocus accessibilityLabel="Item name" />
@@ -82,7 +82,7 @@ const styles = StyleSheet.create({
   chipLabelActive: { color: '#fff' },
   actions: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: spacing.sm },
   actionsRight: { flexDirection: 'row', alignItems: 'center', gap: spacing.lg },
-  delete: { color: colors.rust, fontWeight: '700', fontSize: 14 },
+  delete: { color: colors.rustText, fontWeight: '700', fontSize: 14 },
   cancel: { color: colors.inkSoft, fontWeight: '700', fontSize: 14 },
   save: { backgroundColor: colors.forest, paddingHorizontal: 18, paddingVertical: 10, borderRadius: 12 },
   saveDisabled: { backgroundColor: colors.line },

@@ -60,10 +60,22 @@ export default function RecipeDetailScreen({ route, navigation }: Props) {
   return (
     <SafeAreaView style={styles.container} edges={['top', 'bottom']}>
       <View style={styles.header}>
-        <Pressable onPress={() => navigation.goBack()} style={styles.iconBtn} hitSlop={8}>
+        <Pressable
+          onPress={() => navigation.goBack()}
+          style={styles.iconBtn}
+          hitSlop={8}
+          accessibilityRole="button"
+          accessibilityLabel="Back"
+        >
           <Feather name="chevron-left" size={20} color={colors.forest} />
         </Pressable>
-        <Pressable onPress={() => toggleFavorite(recipe.id)} hitSlop={8}>
+        <Pressable
+          onPress={() => toggleFavorite(recipe.id)}
+          hitSlop={12}
+          accessibilityRole="button"
+          accessibilityState={{ selected: isFav }}
+          accessibilityLabel={isFav ? 'Remove from favorites' : 'Save to favorites'}
+        >
           <Ionicons name={isFav ? 'heart' : 'heart-outline'} size={20} color={colors.rust} />
         </Pressable>
       </View>
@@ -99,6 +111,7 @@ export default function RecipeDetailScreen({ route, navigation }: Props) {
           <View style={styles.servingsControls}>
             <Pressable
               onPress={() => changeServings(-1)}
+              hitSlop={6}
               disabled={servings <= MIN_SERVINGS}
               accessibilityRole="button"
               accessibilityLabel="Fewer servings"
@@ -109,6 +122,7 @@ export default function RecipeDetailScreen({ route, navigation }: Props) {
             <Text style={styles.servingsValue}>{servings}</Text>
             <Pressable
               onPress={() => changeServings(1)}
+              hitSlop={6}
               disabled={servings >= MAX_SERVINGS}
               accessibilityRole="button"
               accessibilityLabel="More servings"
@@ -220,7 +234,7 @@ const styles = StyleSheet.create({
   servingsLabel: { fontWeight: '700', fontSize: 13.5, color: colors.ink },
   servingsControls: { flexDirection: 'row', alignItems: 'center', gap: 14 },
   circleBtnSm: {
-    width: 28, height: 28, borderRadius: 14, backgroundColor: colors.sageLight,
+    width: 34, height: 34, borderRadius: 17, backgroundColor: colors.sageLight,
     alignItems: 'center', justifyContent: 'center',
   },
   servingsValue: { fontWeight: '600', fontSize: 17, minWidth: 16, textAlign: 'center', color: colors.ink },
@@ -229,7 +243,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.forest, borderRadius: 14, paddingVertical: 14,
   },
   addBtnLabel: { color: '#fff', fontWeight: '700', fontSize: 15 },
-  inPlanNote: { fontSize: 12.5, color: colors.sage, textAlign: 'center', marginTop: 8, fontWeight: '600' },
+  inPlanNote: { fontSize: 12.5, color: colors.sageText, textAlign: 'center', marginTop: 8, fontWeight: '600' },
   cookBtn: {
     flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, marginTop: 12,
     borderRadius: 14, paddingVertical: 13, borderWidth: 1.5, borderColor: colors.forest,

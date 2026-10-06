@@ -142,7 +142,7 @@ function Section({ label, children }: { label: string; children: React.ReactNode
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: colors.cream },
   header: { paddingHorizontal: 20, paddingTop: 12 },
-  eyebrow: { fontSize: 13, color: colors.gold, fontWeight: '600' },
+  eyebrow: { fontSize: 13, color: colors.goldText, fontWeight: '600' },
   title: { fontSize: 24, fontWeight: '600', color: colors.forest },
   scroll: { padding: 20, gap: 28 },
   section: { gap: 12 },
@@ -152,5 +152,5 @@ const styles = StyleSheet.create({
   about: { fontSize: 13, color: colors.ink, lineHeight: 19 },
   version: { fontSize: 12, color: colors.inkSoft },
   dangerBtn: { paddingVertical: 12, alignItems: 'center' },
-  dangerLabel: { color: colors.rust, fontWeight: '600', fontSize: 13.5 },
+  dangerLabel: { color: colors.rustText, fontWeight: '600', fontSize: 13.5 },
 });

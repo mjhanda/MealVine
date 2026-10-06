@@ -184,7 +184,7 @@ export default function PlanScreen() {
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: colors.cream },
   header: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', paddingHorizontal: 20, paddingTop: 12 },
-  eyebrow: { fontSize: 13, color: colors.gold, fontWeight: '600' },
+  eyebrow: { fontSize: 13, color: colors.goldText, fontWeight: '600' },
   title: { fontSize: 24, fontWeight: '600', color: colors.forest },
   subtitle: { fontSize: 12.5, color: colors.inkSoft, marginTop: 4 },
   iconBtn: {

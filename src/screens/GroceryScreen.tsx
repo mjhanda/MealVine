@@ -180,7 +180,7 @@ const styles = StyleSheet.create({
   header: { paddingHorizontal: 20, paddingTop: 12 },
   titleRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-end' },
   headerActions: { flexDirection: 'row', alignItems: 'center', gap: 14 },
-  eyebrow: { fontSize: 13, color: colors.gold, fontWeight: '600' },
+  eyebrow: { fontSize: 13, color: colors.goldText, fontWeight: '600' },
   title: { fontSize: 24, fontWeight: '600', color: colors.forest },
   subtitle: { fontSize: 12.5, color: colors.inkSoft, marginTop: 4 },
   headerAction: { fontSize: 13, fontWeight: '700', color: colors.forest },

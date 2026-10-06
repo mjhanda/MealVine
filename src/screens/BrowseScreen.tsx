@@ -44,6 +44,7 @@ function RefinePill({ icon, label, active, onPress, a11y }: RefinePillProps) {
     <Pressable
       onPress={onPress}
       style={[styles.refinePill, active && styles.refinePillActive]}
+      hitSlop={{ top: 7, bottom: 7 }}
       accessibilityRole="switch"
       accessibilityState={{ checked: active }}
       accessibilityLabel={a11y ?? label}
@@ -177,7 +178,7 @@ export default function BrowseScreen() {
           autoCorrect={false}
         />
         {search.length > 0 && (
-          <Pressable onPress={() => setSearch('')} hitSlop={8}>
+          <Pressable onPress={() => setSearch('')} hitSlop={14} accessibilityRole="button" accessibilityLabel="Clear search">
             <Feather name="x-circle" size={16} color={colors.inkSoft} />
           </Pressable>
         )}
@@ -196,6 +197,9 @@ export default function BrowseScreen() {
               <Pressable
                 key={f.id}
                 onPress={() => setFilter(f.id)}
+                hitSlop={{ top: 6, bottom: 6 }}
+                accessibilityRole="radio"
+                accessibilityState={{ checked: active }}
                 style={[styles.filterPill, active ? { backgroundColor: colors.forest } : styles.filterPillInactive]}
               >
                 <Text style={[styles.filterLabel, { color: active ? '#fff' : colors.ink }]}>{f.label}</Text>
@@ -297,7 +301,7 @@ export default function BrowseScreen() {
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: colors.cream },
   header: { paddingHorizontal: 20, paddingTop: 12 },
-  eyebrow: { fontSize: 13, color: colors.gold, fontWeight: '600' },
+  eyebrow: { fontSize: 13, color: colors.goldText, fontWeight: '600' },
   title: { fontSize: 24, fontWeight: '600', color: colors.forest },
   searchRow: {
     flexDirection: 'row', alignItems: 'center', gap: 8, marginTop: 14,

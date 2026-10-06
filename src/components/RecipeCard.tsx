@@ -97,5 +97,5 @@ const styles = StyleSheet.create({
   timeRow: { flexDirection: 'row', alignItems: 'center', gap: 3 },
   timeText: { fontSize: 12, color: colors.inkSoft },
   warningRow: { flexDirection: 'row', alignItems: 'center', gap: 4, marginTop: 4 },
-  warningText: { fontSize: 12, color: colors.rust, fontWeight: '600', flexShrink: 1 },
+  warningText: { fontSize: 12, color: colors.rustText, fontWeight: '600', flexShrink: 1 },
 });

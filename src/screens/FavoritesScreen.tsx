@@ -49,6 +49,7 @@ export default function FavoritesScreen() {
                 <Pressable
                   key={mode}
                   onPress={() => setSort(mode)}
+                  hitSlop={{ top: 8, bottom: 8 }}
                   style={[styles.sortPill, sort === mode && styles.sortPillActive]}
                   accessibilityRole="radio"
                   accessibilityState={{ checked: sort === mode }}
@@ -88,7 +89,7 @@ const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: colors.cream },
   header: { paddingHorizontal: 20, paddingTop: 12 },
   titleRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
-  eyebrow: { fontSize: 13, color: colors.gold, fontWeight: '600' },
+  eyebrow: { fontSize: 13, color: colors.goldText, fontWeight: '600' },
   title: { fontSize: 24, fontWeight: '600', color: colors.forest },
   sortRow: { flexDirection: 'row', gap: 6 },
   sortPill: { paddingHorizontal: 10, paddingVertical: 6, borderRadius: 16, borderWidth: 1, borderColor: colors.line },
