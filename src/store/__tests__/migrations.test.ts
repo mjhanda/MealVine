@@ -2,6 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { migrateFavorites, useFavoritesStore } from '../favoritesStore';
 import { migrateGrocery, useGroceryStore } from '../groceryStore';
 import { MigrationError, useStorageHealth } from '../persistence';
+import { migrateHistory } from '../historyStore';
 import { migratePlan, usePlanStore } from '../planStore';
 import { migratePreferences, usePreferencesStore } from '../preferencesStore';
 import { favoritesV0, groceryV0, groceryV1, listPlanV0, preferencesV0, weeklyPlanV0 } from './fixtures';
@@ -111,5 +112,13 @@ describe('rehydration from real storage', () => {
     await new Promise((r) => setTimeout(r, 0));
     expect(usePlanStore.getState().hasHydrated).toBe(true);
     expect(useStorageHealth.getState().failedStores).toContain('mealplan:plan');
+  });
+});
+
+describe('history store', () => {
+
+  it('accepts a valid blob and rejects a broken one', () => {
+    expect(migrateHistory({ cooked: [] }, 0)).toEqual({ cooked: [] });
+    expect(() => migrateHistory({}, 0)).toThrow(MigrationError);
   });
 });

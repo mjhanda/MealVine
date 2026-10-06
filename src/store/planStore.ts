@@ -47,8 +47,10 @@ export function migratePlan(persisted: unknown, fromVersion: number): PersistedP
 
 interface PlanState extends PersistedPlan {
   hasHydrated: boolean;
-  addItem: (recipeId: string, servings: number) => void;
+  addItem: (recipeId: string, servings: number) => string; // returns the new entry's id
   removeItem: (id: string) => void;
+  // Puts a previously removed entry back (undo); no-op if an entry with that id exists.
+  restoreItem: (item: PlanItem) => void;
   updateServings: (id: string, servings: number) => void;
   clear: () => void;
 }
@@ -62,17 +64,23 @@ export const usePlanStore = create<PlanState>()(
     (set) => ({
       plan: { items: [] },
       hasHydrated: false,
-      addItem: (recipeId, servings) =>
+      addItem: (recipeId, servings) => {
+        const id = newItemId();
         set((state) => ({
-          plan: {
-            ...state.plan,
-            items: [...state.plan.items, { id: newItemId(), recipeId, servings }],
-          },
-        })),
+          plan: { ...state.plan, items: [...state.plan.items, { id, recipeId, servings }] },
+        }));
+        return id;
+      },
       removeItem: (id) =>
         set((state) => ({
           plan: { ...state.plan, items: state.plan.items.filter((item) => item.id !== id) },
         })),
+      restoreItem: (item) =>
+        set((state) =>
+          state.plan.items.some((i) => i.id === item.id)
+            ? state
+            : { plan: { ...state.plan, items: [...state.plan.items, item] } }
+        ),
       updateServings: (id, servings) =>
         set((state) => ({
           plan: {

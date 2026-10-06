@@ -95,6 +95,13 @@ export interface MealPlan {
   items: PlanItem[];
 }
 
+export interface CookedEntry {
+  id: string;
+  recipeId: string;
+  servings: number;
+  cookedAt: number; // epoch ms
+}
+
 export interface ManualGroceryItem {
   id: string;
   name: string;

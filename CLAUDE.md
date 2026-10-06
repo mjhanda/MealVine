@@ -24,6 +24,9 @@ no network calls, no auth.
 - `src/store/*` — one Zustand store per concern (`preferencesStore`, `planStore`, `favoritesStore`, `groceryStore`), each persisted independently. Don't reach into another store's state directly from a component — read via that store's own hook.
 - `src/utils/recipeCatalog.ts` — recipe lookup and browse filtering (search by title/ingredient, diet, meal type); pure functions, no side effects.
 - `src/utils/grocery.ts` — ingredient aggregation across the plan's meals into one line per canonical ingredient (each plan entry scales its recipe by its own serving count; amounts convert within a unit family via `src/utils/units.ts`), grouped by aisle.
+- `src/store/historyStore.ts` — cooked meals (`CookedEntry`, newest first, capped at 500).
+- `src/store/mealActions.ts` — the only place allowed to touch two stores in one action (`markCooked`, `undoCooked`, `cookAgain`). `src/store/planGrocerySync.ts` similarly keeps grocery check-offs pruned to the plan; it's started once in `App.tsx`.
+- `src/components/dialogs.ts` — `confirmAction`/`notify`. Use these, never `Alert.alert` directly: react-native-web ignores Alert buttons, so confirmations silently fail on web.
 - `src/store/persistence.ts` — `persistOptions()` (versioned persist config shared by every store) and `useStorageHealth` (non-persisted record of stores that failed to load).
 - `src/store/planStore.ts` — owns the plan list (`MealPlan.items`); `migratePlan()` upgrades both the v1-app weekly grid (via `migrateLegacyPlan()`) and the unversioned v2 list.
 - `src/navigation/` — `RootNavigator` (Onboarding vs. Main, plus modal `RecipeDetail`) and `MainTabs` (Plan/Browse/Grocery/Favorites/Settings).
