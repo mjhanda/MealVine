@@ -6,25 +6,34 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import DietTag from '../components/DietTag';
 import { RootStackParamList } from '../navigation/types';
 import { useFavoritesStore } from '../store/favoritesStore';
-import { usePlanStore } from '../store/planStore';
+import { MAX_SERVINGS, MIN_SERVINGS, usePlanStore } from '../store/planStore';
 import { usePreferencesStore } from '../store/preferencesStore';
 import { colors } from '../theme';
 import { ingredientDisplayName, recipeById } from '../utils/recipeCatalog';
 import { scaleAmount, unitLabel } from '../utils/units';
 
-const MIN_SERVINGS = 1;
-const MAX_SERVINGS = 10;
 
 type Props = NativeStackScreenProps<RootStackParamList, 'RecipeDetail'>;
 
 export default function RecipeDetailScreen({ route, navigation }: Props) {
   const recipe = recipeById(route.params.recipeId);
   const householdSize = usePreferencesStore((s) => s.householdSize);
-  const [servings, setServings] = useState(householdSize);
+  const [draftServings, setDraftServings] = useState(householdSize);
   const favorites = useFavoritesStore((s) => s.favorites);
   const toggleFavorite = useFavoritesStore((s) => s.toggleFavorite);
   const plan = usePlanStore((s) => s.plan);
   const addItem = usePlanStore((s) => s.addItem);
+  const updateServings = usePlanStore((s) => s.updateServings);
+  // Opened from the plan → the stepper edits that entry (and so the grocery list) directly.
+  const planItem = plan.items.find((item) => item.id === route.params.planItemId);
+  const servings = planItem ? planItem.servings : draftServings;
+  const changeServings = (delta: number) => {
+    if (planItem) {
+      updateServings(planItem.id, planItem.servings + delta);
+      return;
+    }
+    setDraftServings((s) => Math.min(MAX_SERVINGS, Math.max(MIN_SERVINGS, s + delta)));
+  };
 
   if (!recipe) {
     return (
@@ -66,14 +75,20 @@ export default function RecipeDetailScreen({ route, navigation }: Props) {
           </View>
           <View style={styles.servingsControls}>
             <Pressable
-              onPress={() => setServings((s) => Math.max(MIN_SERVINGS, s - 1))}
+              onPress={() => changeServings(-1)}
+              disabled={servings <= MIN_SERVINGS}
+              accessibilityRole="button"
+              accessibilityLabel="Fewer servings"
               style={styles.circleBtnSm}
             >
               <Feather name="minus" size={14} color={colors.forest} />
             </Pressable>
             <Text style={styles.servingsValue}>{servings}</Text>
             <Pressable
-              onPress={() => setServings((s) => Math.min(MAX_SERVINGS, s + 1))}
+              onPress={() => changeServings(1)}
+              disabled={servings >= MAX_SERVINGS}
+              accessibilityRole="button"
+              accessibilityLabel="More servings"
               style={styles.circleBtnSm}
             >
               <Feather name="plus" size={14} color={colors.forest} />
@@ -81,14 +96,22 @@ export default function RecipeDetailScreen({ route, navigation }: Props) {
           </View>
         </View>
 
-        <Pressable onPress={() => addItem(recipe.id, servings)} style={styles.addBtn}>
-          <Feather name="plus" size={18} color="#fff" />
-          <Text style={styles.addBtnLabel}>
-            {inPlanCount > 0 ? 'Add another to plan' : 'Add to plan'}
-          </Text>
-        </Pressable>
-        {inPlanCount > 0 && (
-          <Text style={styles.inPlanNote}>Already in your plan {inPlanCount} time{inPlanCount === 1 ? '' : 's'}</Text>
+        {planItem ? (
+          <Text style={styles.inPlanNote}>In your plan — changing servings updates your grocery list.</Text>
+        ) : (
+          <>
+            <Pressable onPress={() => addItem(recipe.id, servings)} style={styles.addBtn} accessibilityRole="button">
+              <Feather name="plus" size={18} color="#fff" />
+              <Text style={styles.addBtnLabel}>
+                {inPlanCount > 0 ? 'Add another to plan' : 'Add to plan'}
+              </Text>
+            </Pressable>
+            {inPlanCount > 0 && (
+              <Text style={styles.inPlanNote}>
+                Already in your plan {inPlanCount} time{inPlanCount === 1 ? '' : 's'}
+              </Text>
+            )}
+          </>
         )}
 
         <Text style={styles.sectionHeader}>Ingredients</Text>

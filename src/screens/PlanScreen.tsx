@@ -89,7 +89,8 @@ export default function PlanScreen() {
                     <RecipeCard
                       key={itemId}
                       recipe={recipe}
-                      onPress={() => navigation.navigate('RecipeDetail', { recipeId: recipe.id })}
+                      servings={item.servings}
+                      onPress={() => navigation.navigate('RecipeDetail', { recipeId: recipe.id, planItemId: item.id })}
                       right={
                         <Pressable onPress={() => removeItem(item.id)} hitSlop={8}>
                           <Feather name="x" size={18} color={colors.inkSoft} />

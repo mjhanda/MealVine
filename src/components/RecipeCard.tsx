@@ -9,11 +9,17 @@ interface Props {
   recipe: Recipe;
   onPress: () => void;
   right?: ReactNode;
+  servings?: number;
 }
 
-export default function RecipeCard({ recipe, onPress, right }: Props) {
+export default function RecipeCard({ recipe, onPress, right, servings }: Props) {
   return (
-    <Pressable onPress={onPress} style={styles.card}>
+    <Pressable
+      onPress={onPress}
+      style={styles.card}
+      accessibilityRole="button"
+      accessibilityLabel={servings !== undefined ? `${recipe.title}, ${servings} servings` : recipe.title}
+    >
       <View style={styles.emojiWrap}>
         <Text style={styles.emoji}>{recipe.emoji}</Text>
       </View>
@@ -27,6 +33,12 @@ export default function RecipeCard({ recipe, onPress, right }: Props) {
             <Feather name="clock" size={12} color={colors.inkSoft} />
             <Text style={styles.timeText}>{recipe.prep + recipe.cook}m</Text>
           </View>
+          {servings !== undefined && (
+            <View style={styles.timeRow}>
+              <Feather name="users" size={12} color={colors.inkSoft} />
+              <Text style={styles.timeText}>{servings}</Text>
+            </View>
+          )}
         </View>
       </View>
       {right}

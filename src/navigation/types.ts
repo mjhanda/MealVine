@@ -1,7 +1,8 @@
 export type RootStackParamList = {
   Onboarding: undefined;
   Main: undefined;
-  RecipeDetail: { recipeId: string };
+  // planItemId set = opened from the plan: servings edit that entry instead of adding a new one.
+  RecipeDetail: { recipeId: string; planItemId?: string };
 };
 
 export type MainTabParamList = {

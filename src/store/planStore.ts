@@ -49,8 +49,13 @@ interface PlanState extends PersistedPlan {
   hasHydrated: boolean;
   addItem: (recipeId: string, servings: number) => void;
   removeItem: (id: string) => void;
+  updateServings: (id: string, servings: number) => void;
   clear: () => void;
 }
+
+export const MIN_SERVINGS = 1;
+export const MAX_SERVINGS = 12;
+const clampServings = (n: number) => Math.min(MAX_SERVINGS, Math.max(MIN_SERVINGS, Math.round(n)));
 
 export const usePlanStore = create<PlanState>()(
   persist(
@@ -67,6 +72,15 @@ export const usePlanStore = create<PlanState>()(
       removeItem: (id) =>
         set((state) => ({
           plan: { ...state.plan, items: state.plan.items.filter((item) => item.id !== id) },
+        })),
+      updateServings: (id, servings) =>
+        set((state) => ({
+          plan: {
+            ...state.plan,
+            items: state.plan.items.map((item) =>
+              item.id === id ? { ...item, servings: clampServings(servings) } : item
+            ),
+          },
         })),
       clear: () => set({ plan: { items: [] } }),
     }),
