@@ -6,15 +6,50 @@ import { Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-
 import { SafeAreaView } from 'react-native-safe-area-context';
 import RecipeCard from '../components/RecipeCard';
 import { MainTabParamList, RootStackParamList } from '../navigation/types';
+import { useFavoritesStore } from '../store/favoritesStore';
 import { usePlanStore } from '../store/planStore';
 import { useEatingPrefs, usePreferencesStore } from '../store/preferencesStore';
 import { useUndoStore } from '../store/undoStore';
 import { colors, mealLabels, mealTypeOrder } from '../theme';
 import { MealType } from '../types';
 import { DIETS } from '../utils/diets';
-import { filterRecipes, recipeById } from '../utils/recipeCatalog';
+import { filterRecipes, recipeById, RecipeFilter, RelaxableFilter, relaxSuggestions } from '../utils/recipeCatalog';
 
 type Nav = NativeStackNavigationProp<RootStackParamList & MainTabParamList>;
+
+const TIME_LIMITS = [15, 30, 45];
+
+const RELAX_LABELS: Record<RelaxableFilter, string> = {
+  query: 'Clear search',
+  mealType: 'All meal types',
+  diet: 'Show all diets',
+  maxMinutes: 'Any cooking time',
+  favorites: 'All recipes, not just favorites',
+  hidePlanned: 'Include planned meals',
+};
+
+interface RefinePillProps {
+  icon: keyof typeof Feather.glyphMap;
+  label: string;
+  active: boolean;
+  onPress: () => void;
+  a11y?: string;
+}
+
+function RefinePill({ icon, label, active, onPress, a11y }: RefinePillProps) {
+  return (
+    <Pressable
+      onPress={onPress}
+      style={[styles.refinePill, active && styles.refinePillActive]}
+      accessibilityRole="switch"
+      accessibilityState={{ checked: active }}
+      accessibilityLabel={a11y ?? label}
+    >
+      <Feather name={icon} size={13} color={active ? colors.forest : colors.inkSoft} />
+      <Text style={[styles.refineLabel, active && styles.refineLabelActive]}>{label}</Text>
+    </Pressable>
+  );
+}
 
 export default function BrowseScreen() {
   const navigation = useNavigation<Nav>();
@@ -38,6 +73,10 @@ export default function BrowseScreen() {
   const [search, setSearch] = useState('');
   const [filter, setFilter] = useState<MealType | 'all'>('all');
   const [showAllDiets, setShowAllDiets] = useState(false);
+  const [maxMinutes, setMaxMinutes] = useState<number | null>(null);
+  const [favoritesOnly, setFavoritesOnly] = useState(false);
+  const [hidePlanned, setHidePlanned] = useState(false);
+  const favorites = useFavoritesStore((s) => s.favorites);
 
   const chips: { id: MealType | 'all'; label: string }[] = useMemo(() => {
     const selected = mealTypes.length > 0 ? mealTypes : mealTypeOrder;
@@ -48,11 +87,32 @@ export default function BrowseScreen() {
   }, [mealTypes]);
 
   const mealType = swapRecipe ? swapRecipe.mealType : filter;
-  const recipes = useMemo(
-    () =>
-      filterRecipes({ mealType, query: search, prefs, showAllDiets }).filter((r) => r.id !== swapRecipe?.id),
-    [mealType, prefs, showAllDiets, search, swapRecipe]
+  const criteria: RecipeFilter = useMemo(
+    () => ({
+      mealType,
+      query: search,
+      prefs,
+      showAllDiets,
+      maxMinutes,
+      onlyIds: favoritesOnly ? new Set(favorites) : null,
+      excludeIds: new Set([
+        ...(hidePlanned ? plan.items.map((i) => i.recipeId) : []),
+        ...(swapRecipe ? [swapRecipe.id] : []),
+      ]),
+    }),
+    [mealType, search, prefs, showAllDiets, maxMinutes, favoritesOnly, favorites, hidePlanned, plan.items, swapRecipe]
   );
+  const recipes = useMemo(() => filterRecipes(criteria), [criteria]);
+  const suggestions = useMemo(() => (recipes.length === 0 ? relaxSuggestions(criteria) : []), [recipes, criteria]);
+
+  const relax = (f: RelaxableFilter) => {
+    if (f === 'query') setSearch('');
+    if (f === 'mealType') setFilter('all');
+    if (f === 'diet') setShowAllDiets(true);
+    if (f === 'maxMinutes') setMaxMinutes(null);
+    if (f === 'favorites') setFavoritesOnly(false);
+    if (f === 'hidePlanned') setHidePlanned(false);
+  };
 
   const handleSwap = (recipeId: string, title: string) => {
     if (!swapItem) return;
@@ -139,6 +199,23 @@ export default function BrowseScreen() {
         </ScrollView>
       )}
 
+      <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.filterRow} contentContainerStyle={{ gap: 8 }}>
+        {TIME_LIMITS.map((mins) => (
+          <RefinePill
+            key={mins}
+            icon="clock"
+            label={`${mins} min`}
+            active={maxMinutes === mins}
+            onPress={() => setMaxMinutes(maxMinutes === mins ? null : mins)}
+            a11y={`Under ${mins} minutes`}
+          />
+        ))}
+        <RefinePill icon="heart" label="Favorites" active={favoritesOnly} onPress={() => setFavoritesOnly((v) => !v)} />
+        {!swapRecipe && (
+          <RefinePill icon="eye-off" label="Hide planned" active={hidePlanned} onPress={() => setHidePlanned((v) => !v)} />
+        )}
+      </ScrollView>
+
       {!isClassic && (
         <View style={styles.dietNoteRow}>
           <Text style={styles.dietNote}>
@@ -154,7 +231,23 @@ export default function BrowseScreen() {
       )}
 
       <ScrollView contentContainerStyle={{ padding: 20, paddingTop: 12, paddingBottom: 96, gap: 10 }}>
-        {recipes.length === 0 && <Text style={styles.emptyText}>No recipes match your search.</Text>}
+        {recipes.length > 0 && (
+          <Text style={styles.countText}>
+            {recipes.length} recipe{recipes.length === 1 ? '' : 's'}
+          </Text>
+        )}
+        {recipes.length === 0 && (
+          <View style={styles.empty}>
+            <Text style={styles.emptyText}>No recipes match.</Text>
+            {suggestions.map(({ filter: f, count }) => (
+              <Pressable key={f} onPress={() => relax(f)} style={styles.relaxBtn} accessibilityRole="button">
+                <Text style={styles.relaxLabel}>
+                  {RELAX_LABELS[f]} ({count})
+                </Text>
+              </Pressable>
+            ))}
+          </View>
+        )}
         {recipes.map((recipe) => {
           const inPlan = (inPlanCounts.get(recipe.id) || 0) > 0;
           return (
@@ -206,6 +299,13 @@ const styles = StyleSheet.create({
   searchInput: { flex: 1, fontSize: 13.5, color: colors.ink },
   filterRow: { marginTop: 12, paddingHorizontal: 20, flexGrow: 0, flexShrink: 0 },
   filterPill: { paddingHorizontal: 14, paddingVertical: 8, borderRadius: 20 },
+  refinePill: {
+    flexDirection: 'row', alignItems: 'center', gap: 5, paddingHorizontal: 12, paddingVertical: 7,
+    borderRadius: 20, borderWidth: 1, borderColor: colors.line,
+  },
+  refinePillActive: { borderColor: colors.forest, backgroundColor: colors.sageLight },
+  refineLabel: { fontSize: 12.5, fontWeight: '600', color: colors.inkSoft },
+  refineLabelActive: { color: colors.forest, fontWeight: '700' },
   filterPillInactive: { backgroundColor: colors.card, borderWidth: 1, borderColor: colors.line },
   filterLabel: { fontWeight: '700', fontSize: 13 },
   dietNoteRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: 20, marginTop: 12 },
@@ -217,5 +317,9 @@ const styles = StyleSheet.create({
     alignItems: 'center', justifyContent: 'center',
   },
   addBtnInPlan: { backgroundColor: colors.sage },
+  countText: { fontSize: 12, color: colors.inkSoft },
+  empty: { alignItems: 'center', gap: 10, marginTop: 32 },
+  relaxBtn: { paddingHorizontal: 16, paddingVertical: 10, borderRadius: 20, backgroundColor: colors.sageLight },
+  relaxLabel: { fontSize: 13.5, fontWeight: '700', color: colors.forest },
   emptyText: { color: colors.inkSoft, fontSize: 14, textAlign: 'center', marginTop: 40 },
 });

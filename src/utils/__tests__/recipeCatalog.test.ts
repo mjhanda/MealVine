@@ -1,7 +1,7 @@
 import { INGREDIENTS } from '../../data/ingredients';
 import { RECIPES } from '../../data/recipes';
 import { EatingPrefs, fitsDiet } from '../diets';
-import { filterRecipes, ingredientDisplayName, recipeById } from '../recipeCatalog';
+import { filterRecipes, ingredientDisplayName, recipeById, relaxSuggestions, totalMinutes } from '../recipeCatalog';
 
 const classic: EatingPrefs = { diet: 'classic', allergies: [], dislikes: [] };
 
@@ -50,5 +50,50 @@ describe('filterRecipes', () => {
   });
   it('matches plural names', () => {
     expect(filterRecipes({ mealType: 'all', query: 'tomatoes', prefs: classic }).some((r) => r.ingredients.some((i) => i.id === 'tomato'))).toBe(true);
+  });
+});
+
+describe('filterRecipes: time, ids, combinations', () => {
+  const base = { mealType: 'all' as const, query: '', prefs: classic };
+  it('maxMinutes keeps only quick enough recipes', () => {
+    const quick = filterRecipes({ ...base, mealType: 'dinner', maxMinutes: 30 });
+    expect(quick.length).toBeGreaterThan(0);
+    quick.forEach((r) => {
+      expect(r.mealType).toBe('dinner');
+      expect(totalMinutes(r)).toBeLessThanOrEqual(30);
+    });
+  });
+  it('onlyIds and excludeIds', () => {
+    expect(filterRecipes({ ...base, onlyIds: new Set(['r1', 'r2']) }).map((r) => r.id)).toEqual(['r1', 'r2']);
+    expect(filterRecipes({ ...base, excludeIds: new Set(['r1']) }).some((r) => r.id === 'r1')).toBe(false);
+  });
+  it('allergen-excluded recipes never appear under any filter combination', () => {
+    const prefs: EatingPrefs = { diet: 'classic', allergies: ['dairy'], dislikes: [] };
+    const combos = [
+      { showAllDiets: true },
+      { maxMinutes: 45 },
+      { onlyIds: new Set(RECIPES.map((r) => r.id)) },
+      { mealType: 'breakfast' as const, query: 'egg' },
+    ];
+    combos.forEach((c) =>
+      filterRecipes({ ...base, prefs, ...c }).forEach((r) =>
+        r.ingredients.forEach((i) => expect(INGREDIENTS[i.id].tags).not.toContain('dairy'))
+      )
+    );
+  });
+});
+
+describe('relaxSuggestions', () => {
+  it('names each active filter that would bring results back, with counts', () => {
+    const f = { mealType: 'snack' as const, query: 'salmon', prefs: classic, maxMinutes: 15 };
+    expect(filterRecipes(f)).toHaveLength(0);
+    const s = relaxSuggestions(f);
+    expect(s.map((x) => x.filter)).toEqual(expect.arrayContaining(['query', 'mealType']));
+    s.forEach((x) => expect(x.count).toBeGreaterThan(0));
+  });
+  it('never suggests dropping allergies', () => {
+    const prefs: EatingPrefs = { diet: 'classic', allergies: ['fish', 'shellfish'], dislikes: [] };
+    const s = relaxSuggestions({ mealType: 'all', query: 'salmon', prefs });
+    expect(s.map((x) => x.filter)).toEqual(['query']);
   });
 });

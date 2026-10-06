@@ -22,6 +22,9 @@ export interface RecipeFilter {
   prefs: EatingPrefs;
   // Relaxes the diet only — allergies and dislikes always exclude.
   showAllDiets?: boolean;
+  maxMinutes?: number | null; // prep + cook
+  onlyIds?: Set<string> | null; // e.g. favorites
+  excludeIds?: Set<string> | null; // e.g. already planned
 }
 
 function matchesQuery(recipe: Recipe, query: string): boolean {
@@ -33,13 +36,37 @@ function matchesQuery(recipe: Recipe, query: string): boolean {
   });
 }
 
-export function filterRecipes({ mealType, query, prefs, showAllDiets = false }: RecipeFilter): Recipe[] {
-  const q = query.trim().toLowerCase();
+export const totalMinutes = (r: Recipe) => r.prep + r.cook;
+
+export function filterRecipes(f: RecipeFilter): Recipe[] {
+  const q = f.query.trim().toLowerCase();
   return RECIPES.filter((r) => {
-    if (mealType !== 'all' && r.mealType !== mealType) return false;
-    const conflicts = recipeConflicts(r, prefs);
+    if (f.mealType !== 'all' && r.mealType !== f.mealType) return false;
+    if (f.maxMinutes && totalMinutes(r) > f.maxMinutes) return false;
+    if (f.onlyIds && !f.onlyIds.has(r.id)) return false;
+    if (f.excludeIds?.has(r.id)) return false;
+    const conflicts = recipeConflicts(r, f.prefs);
     if (isExcluded(conflicts)) return false;
-    if (!showAllDiets && conflicts.diet) return false;
+    if (!f.showAllDiets && conflicts.diet) return false;
     return matchesQuery(r, q);
   });
+}
+
+export type RelaxableFilter = 'query' | 'mealType' | 'diet' | 'maxMinutes' | 'favorites' | 'hidePlanned';
+
+// For an empty result: which single filter, if dropped, would bring recipes back (and how many).
+// Allergies/dislikes are never suggested.
+export function relaxSuggestions(f: RecipeFilter): { filter: RelaxableFilter; count: number }[] {
+  const candidates: [RelaxableFilter, boolean, RecipeFilter][] = [
+    ['query', !!f.query.trim(), { ...f, query: '' }],
+    ['mealType', f.mealType !== 'all', { ...f, mealType: 'all' }],
+    ['diet', !f.showAllDiets && f.prefs.diet !== 'classic', { ...f, showAllDiets: true }],
+    ['maxMinutes', !!f.maxMinutes, { ...f, maxMinutes: null }],
+    ['favorites', !!f.onlyIds, { ...f, onlyIds: null }],
+    ['hidePlanned', !!f.excludeIds?.size, { ...f, excludeIds: null }],
+  ];
+  return candidates
+    .filter(([, active]) => active)
+    .map(([filter, , relaxed]) => ({ filter, count: filterRecipes(relaxed).length }))
+    .filter((s) => s.count > 0);
 }
