@@ -3,6 +3,7 @@ export type RootStackParamList = {
   Main: undefined;
   // planItemId set = opened from the plan: servings edit that entry instead of adding a new one.
   RecipeDetail: { recipeId: string; planItemId?: string };
+  Cook: { recipeId: string; planItemId?: string };
 };
 
 export type MainTabParamList = {

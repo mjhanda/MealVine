@@ -131,6 +131,15 @@ export default function RecipeDetailScreen({ route, navigation }: Props) {
           </>
         )}
 
+        <Pressable
+          onPress={() => navigation.navigate('Cook', { recipeId: recipe.id, planItemId: planItem?.id })}
+          style={styles.cookBtn}
+          accessibilityRole="button"
+        >
+          <Feather name="play" size={16} color={colors.forest} />
+          <Text style={styles.cookBtnLabel}>Start cooking</Text>
+        </Pressable>
+
         <Text style={styles.sectionHeader}>Ingredients</Text>
         <View style={{ gap: 8 }}>
           {recipe.ingredients.map((ing, i) => {
@@ -198,6 +207,11 @@ const styles = StyleSheet.create({
   },
   addBtnLabel: { color: '#fff', fontWeight: '700', fontSize: 15 },
   inPlanNote: { fontSize: 12.5, color: colors.sage, textAlign: 'center', marginTop: 8, fontWeight: '600' },
+  cookBtn: {
+    flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, marginTop: 12,
+    borderRadius: 14, paddingVertical: 13, borderWidth: 1.5, borderColor: colors.forest,
+  },
+  cookBtnLabel: { color: colors.forest, fontWeight: '700', fontSize: 15 },
   sectionHeader: {
     fontWeight: '800', fontSize: 13, color: colors.forest, marginTop: 24, marginBottom: 10,
     textTransform: 'uppercase', letterSpacing: 0.6,

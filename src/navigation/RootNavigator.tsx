@@ -4,6 +4,7 @@ import React, { useEffect } from 'react';
 import { ActivityIndicator, View } from 'react-native';
 import { notify } from '../components/dialogs';
 import UndoBar from '../components/UndoBar';
+import CookScreen from '../screens/CookScreen';
 import OnboardingScreen from '../screens/OnboardingScreen';
 import RecipeDetailScreen from '../screens/RecipeDetailScreen';
 import { useStorageHealth } from '../store/persistence';
@@ -49,6 +50,7 @@ export default function RootNavigator() {
           <>
             <Stack.Screen name="Main" component={MainTabs} />
             <Stack.Screen name="RecipeDetail" component={RecipeDetailScreen} options={{ presentation: 'modal' }} />
+            <Stack.Screen name="Cook" component={CookScreen} options={{ presentation: 'fullScreenModal' }} />
           </>
         )}
       </Stack.Navigator>
