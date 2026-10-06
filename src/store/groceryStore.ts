@@ -2,11 +2,14 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { LEGACY_INGREDIENT_NAMES } from '../data/legacyIngredientNames';
 import { Aisle, GroceryState, ManualGroceryItem } from '../types';
+import { pruneChecked } from '../utils/grocery';
 import { isRecord, MigrationError, persistOptions } from './persistence';
 
 export const GROCERY_VERSION = 2;
 
 export const MANUAL_KEY_PREFIX = 'manual__';
+export const manualKey = (id: string) => `${MANUAL_KEY_PREFIX}${id}`;
+const isManualKey = (key: string) => key.startsWith(MANUAL_KEY_PREFIX);
 
 // Pre-v2 section names → v2 aisles. Every v0/v1 manual item was forced into 'Pantry & Canned'
 // regardless of what it was, so that one maps to 'Other' rather than pretending to know.
@@ -24,7 +27,7 @@ function migrateCheckedKeys(checked: Record<string, boolean>): Record<string, bo
   const out: Record<string, boolean> = {};
   Object.entries(checked).forEach(([key, value]) => {
     if (!value) return;
-    if (key.startsWith(MANUAL_KEY_PREFIX)) {
+    if (isManualKey(key)) {
       out[key] = true;
       return;
     }
@@ -57,6 +60,7 @@ interface GroceryStoreState extends GroceryState {
   addManual: (name: string) => void;
   removeManual: (id: string) => void;
   clearChecked: () => void;
+  pruneToPlan: (liveKeys: Set<string>) => void;
 }
 
 export const useGroceryStore = create<GroceryStoreState>()(
@@ -74,8 +78,13 @@ export const useGroceryStore = create<GroceryStoreState>()(
           ],
         })),
       removeManual: (id) =>
-        set((state) => ({ manualItems: state.manualItems.filter((m) => m.id !== id) })),
+        set((state) => {
+          const { [manualKey(id)]: _removed, ...checked } = state.checked;
+          return { manualItems: state.manualItems.filter((m) => m.id !== id), checked };
+        }),
       clearChecked: () => set({ checked: {} }),
+      pruneToPlan: (liveKeys) =>
+        set((state) => ({ checked: pruneChecked(state.checked, liveKeys, isManualKey) })),
     }),
     persistOptions<GroceryStoreState, GroceryState>({
       name: 'mealplan:grocery',

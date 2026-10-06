@@ -70,3 +70,22 @@ export function groupByAisle<T extends { aisle: Aisle; name: string }>(lines: T[
 export function groceryItemsFromPlan(plan: MealPlan): Record<Aisle, GroceryLine[]> {
   return groupByAisle(groceryLinesFromPlan(plan));
 }
+
+// Drops check-offs for ingredients no recipe in the plan needs any more, so they come back
+// unchecked when a later meal needs them again. Manual-item keys are left alone.
+export function pruneChecked(
+  checked: Record<string, boolean>,
+  liveKeys: Set<string>,
+  isManualKey: (key: string) => boolean
+): Record<string, boolean> {
+  const next: Record<string, boolean> = {};
+  Object.entries(checked).forEach(([key, value]) => {
+    if (value && (isManualKey(key) || liveKeys.has(key))) next[key] = true;
+  });
+  return next;
+}
+
+// Unchecked first, then alphabetical — so what's left to buy stays at the top of each aisle.
+export function sortForShopping<T extends { key: string; name: string }>(lines: T[], checked: Record<string, boolean>): T[] {
+  return [...lines].sort((a, b) => Number(!!checked[a.key]) - Number(!!checked[b.key]) || a.name.localeCompare(b.name));
+}

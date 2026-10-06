@@ -2,10 +2,11 @@ import { Feather } from '@expo/vector-icons';
 import React, { useMemo, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { MANUAL_KEY_PREFIX, useGroceryStore } from '../store/groceryStore';
+import { confirmAction } from '../components/dialogs';
+import { manualKey, useGroceryStore } from '../store/groceryStore';
 import { usePlanStore } from '../store/planStore';
 import { aisleOrder, colors } from '../theme';
-import { groceryItemsFromPlan } from '../utils/grocery';
+import { groceryItemsFromPlan, sortForShopping } from '../utils/grocery';
 import { unitLabel } from '../utils/units';
 
 export default function GroceryScreen() {
@@ -15,6 +16,7 @@ export default function GroceryScreen() {
   const manualItems = useGroceryStore((s) => s.manualItems);
   const addManual = useGroceryStore((s) => s.addManual);
   const removeManual = useGroceryStore((s) => s.removeManual);
+  const clearChecked = useGroceryStore((s) => s.clearChecked);
   const [newItem, setNewItem] = useState('');
 
   const grouped = useMemo(() => groceryItemsFromPlan(plan), [plan]);
@@ -25,7 +27,12 @@ export default function GroceryScreen() {
     Object.values(grouped).reduce(
       (n, list) => n + list.filter((it) => checked[it.key]).length,
       0
-    ) + manualItems.filter((m) => checked[`${MANUAL_KEY_PREFIX}${m.id}`]).length;
+    ) + manualItems.filter((m) => checked[manualKey(m.id)]).length;
+
+  const handleUncheckAll = () => {
+    if (checkedCount === 0) return;
+    confirmAction('Uncheck everything?', 'Every item goes back on your list as not yet picked up.', 'Uncheck all', clearChecked);
+  };
 
   const handleAdd = () => {
     const name = newItem.trim();
@@ -37,11 +44,20 @@ export default function GroceryScreen() {
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
       <View style={styles.header}>
-        <Text style={styles.eyebrow}>Auto-generated</Text>
-        <Text style={styles.title}>Grocery list</Text>
-        <Text style={styles.subtitle}>
-          {checkedCount} of {totalItems} picked up
-        </Text>
+        <View style={styles.titleRow}>
+          <View>
+            <Text style={styles.eyebrow}>Auto-generated</Text>
+            <Text style={styles.title}>Grocery list</Text>
+            <Text style={styles.subtitle}>
+              {checkedCount} of {totalItems} picked up
+            </Text>
+          </View>
+          {checkedCount > 0 && (
+            <Pressable onPress={handleUncheckAll} hitSlop={8} accessibilityRole="button">
+              <Text style={styles.headerAction}>Uncheck all</Text>
+            </Pressable>
+          )}
+        </View>
         <View style={styles.addRow}>
           <TextInput
             value={newItem}
@@ -62,8 +78,11 @@ export default function GroceryScreen() {
           <Text style={styles.emptyText}>Add meals to your plan to generate your list.</Text>
         )}
         {aisleOrder.map((cat) => {
-          const items = grouped[cat];
-          const manuals = manualItems.filter((m) => m.aisle === cat);
+          const items = sortForShopping(grouped[cat], checked);
+          const manuals = sortForShopping(
+            manualItems.filter((m) => m.aisle === cat).map((m) => ({ ...m, key: manualKey(m.id) })),
+            checked
+          );
           if (items.length === 0 && manuals.length === 0) return null;
           return (
             <View key={cat}>
@@ -85,7 +104,7 @@ export default function GroceryScreen() {
                   );
                 })}
                 {manuals.map((m) => {
-                  const key = `${MANUAL_KEY_PREFIX}${m.id}`;
+                  const key = m.key;
                   const isChecked = !!checked[key];
                   return (
                     <Pressable key={key} onPress={() => toggleCheck(key)} style={styles.row}>
@@ -114,6 +133,8 @@ const styles = StyleSheet.create({
   eyebrow: { fontSize: 13, color: colors.gold, fontWeight: '600' },
   title: { fontSize: 24, fontWeight: '600', color: colors.forest },
   subtitle: { fontSize: 12.5, color: colors.inkSoft, marginTop: 4 },
+  titleRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-end' },
+  headerAction: { fontSize: 13, fontWeight: '700', color: colors.forest },
   addRow: { flexDirection: 'row', gap: 8, marginTop: 14 },
   input: {
     flex: 1, paddingHorizontal: 14, paddingVertical: 11, borderRadius: 12,

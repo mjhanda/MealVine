@@ -1,7 +1,8 @@
 import { Feather } from '@expo/vector-icons';
 import React, { useState } from 'react';
-import { Alert, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { confirmAction, notify } from '../components/dialogs';
 import { usePreferencesStore } from '../store/preferencesStore';
 import { colors, mealLabels } from '../theme';
 import { DietPref, MealType } from '../types';
@@ -34,11 +35,11 @@ export default function SettingsScreen() {
 
   const handleSave = () => {
     if (mealTypes.length === 0) {
-      Alert.alert('Pick at least one meal', 'Choose breakfast, lunch, dinner, or snack to plan.');
+      notify('Pick at least one meal', 'Choose breakfast, lunch, dinner, or snack to plan.');
       return;
     }
     updatePreferences({ householdSize: household, diet, mealTypes });
-    Alert.alert('Saved', 'Your preferences are up to date.');
+    notify('Saved', 'Your preferences are up to date.');
   };
 
   return (
@@ -105,10 +106,7 @@ export default function SettingsScreen() {
 
         <Pressable
           onPress={() =>
-            Alert.alert('Restart onboarding?', 'This clears your saved preferences.', [
-              { text: 'Cancel', style: 'cancel' },
-              { text: 'Restart', style: 'destructive', onPress: resetOnboarding },
-            ])
+            confirmAction('Restart onboarding?', 'This clears your saved preferences.', 'Restart', resetOnboarding)
           }
           style={styles.dangerBtn}
         >

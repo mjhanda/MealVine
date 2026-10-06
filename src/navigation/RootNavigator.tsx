@@ -1,7 +1,8 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React, { useEffect } from 'react';
-import { ActivityIndicator, Alert, View } from 'react-native';
+import { ActivityIndicator, View } from 'react-native';
+import { notify } from '../components/dialogs';
 import OnboardingScreen from '../screens/OnboardingScreen';
 import RecipeDetailScreen from '../screens/RecipeDetailScreen';
 import { useStorageHealth } from '../store/persistence';
@@ -23,10 +24,10 @@ export default function RootNavigator() {
 
   useEffect(() => {
     if (!hasHydrated || failedStores.length === 0) return;
-    Alert.alert(
+    notify(
       "Some saved data couldn't be loaded",
       'The app started fresh for those parts. A backup copy was kept on this device.',
-      [{ text: 'OK', onPress: dismissStorageFailure }]
+      dismissStorageFailure
     );
   }, [hasHydrated, failedStores, dismissStorageFailure]);
 

@@ -2,8 +2,9 @@ import { Feather } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import React, { useMemo } from 'react';
-import { Alert, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { confirmAction } from '../components/dialogs';
 import RecipeCard from '../components/RecipeCard';
 import { MainTabParamList, RootStackParamList } from '../navigation/types';
 import { usePlanStore } from '../store/planStore';
@@ -42,10 +43,12 @@ export default function PlanScreen() {
 
   const handleClear = () => {
     if (total === 0) return;
-    Alert.alert('Clear your plan?', `Removes all ${total} meal${total === 1 ? '' : 's'} and rebuilds the grocery list from nothing.`, [
-      { text: 'Cancel', style: 'cancel' },
-      { text: 'Clear', style: 'destructive', onPress: clear },
-    ]);
+    confirmAction(
+      'Clear your plan?',
+      `Removes all ${total} meal${total === 1 ? '' : 's'} and their ingredients from the grocery list. Items you added yourself stay.`,
+      'Clear',
+      clear
+    );
   };
 
   return (

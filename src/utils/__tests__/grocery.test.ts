@@ -1,6 +1,6 @@
 import { RECIPES } from '../../data/recipes';
 import { aisleOrder } from '../../theme';
-import { groceryItemsFromPlan, groceryLinesFromPlan } from '../grocery';
+import { groceryItemsFromPlan, groceryLinesFromPlan, pruneChecked, sortForShopping } from '../grocery';
 import { recipeById } from '../recipeCatalog';
 
 const planOf = (...entries: [string, number][]) => ({
@@ -60,5 +60,17 @@ describe('groceryItemsFromPlan', () => {
       expect(names).toEqual([...names].sort((a, b) => a.localeCompare(b)));
     });
     expect(grouped['Dairy & Eggs'].map((l) => l.ingredientId)).toEqual(expect.arrayContaining(['eggs', 'greek-yogurt']));
+  });
+});
+
+describe('pruneChecked / sortForShopping', () => {
+
+  it('keeps live and manual keys, drops the rest and false values', () => {
+    const out = pruneChecked({ eggs: true, garlic: true, salt: false, manual__1: true }, new Set(['eggs', 'salt']), (k) => k.startsWith('manual__'));
+    expect(out).toEqual({ eggs: true, manual__1: true });
+  });
+  it('puts checked items last, alphabetical within each group', () => {
+    const lines = [{ key: 'a', name: 'Apple' }, { key: 'b', name: 'Banana' }, { key: 'c', name: 'Cherry' }];
+    expect(sortForShopping(lines, { a: true }).map((l) => l.key)).toEqual(['b', 'c', 'a']);
   });
 });
