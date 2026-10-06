@@ -1,4 +1,4 @@
-# MealApp — Product Plan
+# MealVine — Product Plan
 
 Last updated 2026-10-05. Work items live in GitHub issues (mirrored in
 [`docs/TASKS.md`](TASKS.md)); this file covers what the product is, what's
@@ -17,8 +17,10 @@ whenever you like and tick them off.
 - **Positioning:** works offline, no account, private by default, and your
   data stays exportable. Competitive context (Mealime's 2026-10-21 shutdown) is
   in `TASKS.md` and issue #25.
-- **Name:** "MealApp" is a working title. The shipping name is undecided (#25).
-  No competitor's name or branding may appear in the app or store listing.
+- **Name / publisher:** **MealVine**, published by **Bionic Sun LLC** on the App Store and Google Play
+  (`com.bionicsun.mealvine`). No competitor's name or branding may appear in the app or store listing.
+- **Business model:** subscription, $4.99/month plus a yearly plan, 14-day free trial, then a hard
+  paywall (shown after onboarding). RevenueCat handles purchases and entitlement (`pro`).
 
 ## 2. Core loop and what's built
 
@@ -59,10 +61,12 @@ architecture and security notes.
 | 2026-10-05 | Allergen tags are conservative | A missed tag is a safety bug; an extra tag only hides a recipe. Disclaimer shown wherever allergies are set. |
 | 2026-10-05 | v1 "veg + lean protein" maps to Flexitarian | It was exactly "no red meat, no pork". |
 | 2026-10-05 | Undo instead of confirm for reversible actions | Faster, and less nagging; confirmations only for bulk-destructive actions. |
+| 2026-10-05 | Name MealVine, publisher Bionic Sun LLC, both stores | Owner decision (#25). Trademark caution: an app called "MealTwine" exists. |
+| 2026-10-05 | $4.99/mo + yearly subscription, 14-day trial, hard paywall, RevenueCat | Owner decision. Trade-off accepted: one third-party SDK with network access, so store privacy labels declare purchase history + an anonymous ID; meal data stays on-device. |
 
 ## 5. Open decisions (owner)
 
-- **#25 Publish?** Name, price model, platform order, launch date.
+- **Yearly price** (recommendation: $29.99, "save 50%") and **launch date**.
 - **#15 Photos:** self-shot, licensed, or AI-generated with disclosure; bundled vs CDN.
 - **Red meat and pork recipes (#16):** none exist today, so Classic is
   effectively Flexitarian. Adding them is needed for a general audience.
