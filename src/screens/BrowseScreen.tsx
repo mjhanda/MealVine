@@ -23,12 +23,14 @@ import { filterRecipes, recipeById, RecipeFilter, RelaxableFilter, relaxSuggesti
 type Nav = NativeStackNavigationProp<RootStackParamList & MainTabParamList>;
 
 const TIME_LIMITS = [15, 30, 45];
+const KCAL_LIMITS = [400, 600];
 
 const RELAX_LABELS: Record<RelaxableFilter, string> = {
   query: 'Clear search',
   mealType: 'All meal types',
   diet: 'Show all diets',
   maxMinutes: 'Any cooking time',
+  maxKcal: 'Any calories',
   favorites: 'All recipes, not just favorites',
   hidePlanned: 'Include planned meals',
 };
@@ -80,6 +82,7 @@ export default function BrowseScreen() {
   const [filter, setFilter] = useState<MealType | 'all'>('all');
   const [showAllDiets, setShowAllDiets] = useState(false);
   const [maxMinutes, setMaxMinutes] = useState<number | null>(null);
+  const [maxKcal, setMaxKcal] = useState<number | null>(null);
   const [favoritesOnly, setFavoritesOnly] = useState(false);
   const [hidePlanned, setHidePlanned] = useState(false);
   const favorites = useFavoritesStore((s) => s.favorites);
@@ -103,13 +106,14 @@ export default function BrowseScreen() {
       prefs,
       showAllDiets,
       maxMinutes,
+      maxKcal,
       onlyIds: favoritesOnly ? new Set(favorites) : null,
       excludeIds: new Set([
         ...(hidePlanned ? plan.items.map((i) => i.recipeId) : []),
         ...(swapRecipe ? [swapRecipe.id] : []),
       ]),
     }),
-    [mealType, search, prefs, showAllDiets, maxMinutes, favoritesOnly, favorites, hidePlanned, plan.items, swapRecipe]
+    [mealType, search, prefs, showAllDiets, maxMinutes, maxKcal, favoritesOnly, favorites, hidePlanned, plan.items, swapRecipe]
   );
   const recipes = useMemo(() => filterRecipes(criteria), [criteria]);
   const suggestions = useMemo(() => (recipes.length === 0 ? relaxSuggestions(criteria) : []), [recipes, criteria]);
@@ -119,6 +123,7 @@ export default function BrowseScreen() {
     if (f === 'mealType') setFilter('all');
     if (f === 'diet') setShowAllDiets(true);
     if (f === 'maxMinutes') setMaxMinutes(null);
+    if (f === 'maxKcal') setMaxKcal(null);
     if (f === 'favorites') setFavoritesOnly(false);
     if (f === 'hidePlanned') setHidePlanned(false);
   };
@@ -220,6 +225,16 @@ export default function BrowseScreen() {
             active={maxMinutes === mins}
             onPress={() => setMaxMinutes(maxMinutes === mins ? null : mins)}
             a11y={`Under ${mins} minutes`}
+          />
+        ))}
+        {KCAL_LIMITS.map((kcal) => (
+          <RefinePill
+            key={kcal}
+            icon="zap"
+            label={`< ${kcal} kcal`}
+            active={maxKcal === kcal}
+            onPress={() => setMaxKcal(maxKcal === kcal ? null : kcal)}
+            a11y={`Under ${kcal} calories per serving`}
           />
         ))}
         <RefinePill icon="heart" label="Favorites" active={favoritesOnly} onPress={() => setFavoritesOnly((v) => !v)} />

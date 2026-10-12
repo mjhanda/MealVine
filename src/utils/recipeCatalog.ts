@@ -2,6 +2,7 @@ import { ingredientById } from '../data/ingredients';
 import { RECIPES } from '../data/recipes';
 import { MealType, Recipe, RecipeIngredient } from '../types';
 import { EatingPrefs, isExcluded, recipeConflicts } from './diets';
+import { caloriesPerServing } from './nutrition';
 
 // "2 Carrots, diced" — plural for counts above one, prep note appended.
 export function ingredientDisplayName(ing: RecipeIngredient, scaledAmount: number): string {
@@ -23,6 +24,7 @@ export interface RecipeFilter {
   // Relaxes the diet only — allergies and dislikes always exclude.
   showAllDiets?: boolean;
   maxMinutes?: number | null; // prep + cook
+  maxKcal?: number | null; // per serving
   onlyIds?: Set<string> | null; // e.g. favorites
   excludeIds?: Set<string> | null; // e.g. already planned
 }
@@ -43,6 +45,7 @@ export function filterRecipes(f: RecipeFilter): Recipe[] {
   return RECIPES.filter((r) => {
     if (f.mealType !== 'all' && r.mealType !== f.mealType) return false;
     if (f.maxMinutes && totalMinutes(r) > f.maxMinutes) return false;
+    if (f.maxKcal && caloriesPerServing(r) > f.maxKcal) return false;
     if (f.onlyIds && !f.onlyIds.has(r.id)) return false;
     if (f.excludeIds?.has(r.id)) return false;
     const conflicts = recipeConflicts(r, f.prefs);
@@ -52,7 +55,7 @@ export function filterRecipes(f: RecipeFilter): Recipe[] {
   });
 }
 
-export type RelaxableFilter = 'query' | 'mealType' | 'diet' | 'maxMinutes' | 'favorites' | 'hidePlanned';
+export type RelaxableFilter = 'query' | 'mealType' | 'diet' | 'maxMinutes' | 'maxKcal' | 'favorites' | 'hidePlanned';
 
 // For an empty result: which single filter, if dropped, would bring recipes back (and how many).
 // Allergies/dislikes are never suggested.
@@ -62,6 +65,7 @@ export function relaxSuggestions(f: RecipeFilter): { filter: RelaxableFilter; co
     ['mealType', f.mealType !== 'all', { ...f, mealType: 'all' }],
     ['diet', !f.showAllDiets && f.prefs.diet !== 'classic', { ...f, showAllDiets: true }],
     ['maxMinutes', !!f.maxMinutes, { ...f, maxMinutes: null }],
+    ['maxKcal', !!f.maxKcal, { ...f, maxKcal: null }],
     ['favorites', !!f.onlyIds, { ...f, onlyIds: null }],
     ['hidePlanned', !!f.excludeIds?.size, { ...f, excludeIds: null }],
   ];

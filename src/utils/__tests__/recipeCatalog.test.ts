@@ -1,6 +1,7 @@
 import { INGREDIENTS } from '../../data/ingredients';
 import { RECIPES } from '../../data/recipes';
 import { EatingPrefs, fitsDiet } from '../diets';
+import { caloriesPerServing } from '../nutrition';
 import { filterRecipes, ingredientDisplayName, recipeById, relaxSuggestions, totalMinutes } from '../recipeCatalog';
 
 const classic: EatingPrefs = { diet: 'classic', allergies: [], dislikes: [] };
@@ -95,5 +96,19 @@ describe('relaxSuggestions', () => {
     const prefs: EatingPrefs = { diet: 'classic', allergies: ['fish', 'shellfish'], dislikes: [] };
     const s = relaxSuggestions({ mealType: 'all', query: 'salmon', prefs });
     expect(s.map((x) => x.filter)).toEqual(['query']);
+  });
+});
+
+describe('calorie filter', () => {
+
+  it('keeps only recipes at or under the limit per serving', () => {
+    const light = filterRecipes({ mealType: 'all', query: '', prefs: classic, maxKcal: 400 });
+    expect(light.length).toBeGreaterThan(0);
+    expect(light.length).toBeLessThan(RECIPES.length);
+    light.forEach((r) => expect(caloriesPerServing(r)).toBeLessThanOrEqual(400));
+  });
+  it('is offered as a relax suggestion', () => {
+    const s = relaxSuggestions({ mealType: 'dinner', query: '', prefs: classic, maxKcal: 50 });
+    expect(s.map((x) => x.filter)).toContain('maxKcal');
   });
 });

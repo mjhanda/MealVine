@@ -5,6 +5,7 @@ import { Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-
 import { SafeAreaView } from 'react-native-safe-area-context';
 import AdSlot from '../ads/AdSlot';
 import ProteinTag from '../components/ProteinTag';
+import NutritionPanel from '../components/NutritionPanel';
 import RatingButtons from '../components/RatingButtons';
 import { RootStackParamList } from '../navigation/types';
 import { useFavoritesStore } from '../store/favoritesStore';
@@ -15,6 +16,7 @@ import { useEatingPrefs, usePreferencesStore } from '../store/preferencesStore';
 import { colors } from '../theme';
 import { describeConflicts, DIETS, dietsFor, isExcluded, recipeConflicts } from '../utils/diets';
 import { ingredientDisplayName, recipeById } from '../utils/recipeCatalog';
+import { caloriesPerServing } from '../utils/nutrition';
 import { formatQuantity, scaleAmount } from '../utils/units';
 
 
@@ -28,6 +30,7 @@ export default function RecipeDetailScreen({ route, navigation }: Props) {
   const setNote = useRecipeNotesStore((s) => s.setNote);
   const timesCooked = useHistoryStore((s) => s.cooked.filter((e) => e.recipeId === route.params.recipeId).length);
   const [draftServings, setDraftServings] = useState(householdSize);
+  const [tab, setTab] = useState<'recipe' | 'nutrition'>('recipe');
   const favorites = useFavoritesStore((s) => s.favorites);
   const toggleFavorite = useFavoritesStore((s) => s.toggleFavorite);
   const plan = usePlanStore((s) => s.plan);
@@ -161,51 +164,73 @@ export default function RecipeDetailScreen({ route, navigation }: Props) {
           <Text style={styles.cookBtnLabel}>Start cooking</Text>
         </Pressable>
 
-        <Text style={styles.sectionHeader}>Ingredients</Text>
-        <View style={{ gap: 8 }}>
-          {recipe.ingredients.map((ing, i) => {
-            const amount = scaleAmount(ing.amount, recipe.servings, servings);
-            return (
-              <View key={i} style={styles.ingredientRow}>
-                <Text style={styles.ingredientName}>{ingredientDisplayName(ing, amount)}</Text>
-                <Text style={styles.ingredientAmount}>{formatQuantity(amount, ing.unit)}</Text>
-              </View>
-            );
-          })}
-        </View>
-
-        <Text style={styles.sectionHeader}>Steps</Text>
-        <View style={{ gap: 14 }}>
-          {recipe.steps.map((step, i) => (
-            <View key={i} style={styles.stepRow}>
-              <View style={styles.stepBadge}>
-                <Text style={styles.stepBadgeText}>{i + 1}</Text>
-              </View>
-              <Text style={styles.stepText}>{step}</Text>
-            </View>
+        <View style={styles.tabs} accessibilityRole="tablist">
+          {(['recipe', 'nutrition'] as const).map((t) => (
+            <Pressable
+              key={t}
+              onPress={() => setTab(t)}
+              style={[styles.tab, tab === t && styles.tabActive]}
+              accessibilityRole="tab"
+              accessibilityState={{ selected: tab === t }}
+            >
+              <Text style={[styles.tabLabel, tab === t && styles.tabLabelActive]}>
+                {t === 'recipe' ? 'Recipe' : `Nutrition · ${Math.round(caloriesPerServing(recipe) / 10) * 10} kcal`}
+              </Text>
+            </Pressable>
           ))}
         </View>
 
-        <View style={styles.adWrap}>
-          <AdSlot placement="recipe-detail" />
-        </View>
+        {tab === 'recipe' ? (
+          <>
+            <Text style={styles.sectionHeader}>Ingredients</Text>
+            <View style={{ gap: 8 }}>
+              {recipe.ingredients.map((ing, i) => {
+                const amount = scaleAmount(ing.amount, recipe.servings, servings);
+                return (
+                  <View key={i} style={styles.ingredientRow}>
+                    <Text style={styles.ingredientName}>{ingredientDisplayName(ing, amount)}</Text>
+                    <Text style={styles.ingredientAmount}>{formatQuantity(amount, ing.unit)}</Text>
+                  </View>
+                );
+              })}
+            </View>
 
-        <Text style={styles.sectionHeader}>Your notes</Text>
-        <TextInput
-          value={note}
-          onChangeText={(text) => setNote(recipe.id, text)}
-          placeholder="Tweaks for next time — e.g. half the chili, add lime"
-          placeholderTextColor={colors.inkSoft}
-          multiline
-          style={styles.noteInput}
-          accessibilityLabel="Your notes for this recipe"
-        />
-        <View style={styles.ratingRow}>
-          <Text style={styles.ratingLabel}>
-            {timesCooked ? `Cooked ${timesCooked}× · how was it?` : 'How was it?'}
-          </Text>
-          <RatingButtons recipeId={recipe.id} />
-        </View>
+            <Text style={styles.sectionHeader}>Steps</Text>
+            <View style={{ gap: 14 }}>
+              {recipe.steps.map((step, i) => (
+                <View key={i} style={styles.stepRow}>
+                  <View style={styles.stepBadge}>
+                    <Text style={styles.stepBadgeText}>{i + 1}</Text>
+                  </View>
+                  <Text style={styles.stepText}>{step}</Text>
+                </View>
+              ))}
+            </View>
+
+            <View style={styles.adWrap}>
+              <AdSlot placement="recipe-detail" />
+            </View>
+
+            <Text style={styles.sectionHeader}>Your notes</Text>
+            <TextInput
+              value={note}
+              onChangeText={(text) => setNote(recipe.id, text)}
+              placeholder="Tweaks for next time — e.g. half the chili, add lime"
+              placeholderTextColor={colors.inkSoft}
+              multiline
+              style={styles.noteInput}
+              accessibilityLabel="Your notes for this recipe"
+            />
+            <View style={styles.ratingRow}>
+              <Text style={styles.ratingLabel}>
+                {timesCooked ? `Cooked ${timesCooked}× · how was it?` : 'How was it?'}
+              </Text>
+              <RatingButtons recipeId={recipe.id} />
+            </View>
+          </>
+        ) : (
+          <NutritionPanel recipe={recipe} servings={servings} />
+        )}
       </ScrollView>
     </SafeAreaView>
   );
@@ -231,6 +256,14 @@ const styles = StyleSheet.create({
   },
   bannerDanger: { backgroundColor: colors.rustLight, borderColor: colors.rust },
   bannerText: { flex: 1, fontSize: 13, color: colors.ink, lineHeight: 18 },
+  tabs: {
+    flexDirection: 'row', marginTop: 20, borderRadius: 12, borderWidth: 1, borderColor: colors.line,
+    backgroundColor: colors.card, padding: 3,
+  },
+  tab: { flex: 1, alignItems: 'center', paddingVertical: 10, borderRadius: 9 },
+  tabActive: { backgroundColor: colors.forest },
+  tabLabel: { fontSize: 13.5, fontWeight: '700', color: colors.inkSoft },
+  tabLabelActive: { color: '#fff' },
   servingsRow: {
     flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 24,
     backgroundColor: colors.card, borderWidth: 1, borderColor: colors.line, borderRadius: 14, padding: 14,
