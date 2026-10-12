@@ -38,6 +38,12 @@ npm run android  # requires Android Studio, or scan the QR from `npm start` with
 `npm start` alone launches the Expo dev server and prints a QR code. Scan it
 with Expo Go on your phone to test on a real device without a native build.
 
+## Build for a phone
+
+Purchases, notifications, and file import/export need a development build (not Expo Go):
+`npm run doctor`, then `npm run build:dev` (requires `npx eas-cli login`). The full device
+test script is in [`docs/qa/DEVICE_TEST_PLAN.md`](docs/qa/DEVICE_TEST_PLAN.md).
+
 ## Check it
 
 ```bash
