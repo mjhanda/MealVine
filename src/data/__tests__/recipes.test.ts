@@ -68,6 +68,8 @@ describe('recipe catalog integrity', () => {
       if (r.protein === 'vegetarian') return MEAT_TAGS.some((t) => tags.has(t));
       if (r.protein === 'fish') return !tags.has('fish') && !tags.has('shellfish');
       if (r.protein === 'chicken' || r.protein === 'turkey') return !tags.has('poultry');
+      if (r.protein === 'beef' || r.protein === 'lamb') return !tags.has('red-meat');
+      if (r.protein === 'pork') return !tags.has('pork');
       return false;
     }).map((r) => `${r.id} (${r.protein})`);
     expect(wrong).toEqual([]);

@@ -25,8 +25,13 @@ describe('diets, catalog-wide', () => {
     });
   });
 
-  it.each(DIET_ORDER)('%s has at least 10 recipes', (diet) => {
+  it.each(DIET_ORDER)('%s has at least 10 recipes and 10 dinners', (diet) => {
     expect(RECIPES.filter((r) => fitsDiet(r, diet)).length).toBeGreaterThanOrEqual(10);
+    expect(RECIPES.filter((r) => r.mealType === 'dinner' && fitsDiet(r, diet)).length).toBeGreaterThanOrEqual(10);
+  });
+
+  it('keeps at least 15 weeknight dinners at 20 minutes or less', () => {
+    expect(RECIPES.filter((r) => r.mealType === 'dinner' && r.prep + r.cook <= 20).length).toBeGreaterThanOrEqual(15);
   });
 
   it('vegan shows nothing with dairy, egg, honey, meat, or fish ingredients', () => {

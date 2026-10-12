@@ -832,6 +832,16 @@ export const NUTRIENTS_PER_100G: Record<string, NutrientValues> = {
     satFat: 0.03,
     sugar: 2.33,
   },
+  "ground-beef": {
+    protein: 20,
+    fat: 10,
+    carbs: 0,
+    kcal: 176,
+    fiber: 0,
+    sodium: 66,
+    satFat: 3.93,
+    sugar: 0,
+  },
   "ground-chicken": {
     protein: 17.44,
     fat: 8.1,
@@ -1162,6 +1172,26 @@ export const NUTRIENTS_PER_100G: Record<string, NutrientValues> = {
     satFat: 0.21,
     sugar: 2.87,
   },
+  "pork-chops": {
+    protein: 23.75,
+    fat: 3.09,
+    carbs: 0,
+    kcal: 123,
+    fiber: 0,
+    sodium: 87,
+    satFat: 0.8,
+    sugar: 0,
+  },
+  "pork-tenderloin": {
+    protein: 20.95,
+    fat: 2.17,
+    carbs: 0,
+    kcal: 109,
+    fiber: 0,
+    sodium: 53,
+    satFat: 0.7,
+    sugar: 0,
+  },
   portobello: {
     protein: 2.11,
     fat: 0.35,
@@ -1360,6 +1390,16 @@ export const NUTRIENTS_PER_100G: Record<string, NutrientValues> = {
     fiber: 0,
     sodium: 119,
     satFat: 0.1,
+    sugar: 0,
+  },
+  sirloin: {
+    protein: 22.09,
+    fat: 4.08,
+    carbs: 0,
+    kcal: 131,
+    fiber: 0,
+    sodium: 56,
+    satFat: 1.51,
     sugar: 0,
   },
   "smoked-paprika": {
@@ -2458,6 +2498,16 @@ export const INGREDIENT_SOURCES: Record<string, IngredientSource> = {
       },
     ],
   },
+  "ground-beef": {
+    basis: "usda",
+    foods: [
+      {
+        fdcId: 174030,
+        description: "Beef, ground, 90% lean meat / 10% fat, raw",
+        weight: 1,
+      },
+    ],
+  },
   "ground-chicken": {
     basis: "usda",
     foods: [
@@ -2825,6 +2875,27 @@ export const INGREDIENT_SOURCES: Record<string, IngredientSource> = {
       },
     ],
   },
+  "pork-chops": {
+    basis: "usda",
+    foods: [
+      {
+        fdcId: 168263,
+        description:
+          "Pork, fresh, loin, center loin (chops), boneless, separable lean only, raw",
+        weight: 1,
+      },
+    ],
+  },
+  "pork-tenderloin": {
+    basis: "usda",
+    foods: [
+      {
+        fdcId: 168249,
+        description: "Pork, fresh, loin, tenderloin, separable lean only, raw",
+        weight: 1,
+      },
+    ],
+  },
   portobello: {
     basis: "usda",
     foods: [
@@ -3032,6 +3103,17 @@ export const INGREDIENT_SOURCES: Record<string, IngredientSource> = {
       },
     ],
     missing: ["fiber", "sugar"],
+  },
+  sirloin: {
+    basis: "usda",
+    foods: [
+      {
+        fdcId: 174055,
+        description:
+          'Beef, top sirloin, steak, separable lean only, trimmed to 1/8" fat, all grades, raw',
+        weight: 1,
+      },
+    ],
   },
   "smoked-paprika": {
     basis: "proxy",
