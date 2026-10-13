@@ -75,3 +75,18 @@ describe('recipe catalog integrity', () => {
     expect(wrong).toEqual([]);
   });
 });
+
+describe('recipe sources', () => {
+  const adapted = RECIPES.filter((r) => r.source);
+  it('adapted recipes carry a complete credit', () => {
+    expect(adapted.length).toBeGreaterThan(0);
+    adapted.forEach((r) => {
+      const s = r.source!;
+      expect([r.id, !!(s.title && s.author && s.collection && s.url && s.license)]).toEqual([r.id, true]);
+      expect(s.url).toMatch(/^https:\/\//);
+    });
+  });
+  it('never publishes an email address', () => {
+    adapted.forEach((r) => expect([r.id, JSON.stringify(r.source)]).not.toEqual([r.id, expect.stringMatching(/[\w.-]+@[\w.-]+/)]));
+  });
+});

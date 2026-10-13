@@ -232,6 +232,16 @@ export const NUTRIENTS_PER_100G: Record<string, NutrientValues> = {
     satFat: 0.59,
     sugar: 0.66,
   },
+  bulgur: {
+    protein: 12.29,
+    fat: 1.33,
+    carbs: 75.87,
+    kcal: 342,
+    fiber: 12.5,
+    sodium: 17,
+    satFat: 0.23,
+    sugar: 0.41,
+  },
   "butter-lettuce": {
     protein: 1.35,
     fat: 0.22,
@@ -291,6 +301,16 @@ export const NUTRIENTS_PER_100G: Record<string, NutrientValues> = {
     sodium: 30,
     satFat: 0.13,
     sugar: 1.91,
+  },
+  cayenne: {
+    protein: 12.01,
+    fat: 17.27,
+    carbs: 56.63,
+    kcal: 318,
+    fiber: 27.2,
+    sodium: 30,
+    satFat: 3.26,
+    sugar: 10.34,
   },
   celery: {
     protein: 0.69,
@@ -392,6 +412,16 @@ export const NUTRIENTS_PER_100G: Record<string, NutrientValues> = {
     satFat: 0.15,
     sugar: 1.85,
   },
+  "cider-vinegar": {
+    protein: 0,
+    fat: 0,
+    carbs: 0.93,
+    kcal: 21,
+    fiber: 0,
+    sodium: 5,
+    satFat: 0,
+    sugar: 0.4,
+  },
   cinnamon: {
     protein: 3.99,
     fat: 1.24,
@@ -451,6 +481,16 @@ export const NUTRIENTS_PER_100G: Record<string, NutrientValues> = {
     sodium: 1,
     satFat: 0.08,
     sugar: 0.05,
+  },
+  coriander: {
+    protein: 12.37,
+    fat: 17.77,
+    carbs: 54.99,
+    kcal: 298,
+    fiber: 41.9,
+    sodium: 35,
+    satFat: 0.99,
+    sugar: 0,
   },
   "corn-kernels": {
     protein: 3.27,
@@ -711,6 +751,16 @@ export const NUTRIENTS_PER_100G: Record<string, NutrientValues> = {
     sodium: 14,
     satFat: 1.26,
     sugar: 0,
+  },
+  "fish-sauce": {
+    protein: 5.06,
+    fat: 0.01,
+    carbs: 3.64,
+    kcal: 35,
+    fiber: 0,
+    sodium: 7851,
+    satFat: 0,
+    sugar: 3.64,
   },
   flatbread: {
     protein: 9.8,
@@ -1072,6 +1122,16 @@ export const NUTRIENTS_PER_100G: Record<string, NutrientValues> = {
     satFat: 13.81,
     sugar: 0,
   },
+  "oyster-sauce": {
+    protein: 1.35,
+    fat: 0.25,
+    carbs: 10.92,
+    kcal: 51,
+    fiber: 0.3,
+    sodium: 2733,
+    satFat: 0.04,
+    sugar: 0,
+  },
   paprika: {
     protein: 14.14,
     fat: 12.89,
@@ -1422,6 +1482,16 @@ export const NUTRIENTS_PER_100G: Record<string, NutrientValues> = {
     satFat: 0.93,
     sugar: 0,
   },
+  "snow-peas": {
+    protein: 2.8,
+    fat: 0.2,
+    carbs: 7.55,
+    kcal: 42,
+    fiber: 2.6,
+    sodium: 4,
+    satFat: 0.04,
+    sugar: 4,
+  },
   soba: {
     protein: 14.38,
     fat: 0.71,
@@ -1452,6 +1522,16 @@ export const NUTRIENTS_PER_100G: Record<string, NutrientValues> = {
     satFat: 0.02,
     sugar: 4.89,
   },
+  "sun-dried-tomatoes": {
+    protein: 14.11,
+    fat: 2.97,
+    carbs: 55.76,
+    kcal: 258,
+    fiber: 12.3,
+    sodium: 107,
+    satFat: 0.43,
+    sugar: 37.59,
+  },
   "sweet-potato": {
     protein: 1.57,
     fat: 0.05,
@@ -1481,6 +1561,26 @@ export const NUTRIENTS_PER_100G: Record<string, NutrientValues> = {
     sodium: 5,
     satFat: 0.03,
     sugar: 2.63,
+  },
+  "tomato-paste": {
+    protein: 4.32,
+    fat: 0.47,
+    carbs: 18.91,
+    kcal: 82,
+    fiber: 4.1,
+    sodium: 59,
+    satFat: 0.1,
+    sugar: 12.18,
+  },
+  "tomato-sauce": {
+    protein: 1.2,
+    fat: 0.3,
+    carbs: 5.31,
+    kcal: 24,
+    fiber: 1.5,
+    sodium: 474,
+    satFat: 0.04,
+    sugar: 3.56,
   },
   tuna: {
     protein: 19.44,
@@ -1855,6 +1955,16 @@ export const INGREDIENT_SOURCES: Record<string, IngredientSource> = {
       },
     ],
   },
+  bulgur: {
+    basis: "usda",
+    foods: [
+      {
+        fdcId: 170688,
+        description: "Bulgur, dry",
+        weight: 1,
+      },
+    ],
+  },
   "butter-lettuce": {
     basis: "usda",
     foods: [
@@ -1913,6 +2023,16 @@ export const INGREDIENT_SOURCES: Record<string, IngredientSource> = {
       {
         fdcId: 169986,
         description: "Cauliflower, raw",
+        weight: 1,
+      },
+    ],
+  },
+  cayenne: {
+    basis: "usda",
+    foods: [
+      {
+        fdcId: 170932,
+        description: "Spices, pepper, red or cayenne",
         weight: 1,
       },
     ],
@@ -2023,6 +2143,16 @@ export const INGREDIENT_SOURCES: Record<string, IngredientSource> = {
       },
     ],
   },
+  "cider-vinegar": {
+    basis: "usda",
+    foods: [
+      {
+        fdcId: 173469,
+        description: "Vinegar, cider",
+        weight: 1,
+      },
+    ],
+  },
   cinnamon: {
     basis: "usda",
     foods: [
@@ -2086,6 +2216,17 @@ export const INGREDIENT_SOURCES: Record<string, IngredientSource> = {
         weight: 1,
       },
     ],
+  },
+  coriander: {
+    basis: "usda",
+    foods: [
+      {
+        fdcId: 170922,
+        description: "Spices, coriander seed",
+        weight: 1,
+      },
+    ],
+    missing: ["sugar"],
   },
   "corn-kernels": {
     basis: "usda",
@@ -2358,6 +2499,16 @@ export const INGREDIENT_SOURCES: Record<string, IngredientSource> = {
       },
     ],
     missing: ["sugar"],
+  },
+  "fish-sauce": {
+    basis: "usda",
+    foods: [
+      {
+        fdcId: 174531,
+        description: "Sauce, fish, ready-to-serve",
+        weight: 1,
+      },
+    ],
   },
   flatbread: {
     basis: "proxy",
@@ -2773,6 +2924,16 @@ export const INGREDIENT_SOURCES: Record<string, IngredientSource> = {
       },
     ],
   },
+  "oyster-sauce": {
+    basis: "usda",
+    foods: [
+      {
+        fdcId: 174529,
+        description: "Sauce, oyster, ready-to-serve",
+        weight: 1,
+      },
+    ],
+  },
   paprika: {
     basis: "usda",
     foods: [
@@ -3136,6 +3297,16 @@ export const INGREDIENT_SOURCES: Record<string, IngredientSource> = {
       },
     ],
   },
+  "snow-peas": {
+    basis: "usda",
+    foods: [
+      {
+        fdcId: 170010,
+        description: "Peas, edible-podded, raw",
+        weight: 1,
+      },
+    ],
+  },
   soba: {
     basis: "usda",
     foods: [
@@ -3163,6 +3334,16 @@ export const INGREDIENT_SOURCES: Record<string, IngredientSource> = {
       {
         fdcId: 167762,
         description: "Strawberries, raw",
+        weight: 1,
+      },
+    ],
+  },
+  "sun-dried-tomatoes": {
+    basis: "usda",
+    foods: [
+      {
+        fdcId: 168567,
+        description: "Tomatoes, sun-dried",
         weight: 1,
       },
     ],
@@ -3195,6 +3376,27 @@ export const INGREDIENT_SOURCES: Record<string, IngredientSource> = {
       {
         fdcId: 170457,
         description: "Tomatoes, red, ripe, raw, year round average",
+        weight: 1,
+      },
+    ],
+  },
+  "tomato-paste": {
+    basis: "usda",
+    foods: [
+      {
+        fdcId: 170459,
+        description:
+          "Tomato products, canned, paste, without salt added (Includes foods for USDA's Food Distribution Program)",
+        weight: 1,
+      },
+    ],
+  },
+  "tomato-sauce": {
+    basis: "usda",
+    foods: [
+      {
+        fdcId: 170054,
+        description: "Tomato products, canned, sauce",
         weight: 1,
       },
     ],

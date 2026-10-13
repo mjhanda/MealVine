@@ -1,7 +1,7 @@
 import { Feather, Ionicons } from '@expo/vector-icons';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React, { useState } from 'react';
-import { Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
+import { Linking, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import AdSlot from '../ads/AdSlot';
 import ProteinTag from '../components/ProteinTag';
@@ -17,6 +17,7 @@ import { colors } from '../theme';
 import { describeConflicts, DIETS, dietsFor, isExcluded, recipeConflicts } from '../utils/diets';
 import { ingredientDisplayName, recipeById } from '../utils/recipeCatalog';
 import { caloriesPerServing } from '../utils/nutrition';
+import { sourceCredit } from '../utils/recipeSource';
 import { formatQuantity, scaleAmount } from '../utils/units';
 
 
@@ -207,6 +208,23 @@ export default function RecipeDetailScreen({ route, navigation }: Props) {
               ))}
             </View>
 
+            <View style={styles.sourceBox}>
+              <Text style={styles.sourceText}>{sourceCredit(recipe)}</Text>
+              {recipe.source && (
+                <>
+                  <Text style={styles.sourceLicense}>{recipe.source.license}</Text>
+                  <Pressable
+                    onPress={() => Linking.openURL(recipe.source!.url)}
+                    hitSlop={10}
+                    accessibilityRole="link"
+                    accessibilityLabel="Open the original recipe"
+                  >
+                    <Text style={styles.sourceLink}>View original</Text>
+                  </Pressable>
+                </>
+              )}
+            </View>
+
             <View style={styles.adWrap}>
               <AdSlot placement="recipe-detail" />
             </View>
@@ -304,6 +322,10 @@ const styles = StyleSheet.create({
   },
   stepBadgeText: { color: '#fff', fontSize: 12, fontWeight: '700' },
   adWrap: { marginTop: 24 },
+  sourceBox: { marginTop: 20, gap: 4 },
+  sourceText: { fontSize: 12.5, color: colors.inkSoft, lineHeight: 18 },
+  sourceLicense: { fontSize: 11.5, color: colors.inkSoft, lineHeight: 16 },
+  sourceLink: { fontSize: 12.5, fontWeight: '700', color: colors.forest },
   noteInput: {
     minHeight: 72, padding: 12, borderRadius: 12, borderWidth: 1, borderColor: colors.line,
     backgroundColor: colors.card, fontSize: 14, color: colors.ink, textAlignVertical: 'top',

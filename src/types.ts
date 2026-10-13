@@ -68,6 +68,18 @@ export interface RecipeIngredient {
   prep?: string; // "diced", "hard-boiled" — shown in the recipe, ignored by the grocery list
 }
 
+// Where a recipe came from. Absent = a Dishcart original.
+export interface RecipeSource {
+  kind: 'adapted';
+  title: string; // original recipe title
+  author: string; // poster's name as given (never their email address)
+  posted?: string; // original posting date, e.g. "1993-08-17"
+  collection: string; // e.g. "CMU Recipe Archive (rec.food.cooking)"
+  url: string;
+  license: string; // what we know about the rights, in plain words
+  changes?: string; // substitutions or method changes made when adapting
+}
+
 export interface Recipe {
   id: string;
   title: string;
@@ -79,6 +91,7 @@ export interface Recipe {
   emoji: string;
   ingredients: RecipeIngredient[];
   steps: string[];
+  source?: RecipeSource;
 }
 
 export interface Preferences {
