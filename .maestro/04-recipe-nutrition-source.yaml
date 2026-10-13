@@ -1,0 +1,29 @@
+appId: com.bionicsun.dishcart
+name: Recipe shows nutrition tab and source credit
+---
+- runFlow: subflows/launch.yaml
+- runFlow: subflows/onboard-classic.yaml
+- tapOn: "Browse(, tab.*)?"
+- tapOn: "Search recipes or ingredients"
+- inputText: "adobo"
+- pressKey: Enter
+- tapOn: "Chicken Adobo"
+- assertVisible: "(?i)ingredients"
+- tapOn: "Nutrition.*kcal.*"
+- assertVisible: "Calories"
+- assertVisible: "(?i)per serving"
+- scrollUntilVisible:
+    element: "Show data sources"
+- tapOn: "Show data sources"
+- assertVisible:
+    text: ".*FDC.*"
+- scrollUntilVisible:
+    element: "Recipe(, tab.*)?"
+    direction: UP
+    centerElement: true
+- waitForAnimationToEnd
+- tapOn: "Recipe(, tab.*)?"
+- scrollUntilVisible:
+    element: "Open the original recipe"
+- assertVisible:
+    text: "Adapted from .*Carolyn Pe.*"

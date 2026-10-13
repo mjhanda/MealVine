@@ -1,0 +1,13 @@
+appId: com.bionicsun.dishcart
+name: Settings sections render; ads section; backup buttons
+---
+- runFlow: subflows/launch.yaml
+- runFlow: subflows/onboard-classic.yaml
+- tapOn: "Settings(, tab.*)?"
+- assertVisible: '.*Household size.*'
+- scrollUntilVisible:
+    element: '.*Reset all data.*'
+- assertVisible: '.*Export backup.*'
+- assertVisible: '.*Import backup.*'
+- assertVisible:
+    text: ".*works offline.*"

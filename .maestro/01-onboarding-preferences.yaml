@@ -1,0 +1,28 @@
+appId: com.bionicsun.dishcart
+name: Onboarding applies diet, allergy, and dislike
+---
+- runFlow: subflows/launch.yaml
+- tapOn: "Continue"
+- assertVisible: "How do you eat?"
+- tapOn:
+    text: "Vegetarian.*No meat or fish.*"
+- tapOn: "Continue"
+- assertVisible: "Any allergies?"
+- tapOn: "Peanut allergy"
+- assertVisible: '.*Always check labels.*'
+- tapOn: "Continue"
+- assertVisible: "Anything you won’t eat?"
+- tapOn: "Search ingredients to avoid"
+- inputText: "portobello"
+- tapOn: "Avoid Portobello mushroom"
+- assertVisible: "Remove Portobello mushroom from dislikes"
+- assertNotVisible: "No matching ingredients."
+- tapOn: "Continue"
+- tapOn: "Start planning"
+- assertVisible: "No meals yet"
+- tapOn: "Browse(, tab.*)?"
+- assertVisible: "Showing vegetarian recipes"
+- tapOn: "Search recipes or ingredients"
+- inputText: "peanut"
+- assertVisible: "No recipes match."
+- assertNotVisible: "Peanut Butter Banana Smoothie"

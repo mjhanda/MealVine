@@ -1,6 +1,6 @@
 import { Feather } from '@expo/vector-icons';
 import React, { useMemo, useState } from 'react';
-import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
+import { Keyboard, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 import { INGREDIENTS } from '../../data/ingredients';
 import { colors, radius, spacing } from '../../theme';
 import { prefStyles } from './styles';
@@ -30,7 +30,10 @@ export default function DislikePicker({ value, onChange }: Props) {
   const results = useMemo(() => searchIngredients(query, value), [query, value]);
   const suggestions = query ? results : QUICK_DISLIKES.filter((id) => !value.includes(id));
 
+  // Dismiss first: on iOS the predictive-text bar can re-insert the word after a controlled
+  // TextInput is cleared while it still has focus.
   const add = (id: string) => {
+    Keyboard.dismiss();
     onChange([...value, id]);
     setQuery('');
   };
@@ -63,6 +66,8 @@ export default function DislikePicker({ value, onChange }: Props) {
           placeholderTextColor={colors.inkSoft}
           style={styles.input}
           autoCorrect={false}
+          spellCheck={false}
+          autoComplete="off"
           accessibilityLabel="Search ingredients to avoid"
         />
       </View>

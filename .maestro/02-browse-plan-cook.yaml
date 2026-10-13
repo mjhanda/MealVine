@@ -1,0 +1,18 @@
+appId: com.bionicsun.dishcart
+name: Add from Browse, undo, mark cooked
+---
+- runFlow: subflows/launch.yaml
+- runFlow: subflows/onboard-classic.yaml
+- tapOn: "Browse(, tab.*)?"
+- tapOn: "Search recipes or ingredients"
+- inputText: "adobo"
+- pressKey: Enter
+- tapOn: "Add Chicken Adobo to plan"
+- assertVisible: "Chicken Adobo added to your plan"
+- tapOn: "Plan(, tab.*)?"
+- assertVisible: '.*Chicken Adobo.*'
+- assertVisible: "1 meal to cook"
+- tapOn: "Mark Chicken Adobo as cooked"
+- assertVisible: "Recently cooked"
+- tapOn: "Undo"
+- assertVisible: "1 meal to cook"

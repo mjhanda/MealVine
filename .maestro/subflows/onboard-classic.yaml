@@ -1,0 +1,9 @@
+# Finish onboarding with defaults (Classic, no allergies) — used by flows that don't test onboarding.
+appId: com.bionicsun.dishcart
+---
+- tapOn: "Continue"
+- tapOn: "Continue"
+- tapOn: "Continue"
+- tapOn: "Continue"
+- tapOn: "Start planning"
+- assertVisible: "Your plan"

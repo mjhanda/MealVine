@@ -1,0 +1,23 @@
+appId: com.bionicsun.dishcart
+name: Grocery list builds from the plan; manual item lands in the right aisle
+---
+- runFlow: subflows/launch.yaml
+- runFlow: subflows/onboard-classic.yaml
+- tapOn: "Browse(, tab.*)?"
+- tapOn: "Search recipes or ingredients"
+- inputText: "jambalaya"
+- pressKey: Enter
+- tapOn: "Add Chicken Jambalaya to plan"
+- tapOn: "Grocery(, tab.*)?"
+- assertVisible: "Grocery list"
+- assertVisible: "(?i)meat & seafood"
+- assertVisible: '.*Chicken breast.*'
+- tapOn: '.*Chicken breast, 4 oz.*'
+- assertVisible: "Uncheck all"
+- tapOn: "Add an item"
+- inputText: "Milk"
+- pressKey: Enter
+- assertVisible: "(?i)dairy & eggs"
+- assertVisible: '.*Milk.*'
+- scrollUntilVisible:
+    element: "Probably in your pantry.*"

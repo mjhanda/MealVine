@@ -1,0 +1,25 @@
+appId: com.bionicsun.dishcart
+name: Cooking mode steps, timer, cooked
+---
+- runFlow: subflows/launch.yaml
+- runFlow: subflows/onboard-classic.yaml
+- tapOn: "Browse(, tab.*)?"
+- tapOn: "Search recipes or ingredients"
+- inputText: "adobo"
+- pressKey: Enter
+- tapOn: "Add Chicken Adobo to plan"
+- tapOn: "Plan(, tab.*)?"
+- tapOn: "Chicken Adobo, 2 servings"
+- tapOn: '.*Start cooking.*'
+- assertVisible: "(?i)step 1"
+- tapOn: '.*Next.*'
+- assertVisible: "(?i)step 2"
+- tapOn:
+    text: "Start a .* minute timer"
+- assertVisible: "Stop timer"
+- tapOn: "Stop timer"
+- tapOn: '.*Next.*'
+- assertVisible: "How was it?"
+- tapOn: "Liked it"
+- tapOn: '.*Cooked it.*'
+- assertVisible: "Recently cooked"

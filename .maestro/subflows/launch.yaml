@@ -1,0 +1,16 @@
+# Fresh install state on a RELEASE build (JS bundle embedded; no dev menu or dev-tools button).
+# Build: npx expo run:ios --configuration Release  /  npx expo run:android --variant release
+appId: com.bionicsun.dishcart
+---
+- launchApp:
+    clearState: true
+# Simulator/emulator system alerts (e.g. an Apple Account password prompt): always decline;
+# tests must never enter credentials.
+- runFlow:
+    when:
+      visible: "Not Now"
+    commands:
+      - tapOn: "Not Now"
+- extendedWaitUntil:
+    visible: "How many people are you cooking for?"
+    timeout: 30000
