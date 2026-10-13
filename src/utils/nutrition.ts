@@ -1,3 +1,4 @@
+import { TSP_PER } from './units';
 import { INGREDIENT_SOURCES, NUTRIENTS_PER_100G } from '../data/nutrition/nutritionData';
 import { IngredientSource, NutrientValues } from '../data/nutrition/types';
 import { GRAMS } from '../data/nutrition/usdaMap';
@@ -5,7 +6,6 @@ import { Recipe, RecipeIngredient, Unit } from '../types';
 
 const OZ_G = 28.3495;
 const LB_G = 453.592;
-const TSP_PER: Record<string, number> = { tsp: 1, tbsp: 3, cup: 48 };
 
 export const NUTRIENT_KEYS: (keyof NutrientValues)[] = ['kcal', 'protein', 'fat', 'satFat', 'carbs', 'fiber', 'sugar', 'sodium'];
 const zero = (): NutrientValues => ({ kcal: 0, protein: 0, fat: 0, satFat: 0, carbs: 0, fiber: 0, sugar: 0, sodium: 0 });

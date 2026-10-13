@@ -18,7 +18,7 @@ import { colors, mealLabels, mealTypeOrder } from '../theme';
 import { MealType } from '../types';
 import { DIETS } from '../utils/diets';
 import { cookStats } from '../utils/history';
-import { filterRecipes, recipeById, RecipeFilter, RelaxableFilter, relaxSuggestions } from '../utils/recipeCatalog';
+import { defaultServings, filterRecipes, recipeById, RecipeFilter, RelaxableFilter, relaxSuggestions } from '../utils/recipeCatalog';
 
 type Nav = NativeStackNavigationProp<RootStackParamList & MainTabParamList>;
 
@@ -142,7 +142,8 @@ export default function BrowseScreen() {
     const entries = plan.items.filter((i) => i.recipeId === recipeId);
     const latest = entries[entries.length - 1];
     if (!latest) {
-      const id = addItem(recipeId, householdSize);
+      const recipe = recipeById(recipeId);
+      const id = addItem(recipeId, recipe ? defaultServings(recipe, householdSize) : householdSize);
       showUndo(`${title} added to your plan`, () => removeItem(id));
       return;
     }

@@ -12,6 +12,26 @@ export const USDA_DATASET = {
 
 // Per 100 g of the food as purchased/described. kcal, grams, and sodium in mg.
 export const NUTRIENTS_PER_100G: Record<string, NutrientValues> = {
+  "all-purpose-flour": {
+    protein: 10.33,
+    fat: 0.98,
+    carbs: 76.31,
+    kcal: 364,
+    fiber: 2.7,
+    sodium: 2,
+    satFat: 0.16,
+    sugar: 0.27,
+  },
+  allspice: {
+    protein: 6.09,
+    fat: 8.69,
+    carbs: 72.12,
+    kcal: 263,
+    fiber: 21.6,
+    sodium: 77,
+    satFat: 2.55,
+    sugar: 0,
+  },
   "almond-butter": {
     protein: 20.96,
     fat: 55.5,
@@ -21,6 +41,16 @@ export const NUTRIENTS_PER_100G: Record<string, NutrientValues> = {
     sodium: 7,
     satFat: 4.15,
     sugar: 4.43,
+  },
+  "almond-extract": {
+    protein: 0.06,
+    fat: 0.06,
+    carbs: 12.65,
+    kcal: 288,
+    fiber: 0,
+    sodium: 9,
+    satFat: 0.01,
+    sugar: 12.65,
   },
   almonds: {
     protein: 21.15,
@@ -41,6 +71,26 @@ export const NUTRIENTS_PER_100G: Record<string, NutrientValues> = {
     sodium: 1,
     satFat: 0.03,
     sugar: 10.39,
+  },
+  "apple-juice": {
+    protein: 0.1,
+    fat: 0.13,
+    carbs: 11.3,
+    kcal: 46,
+    fiber: 0.2,
+    sodium: 4,
+    satFat: 0.02,
+    sugar: 9.62,
+  },
+  applesauce: {
+    protein: 0.17,
+    fat: 0.1,
+    carbs: 11.27,
+    kcal: 42,
+    fiber: 1.1,
+    sodium: 2,
+    satFat: 0.01,
+    sugar: 9.39,
   },
   asparagus: {
     protein: 2.2,
@@ -102,6 +152,16 @@ export const NUTRIENTS_PER_100G: Record<string, NutrientValues> = {
     satFat: 0,
     sugar: 0,
   },
+  "baking-soda": {
+    protein: 0,
+    fat: 0,
+    carbs: 0,
+    kcal: 0,
+    fiber: 0,
+    sodium: 27360,
+    satFat: 0,
+    sugar: 0,
+  },
   "balsamic-glaze": {
     protein: 0.5,
     fat: 0,
@@ -141,6 +201,26 @@ export const NUTRIENTS_PER_100G: Record<string, NutrientValues> = {
     sodium: 4,
     satFat: 0.04,
     sugar: 0.3,
+  },
+  "bay-leaves": {
+    protein: 7.61,
+    fat: 8.36,
+    carbs: 74.97,
+    kcal: 313,
+    fiber: 26.3,
+    sodium: 23,
+    satFat: 2.28,
+    sugar: 0,
+  },
+  beer: {
+    protein: 0.46,
+    fat: 0,
+    carbs: 3.55,
+    kcal: 43,
+    fiber: 0,
+    sodium: 4,
+    satFat: 0,
+    sugar: 0,
   },
   beet: {
     protein: 1.61,
@@ -202,6 +282,26 @@ export const NUTRIENTS_PER_100G: Record<string, NutrientValues> = {
     satFat: 0.03,
     sugar: 1.18,
   },
+  "bran-cereal": {
+    protein: 9.9,
+    fat: 2.1,
+    carbs: 80.5,
+    kcal: 328,
+    fiber: 18.3,
+    sodium: 540,
+    satFat: 0.4,
+    sugar: 18.6,
+  },
+  brandy: {
+    protein: 0,
+    fat: 0,
+    carbs: 0.1,
+    kcal: 250,
+    fiber: 0,
+    sodium: 1,
+    satFat: 0,
+    sugar: 0,
+  },
   breadcrumbs: {
     protein: 13.35,
     fat: 5.3,
@@ -232,6 +332,16 @@ export const NUTRIENTS_PER_100G: Record<string, NutrientValues> = {
     satFat: 0.59,
     sugar: 0.66,
   },
+  "brown-sugar": {
+    protein: 0.12,
+    fat: 0,
+    carbs: 98.09,
+    kcal: 380,
+    fiber: 0,
+    sodium: 28,
+    satFat: 0,
+    sugar: 97.02,
+  },
   bulgur: {
     protein: 12.29,
     fat: 1.33,
@@ -241,6 +351,16 @@ export const NUTRIENTS_PER_100G: Record<string, NutrientValues> = {
     sodium: 17,
     satFat: 0.23,
     sugar: 0.41,
+  },
+  butter: {
+    protein: 0.85,
+    fat: 81.11,
+    carbs: 0.06,
+    kcal: 717,
+    fiber: 0,
+    sodium: 643,
+    satFat: 51.37,
+    sugar: 0.06,
   },
   "butter-lettuce": {
     protein: 1.35,
@@ -252,6 +372,26 @@ export const NUTRIENTS_PER_100G: Record<string, NutrientValues> = {
     satFat: 0.03,
     sugar: 0.94,
   },
+  buttermilk: {
+    protein: 3.31,
+    fat: 1.07,
+    carbs: 4.79,
+    kcal: 40,
+    fiber: 0,
+    sodium: 148,
+    satFat: 0.66,
+    sugar: 5.36,
+  },
+  cabbage: {
+    protein: 1.28,
+    fat: 0.1,
+    carbs: 5.8,
+    kcal: 25,
+    fiber: 2.5,
+    sodium: 18,
+    satFat: 0.03,
+    sugar: 3.2,
+  },
   "caesar-dressing": {
     protein: 0.3,
     fat: 4.4,
@@ -261,6 +401,16 @@ export const NUTRIENTS_PER_100G: Record<string, NutrientValues> = {
     sodium: 1148,
     satFat: 0.7,
     sugar: 16.32,
+  },
+  "cake-flour": {
+    protein: 8.2,
+    fat: 0.86,
+    carbs: 78.03,
+    kcal: 362,
+    fiber: 1.7,
+    sodium: 2,
+    satFat: 0.13,
+    sugar: 0.31,
   },
   cantaloupe: {
     protein: 0.84,
@@ -402,6 +552,16 @@ export const NUTRIENTS_PER_100G: Record<string, NutrientValues> = {
     satFat: 2.46,
     sugar: 7.19,
   },
+  "chili-sauce": {
+    protein: 1.93,
+    fat: 0.93,
+    carbs: 19.16,
+    kcal: 93,
+    fiber: 2.2,
+    sodium: 2124,
+    satFat: 0,
+    sugar: 15.11,
+  },
   chives: {
     protein: 3.27,
     fat: 0.73,
@@ -421,6 +581,16 @@ export const NUTRIENTS_PER_100G: Record<string, NutrientValues> = {
     sodium: 5,
     satFat: 0,
     sugar: 0.4,
+  },
+  cilantro: {
+    protein: 2.13,
+    fat: 0.52,
+    carbs: 3.67,
+    kcal: 23,
+    fiber: 2.8,
+    sodium: 46,
+    satFat: 0.01,
+    sugar: 0.87,
   },
   cinnamon: {
     protein: 3.99,
@@ -442,6 +612,16 @@ export const NUTRIENTS_PER_100G: Record<string, NutrientValues> = {
     satFat: 0,
     sugar: 11.83,
   },
+  "cocoa-powder": {
+    protein: 19.6,
+    fat: 13.7,
+    carbs: 57.9,
+    kcal: 228,
+    fiber: 37,
+    sodium: 21,
+    satFat: 8.07,
+    sugar: 1.75,
+  },
   "coconut-milk": {
     protein: 1.01,
     fat: 10.67,
@@ -461,6 +641,26 @@ export const NUTRIENTS_PER_100G: Record<string, NutrientValues> = {
     sodium: 54,
     satFat: 0.13,
     sugar: 0,
+  },
+  coffee: {
+    protein: 0.12,
+    fat: 0.02,
+    carbs: 0,
+    kcal: 1,
+    fiber: 0,
+    sodium: 2,
+    satFat: 0,
+    sugar: 0,
+  },
+  "condensed-milk": {
+    protein: 7.91,
+    fat: 8.7,
+    carbs: 54.4,
+    kcal: 321,
+    fiber: 0,
+    sodium: 127,
+    satFat: 5.49,
+    sugar: 54.4,
   },
   "cooked-brown-rice": {
     protein: 2.74,
@@ -502,6 +702,16 @@ export const NUTRIENTS_PER_100G: Record<string, NutrientValues> = {
     satFat: 0.33,
     sugar: 6.26,
   },
+  "corn-syrup": {
+    protein: 0,
+    fat: 0.2,
+    carbs: 76.79,
+    kcal: 283,
+    fiber: 0,
+    sodium: 62,
+    satFat: 0,
+    sugar: 76.77,
+  },
   "corn-tortilla": {
     protein: 5.7,
     fat: 2.85,
@@ -511,6 +721,26 @@ export const NUTRIENTS_PER_100G: Record<string, NutrientValues> = {
     sodium: 45,
     satFat: 0.45,
     sugar: 0.88,
+  },
+  cornmeal: {
+    protein: 8.12,
+    fat: 3.59,
+    carbs: 76.89,
+    kcal: 362,
+    fiber: 7.3,
+    sodium: 35,
+    satFat: 0.51,
+    sugar: 0.64,
+  },
+  cornstarch: {
+    protein: 0.26,
+    fat: 0.05,
+    carbs: 91.27,
+    kcal: 381,
+    fiber: 0.9,
+    sodium: 9,
+    satFat: 0.01,
+    sugar: 0,
   },
   "cottage-cheese": {
     protein: 10.45,
@@ -522,6 +752,16 @@ export const NUTRIENTS_PER_100G: Record<string, NutrientValues> = {
     satFat: 1.24,
     sugar: 4,
   },
+  couscous: {
+    protein: 12.76,
+    fat: 0.64,
+    carbs: 77.43,
+    kcal: 376,
+    fiber: 5,
+    sodium: 10,
+    satFat: 0.12,
+    sugar: 0,
+  },
   crackers: {
     protein: 10.58,
     fat: 14.13,
@@ -532,6 +772,16 @@ export const NUTRIENTS_PER_100G: Record<string, NutrientValues> = {
     satFat: 2.06,
     sugar: 1.19,
   },
+  cranberries: {
+    protein: 0.46,
+    fat: 0.13,
+    carbs: 11.97,
+    kcal: 46,
+    fiber: 3.6,
+    sodium: 2,
+    satFat: 0.01,
+    sugar: 4.27,
+  },
   "cream-cheese": {
     protein: 6.15,
     fat: 34.44,
@@ -541,6 +791,16 @@ export const NUTRIENTS_PER_100G: Record<string, NutrientValues> = {
     sodium: 314,
     satFat: 20.21,
     sugar: 3.76,
+  },
+  "cream-of-tartar": {
+    protein: 0,
+    fat: 0,
+    carbs: 61.5,
+    kcal: 258,
+    fiber: 0.2,
+    sodium: 52,
+    satFat: 0,
+    sugar: 0,
   },
   croutons: {
     protein: 11.9,
@@ -592,6 +852,16 @@ export const NUTRIENTS_PER_100G: Record<string, NutrientValues> = {
     satFat: 18.52,
     sugar: 47.9,
   },
+  dates: {
+    protein: 2.45,
+    fat: 0.39,
+    carbs: 75.03,
+    kcal: 282,
+    fiber: 8,
+    sodium: 2,
+    satFat: 0.03,
+    sugar: 63.35,
+  },
   "deli-turkey": {
     protein: 14.81,
     fat: 3.77,
@@ -622,6 +892,16 @@ export const NUTRIENTS_PER_100G: Record<string, NutrientValues> = {
     satFat: 0.06,
     sugar: 0,
   },
+  "dried-apricots": {
+    protein: 3.39,
+    fat: 0.51,
+    carbs: 62.64,
+    kcal: 241,
+    fiber: 7.3,
+    sodium: 10,
+    satFat: 0.02,
+    sugar: 53.44,
+  },
   "dried-cranberries": {
     protein: 0.17,
     fat: 1.09,
@@ -651,6 +931,16 @@ export const NUTRIENTS_PER_100G: Record<string, NutrientValues> = {
     sodium: 55,
     satFat: 2.73,
     sugar: 1.71,
+  },
+  "dry-mustard": {
+    protein: 26.08,
+    fat: 36.24,
+    carbs: 28.09,
+    kcal: 508,
+    fiber: 12.2,
+    sodium: 13,
+    satFat: 1.99,
+    sugar: 6.79,
   },
   "edamame-pods": {
     protein: 11.22,
@@ -711,6 +1001,16 @@ export const NUTRIENTS_PER_100G: Record<string, NutrientValues> = {
     sodium: 547,
     satFat: 0.11,
     sugar: 1.83,
+  },
+  "evaporated-milk": {
+    protein: 6.81,
+    fat: 7.56,
+    carbs: 10.04,
+    kcal: 134,
+    fiber: 0,
+    sodium: 106,
+    satFat: 4.59,
+    sugar: 10.04,
   },
   "fajita-seasoning": {
     protein: 13.46,
@@ -832,6 +1132,16 @@ export const NUTRIENTS_PER_100G: Record<string, NutrientValues> = {
     satFat: 0.2,
     sugar: 1.7,
   },
+  "graham-cracker-crumbs": {
+    protein: 6.69,
+    fat: 10.6,
+    carbs: 77.66,
+    kcal: 430,
+    fiber: 3.4,
+    sodium: 516,
+    satFat: 1.63,
+    sugar: 24.85,
+  },
   granola: {
     protein: 13.67,
     fat: 24.31,
@@ -882,6 +1192,16 @@ export const NUTRIENTS_PER_100G: Record<string, NutrientValues> = {
     satFat: 0.03,
     sugar: 2.33,
   },
+  "green-peas": {
+    protein: 5.22,
+    fat: 0.4,
+    carbs: 13.62,
+    kcal: 77,
+    fiber: 4.5,
+    sodium: 108,
+    satFat: 0.07,
+    sugar: 5,
+  },
   "ground-beef": {
     protein: 20,
     fat: 10,
@@ -902,6 +1222,26 @@ export const NUTRIENTS_PER_100G: Record<string, NutrientValues> = {
     satFat: 2.3,
     sugar: 0,
   },
+  "ground-cloves": {
+    protein: 5.97,
+    fat: 13,
+    carbs: 65.53,
+    kcal: 274,
+    fiber: 33.9,
+    sodium: 277,
+    satFat: 3.95,
+    sugar: 2.38,
+  },
+  "ground-ginger": {
+    protein: 8.98,
+    fat: 4.24,
+    carbs: 71.62,
+    kcal: 335,
+    fiber: 14.1,
+    sodium: 27,
+    satFat: 2.6,
+    sugar: 3.39,
+  },
   "ground-turkey": {
     protein: 23.57,
     fat: 1.95,
@@ -911,6 +1251,56 @@ export const NUTRIENTS_PER_100G: Record<string, NutrientValues> = {
     sodium: 51,
     satFat: 0.49,
     sugar: 0,
+  },
+  gruyere: {
+    protein: 29.81,
+    fat: 32.34,
+    carbs: 0.36,
+    kcal: 413,
+    fiber: 0,
+    sodium: 714,
+    satFat: 18.91,
+    sugar: 0.36,
+  },
+  "half-and-half": {
+    protein: 2.96,
+    fat: 19.1,
+    carbs: 3.66,
+    kcal: 195,
+    fiber: 0,
+    sodium: 72,
+    satFat: 10.18,
+    sugar: 3.67,
+  },
+  ham: {
+    protein: 16.6,
+    fat: 8.8,
+    carbs: 3.63,
+    kcal: 164,
+    fiber: 1.3,
+    sodium: 814,
+    satFat: 0.5,
+    sugar: 1,
+  },
+  hazelnuts: {
+    protein: 14.95,
+    fat: 60.75,
+    carbs: 16.7,
+    kcal: 628,
+    fiber: 9.7,
+    sodium: 0,
+    satFat: 4.46,
+    sugar: 4.34,
+  },
+  "heavy-cream": {
+    protein: 2.84,
+    fat: 36.08,
+    carbs: 2.84,
+    kcal: 340,
+    fiber: 0,
+    sodium: 27,
+    satFat: 23.03,
+    sugar: 2.92,
   },
   honey: {
     protein: 0.3,
@@ -922,6 +1312,16 @@ export const NUTRIENTS_PER_100G: Record<string, NutrientValues> = {
     satFat: 0,
     sugar: 82.12,
   },
+  "hot-sauce": {
+    protein: 0.51,
+    fat: 0.37,
+    carbs: 1.75,
+    kcal: 11,
+    fiber: 0.3,
+    sodium: 2643,
+    satFat: 0.05,
+    sugar: 1.26,
+  },
   hummus: {
     protein: 7.78,
     fat: 17.82,
@@ -931,6 +1331,16 @@ export const NUTRIENTS_PER_100G: Record<string, NutrientValues> = {
     sodium: 426,
     satFat: 2.56,
     sugar: 0.62,
+  },
+  "instant-coffee": {
+    protein: 12.2,
+    fat: 0.5,
+    carbs: 75.4,
+    kcal: 353,
+    fiber: 0,
+    sodium: 37,
+    satFat: 0.2,
+    sugar: 0,
   },
   "italian-seasoning": {
     protein: 13.23,
@@ -952,6 +1362,16 @@ export const NUTRIENTS_PER_100G: Record<string, NutrientValues> = {
     satFat: 0.09,
     sugar: 4.12,
   },
+  jam: {
+    protein: 0.37,
+    fat: 0.07,
+    carbs: 68.86,
+    kcal: 278,
+    fiber: 1.1,
+    sodium: 32,
+    satFat: 0.01,
+    sugar: 48.5,
+  },
   "kalamata-olives": {
     protein: 0.84,
     fat: 10.9,
@@ -972,6 +1392,16 @@ export const NUTRIENTS_PER_100G: Record<string, NutrientValues> = {
     satFat: 0.18,
     sugar: 0.99,
   },
+  ketchup: {
+    protein: 1.04,
+    fat: 0.1,
+    carbs: 27.4,
+    kcal: 101,
+    fiber: 0.3,
+    sodium: 907,
+    satFat: 0.01,
+    sugar: 21.27,
+  },
   "kidney-beans": {
     protein: 7.98,
     fat: 1.05,
@@ -981,6 +1411,16 @@ export const NUTRIENTS_PER_100G: Record<string, NutrientValues> = {
     sodium: 231,
     satFat: 0.18,
     sugar: 3.8,
+  },
+  lard: {
+    protein: 0,
+    fat: 100,
+    carbs: 0,
+    kcal: 902,
+    fiber: 0,
+    sodium: 0,
+    satFat: 39.2,
+    sugar: 0,
   },
   "lasagna-noodles": {
     protein: 13.04,
@@ -1012,6 +1452,16 @@ export const NUTRIENTS_PER_100G: Record<string, NutrientValues> = {
     satFat: 0.02,
     sugar: 1.69,
   },
+  mace: {
+    protein: 6.71,
+    fat: 32.38,
+    carbs: 50.5,
+    kcal: 475,
+    fiber: 20.2,
+    sodium: 80,
+    satFat: 9.51,
+    sugar: 0,
+  },
   mango: {
     protein: 0.82,
     fat: 0.38,
@@ -1032,6 +1482,16 @@ export const NUTRIENTS_PER_100G: Record<string, NutrientValues> = {
     satFat: 0.01,
     sugar: 60.46,
   },
+  margarine: {
+    protein: 0.16,
+    fat: 80.71,
+    carbs: 0.7,
+    kcal: 717,
+    fiber: 0,
+    sodium: 751,
+    satFat: 15.19,
+    sugar: 0,
+  },
   marinara: {
     protein: 1.39,
     fat: 1.61,
@@ -1041,6 +1501,16 @@ export const NUTRIENTS_PER_100G: Record<string, NutrientValues> = {
     sodium: 437,
     satFat: 0.22,
     sugar: 4.91,
+  },
+  mayonnaise: {
+    protein: 0.96,
+    fat: 74.85,
+    carbs: 0.57,
+    kcal: 680,
+    fiber: 0,
+    sodium: 635,
+    satFat: 11.7,
+    sugar: 0.57,
   },
   milk: {
     protein: 3.3,
@@ -1102,6 +1572,16 @@ export const NUTRIENTS_PER_100G: Record<string, NutrientValues> = {
     satFat: 6.5,
     sugar: 4.8,
   },
+  molasses: {
+    protein: 0,
+    fat: 0.1,
+    carbs: 74.73,
+    kcal: 290,
+    fiber: 0,
+    sodium: 37,
+    satFat: 0.02,
+    sugar: 74.72,
+  },
   mozzarella: {
     protein: 23.63,
     fat: 19.72,
@@ -1112,6 +1592,36 @@ export const NUTRIENTS_PER_100G: Record<string, NutrientValues> = {
     satFat: 11.47,
     sugar: 2.24,
   },
+  mushrooms: {
+    protein: 3.09,
+    fat: 0.34,
+    carbs: 3.26,
+    kcal: 22,
+    fiber: 1,
+    sodium: 5,
+    satFat: 0.05,
+    sugar: 1.98,
+  },
+  "mustard-seed": {
+    protein: 26.08,
+    fat: 36.24,
+    carbs: 28.09,
+    kcal: 508,
+    fiber: 12.2,
+    sodium: 13,
+    satFat: 1.99,
+    sugar: 6.79,
+  },
+  nutmeg: {
+    protein: 5.84,
+    fat: 36.31,
+    carbs: 49.29,
+    kcal: 525,
+    fiber: 20.8,
+    sodium: 16,
+    satFat: 25.94,
+    sugar: 2.99,
+  },
   "olive-oil": {
     protein: 0,
     fat: 100,
@@ -1121,6 +1631,36 @@ export const NUTRIENTS_PER_100G: Record<string, NutrientValues> = {
     sodium: 2,
     satFat: 13.81,
     sugar: 0,
+  },
+  "onion-powder": {
+    protein: 10.41,
+    fat: 1.04,
+    carbs: 79.12,
+    kcal: 341,
+    fiber: 15.2,
+    sodium: 73,
+    satFat: 0.22,
+    sugar: 6.63,
+  },
+  orange: {
+    protein: 0.94,
+    fat: 0.12,
+    carbs: 11.75,
+    kcal: 47,
+    fiber: 2.4,
+    sodium: 0,
+    satFat: 0.02,
+    sugar: 9.35,
+  },
+  "orange-juice": {
+    protein: 0.7,
+    fat: 0.2,
+    carbs: 10.4,
+    kcal: 45,
+    fiber: 0.2,
+    sodium: 1,
+    satFat: 0.02,
+    sugar: 8.4,
   },
   "oyster-sauce": {
     protein: 1.35,
@@ -1162,6 +1702,16 @@ export const NUTRIENTS_PER_100G: Record<string, NutrientValues> = {
     satFat: 0.13,
     sugar: 0.85,
   },
+  pasta: {
+    protein: 13.04,
+    fat: 1.51,
+    carbs: 74.67,
+    kcal: 371,
+    fiber: 3.2,
+    sodium: 6,
+    satFat: 0.28,
+    sugar: 2.67,
+  },
   peach: {
     protein: 0.91,
     fat: 0.25,
@@ -1192,6 +1742,16 @@ export const NUTRIENTS_PER_100G: Record<string, NutrientValues> = {
     satFat: 2.91,
     sugar: 17.07,
   },
+  peanuts: {
+    protein: 25.8,
+    fat: 49.24,
+    carbs: 16.13,
+    kcal: 567,
+    fiber: 8.5,
+    sodium: 18,
+    satFat: 6.28,
+    sugar: 4.72,
+  },
   "peas-and-carrots": {
     protein: 3.4,
     fat: 0.47,
@@ -1201,6 +1761,16 @@ export const NUTRIENTS_PER_100G: Record<string, NutrientValues> = {
     sodium: 79,
     satFat: 0.08,
     sugar: 0,
+  },
+  pecans: {
+    protein: 9.17,
+    fat: 71.97,
+    carbs: 13.86,
+    kcal: 691,
+    fiber: 9.6,
+    sodium: 0,
+    satFat: 6.18,
+    sugar: 3.97,
   },
   pesto: {
     protein: 4.16,
@@ -1212,6 +1782,26 @@ export const NUTRIENTS_PER_100G: Record<string, NutrientValues> = {
     satFat: 6.72,
     sugar: 2.6,
   },
+  "pie-crust": {
+    protein: 6.16,
+    fat: 26.07,
+    carbs: 48.62,
+    kcal: 457,
+    fiber: 2.5,
+    sodium: 409,
+    satFat: 8.16,
+    sugar: 3.72,
+  },
+  "pine-nuts": {
+    protein: 13.69,
+    fat: 68.37,
+    carbs: 13.08,
+    kcal: 673,
+    fiber: 3.7,
+    sodium: 2,
+    satFat: 4.9,
+    sugar: 3.59,
+  },
   "pineapple-chunks": {
     protein: 0.54,
     fat: 0.12,
@@ -1222,6 +1812,26 @@ export const NUTRIENTS_PER_100G: Record<string, NutrientValues> = {
     satFat: 0.01,
     sugar: 9.85,
   },
+  "pineapple-juice": {
+    protein: 0.36,
+    fat: 0.12,
+    carbs: 12.87,
+    kcal: 53,
+    fiber: 0.2,
+    sodium: 2,
+    satFat: 0.01,
+    sugar: 9.98,
+  },
+  pistachios: {
+    protein: 20.16,
+    fat: 45.32,
+    carbs: 27.17,
+    kcal: 560,
+    fiber: 10.6,
+    sodium: 1,
+    satFat: 5.91,
+    sugar: 7.66,
+  },
   pita: {
     protein: 9.8,
     fat: 1.71,
@@ -1231,6 +1841,26 @@ export const NUTRIENTS_PER_100G: Record<string, NutrientValues> = {
     sodium: 421,
     satFat: 0.21,
     sugar: 2.87,
+  },
+  plums: {
+    protein: 0.7,
+    fat: 0.28,
+    carbs: 11.42,
+    kcal: 46,
+    fiber: 1.4,
+    sodium: 0,
+    satFat: 0.02,
+    sugar: 9.92,
+  },
+  "poppy-seeds": {
+    protein: 17.99,
+    fat: 41.56,
+    carbs: 28.13,
+    kcal: 525,
+    fiber: 19.5,
+    sodium: 26,
+    satFat: 4.52,
+    sugar: 2.99,
   },
   "pork-chops": {
     protein: 23.75,
@@ -1272,6 +1902,46 @@ export const NUTRIENTS_PER_100G: Record<string, NutrientValues> = {
     satFat: 0.03,
     sugar: 0.82,
   },
+  "powdered-sugar": {
+    protein: 0,
+    fat: 0,
+    carbs: 99.77,
+    kcal: 389,
+    fiber: 0,
+    sodium: 2,
+    satFat: 0,
+    sugar: 97.81,
+  },
+  "prepared-mustard": {
+    protein: 3.74,
+    fat: 3.34,
+    carbs: 5.83,
+    kcal: 60,
+    fiber: 4,
+    sodium: 1104,
+    satFat: 0.21,
+    sugar: 0.92,
+  },
+  "pumpkin-pie-spice": {
+    protein: 5.76,
+    fat: 12.6,
+    carbs: 69.28,
+    kcal: 342,
+    fiber: 14.8,
+    sodium: 52,
+    satFat: 6.53,
+    sugar: 7.76,
+  },
+  "pumpkin-puree": {
+    protein: 1.1,
+    fat: 0.28,
+    carbs: 8.09,
+    kcal: 34,
+    fiber: 2.9,
+    sodium: 5,
+    satFat: 0.15,
+    sugar: 3.3,
+  },
   quinoa: {
     protein: 14.12,
     fat: 6.07,
@@ -1281,6 +1951,16 @@ export const NUTRIENTS_PER_100G: Record<string, NutrientValues> = {
     sodium: 5,
     satFat: 0.71,
     sugar: 0,
+  },
+  raisins: {
+    protein: 3.3,
+    fat: 0.25,
+    carbs: 79.32,
+    kcal: 299,
+    fiber: 4.5,
+    sodium: 26,
+    satFat: 0.09,
+    sugar: 65.18,
   },
   raspberries: {
     protein: 1.2,
@@ -1331,6 +2011,36 @@ export const NUTRIENTS_PER_100G: Record<string, NutrientValues> = {
     sodium: 30,
     satFat: 3.26,
     sugar: 10.34,
+  },
+  "red-wine": {
+    protein: 0.07,
+    fat: 0,
+    carbs: 2.61,
+    kcal: 85,
+    fiber: 0,
+    sodium: 4,
+    satFat: 0,
+    sugar: 0.62,
+  },
+  "red-wine-vinegar": {
+    protein: 0.04,
+    fat: 0,
+    carbs: 0.27,
+    kcal: 19,
+    fiber: 0,
+    sodium: 8,
+    satFat: 0,
+    sugar: 0,
+  },
+  rhubarb: {
+    protein: 0.9,
+    fat: 0.2,
+    carbs: 4.54,
+    kcal: 21,
+    fiber: 1.8,
+    sodium: 4,
+    satFat: 0.05,
+    sugar: 1.1,
   },
   "rice-cakes": {
     protein: 8.5,
@@ -1392,6 +2102,36 @@ export const NUTRIENTS_PER_100G: Record<string, NutrientValues> = {
     satFat: 2.84,
     sugar: 0,
   },
+  rum: {
+    protein: 0,
+    fat: 0,
+    carbs: 0,
+    kcal: 231,
+    fiber: 0,
+    sodium: 1,
+    satFat: 0,
+    sugar: 0,
+  },
+  "rye-flour": {
+    protein: 10.88,
+    fat: 1.52,
+    carbs: 75.43,
+    kcal: 349,
+    fiber: 11.8,
+    sodium: 2,
+    satFat: 0.18,
+    sugar: 1.1,
+  },
+  saffron: {
+    protein: 11.43,
+    fat: 5.85,
+    carbs: 65.37,
+    kcal: 310,
+    fiber: 3.9,
+    sodium: 148,
+    satFat: 1.59,
+    sugar: 0,
+  },
   salmon: {
     protein: 20.42,
     fat: 13.42,
@@ -1422,6 +2162,26 @@ export const NUTRIENTS_PER_100G: Record<string, NutrientValues> = {
     satFat: 0,
     sugar: 0,
   },
+  sauerkraut: {
+    protein: 0.91,
+    fat: 0.14,
+    carbs: 4.28,
+    kcal: 19,
+    fiber: 2.9,
+    sodium: 661,
+    satFat: 0.03,
+    sugar: 1.78,
+  },
+  "self-rising-flour": {
+    protein: 9.89,
+    fat: 0.97,
+    carbs: 74.22,
+    kcal: 354,
+    fiber: 2.7,
+    sodium: 1193,
+    satFat: 0.15,
+    sugar: 0.22,
+  },
   "sesame-oil": {
     protein: 0,
     fat: 100,
@@ -1441,6 +2201,46 @@ export const NUTRIENTS_PER_100G: Record<string, NutrientValues> = {
     sodium: 11,
     satFat: 6.72,
     sugar: 0,
+  },
+  shallot: {
+    protein: 2.5,
+    fat: 0.1,
+    carbs: 16.8,
+    kcal: 72,
+    fiber: 3.2,
+    sodium: 12,
+    satFat: 0.02,
+    sugar: 7.87,
+  },
+  sherry: {
+    protein: 0.2,
+    fat: 0,
+    carbs: 11.67,
+    kcal: 152,
+    fiber: 0,
+    sodium: 9,
+    satFat: 0,
+    sugar: 1.09,
+  },
+  shortening: {
+    protein: 0,
+    fat: 100,
+    carbs: 0,
+    kcal: 884,
+    fiber: 0,
+    sodium: 0,
+    satFat: 25,
+    sugar: 0,
+  },
+  "shredded-coconut": {
+    protein: 2.88,
+    fat: 35.49,
+    carbs: 47.67,
+    kcal: 501,
+    fiber: 4.5,
+    sodium: 262,
+    satFat: 31.47,
+    sugar: 43.17,
   },
   shrimp: {
     protein: 20.1,
@@ -1502,6 +2302,16 @@ export const NUTRIENTS_PER_100G: Record<string, NutrientValues> = {
     satFat: 0.14,
     sugar: 0,
   },
+  "sour-cream": {
+    protein: 2.44,
+    fat: 19.35,
+    carbs: 4.63,
+    kcal: 198,
+    fiber: 0,
+    sodium: 31,
+    satFat: 10.14,
+    sugar: 3.41,
+  },
   "soy-sauce": {
     protein: 9.05,
     fat: 0.3,
@@ -1521,6 +2331,16 @@ export const NUTRIENTS_PER_100G: Record<string, NutrientValues> = {
     sodium: 1,
     satFat: 0.02,
     sugar: 4.89,
+  },
+  sugar: {
+    protein: 0,
+    fat: 0,
+    carbs: 99.98,
+    kcal: 387,
+    fiber: 0,
+    sodium: 1,
+    satFat: 0,
+    sugar: 99.8,
   },
   "sun-dried-tomatoes": {
     protein: 14.11,
@@ -1552,6 +2372,16 @@ export const NUTRIENTS_PER_100G: Record<string, NutrientValues> = {
     satFat: 7.53,
     sugar: 0.49,
   },
+  tarragon: {
+    protein: 22.77,
+    fat: 7.24,
+    carbs: 50.22,
+    kcal: 295,
+    fiber: 7.4,
+    sodium: 62,
+    satFat: 1.88,
+    sugar: 0,
+  },
   tomato: {
     protein: 0.88,
     fat: 0.2,
@@ -1561,6 +2391,16 @@ export const NUTRIENTS_PER_100G: Record<string, NutrientValues> = {
     sodium: 5,
     satFat: 0.03,
     sugar: 2.63,
+  },
+  "tomato-juice": {
+    protein: 0.85,
+    fat: 0.29,
+    carbs: 3.53,
+    kcal: 17,
+    fiber: 0.4,
+    sodium: 253,
+    satFat: 0.02,
+    sugar: 2.58,
   },
   "tomato-paste": {
     protein: 4.32,
@@ -1612,6 +2452,36 @@ export const NUTRIENTS_PER_100G: Record<string, NutrientValues> = {
     satFat: 1.96,
     sugar: 0,
   },
+  turmeric: {
+    protein: 9.68,
+    fat: 3.25,
+    carbs: 67.14,
+    kcal: 312,
+    fiber: 22.7,
+    sodium: 27,
+    satFat: 1.84,
+    sugar: 3.21,
+  },
+  "unsweetened-chocolate": {
+    protein: 14.32,
+    fat: 52.31,
+    carbs: 28.42,
+    kcal: 642,
+    fiber: 16.6,
+    sodium: 24,
+    satFat: 32.28,
+    sugar: 0.91,
+  },
+  "vanilla-extract": {
+    protein: 0.06,
+    fat: 0.06,
+    carbs: 12.65,
+    kcal: 288,
+    fiber: 0,
+    sodium: 9,
+    satFat: 0.01,
+    sugar: 12.65,
+  },
   "vegetable-broth": {
     protein: 0.24,
     fat: 0.07,
@@ -1622,6 +2492,16 @@ export const NUTRIENTS_PER_100G: Record<string, NutrientValues> = {
     satFat: 0.03,
     sugar: 0.55,
   },
+  "vegetable-oil": {
+    protein: 0,
+    fat: 100,
+    carbs: 0,
+    kcal: 884,
+    fiber: 0,
+    sodium: 0,
+    satFat: 15.25,
+    sugar: 0,
+  },
   walnuts: {
     protein: 15.23,
     fat: 65.21,
@@ -1631,6 +2511,16 @@ export const NUTRIENTS_PER_100G: Record<string, NutrientValues> = {
     sodium: 2,
     satFat: 6.13,
     sugar: 2.61,
+  },
+  "wheat-bran": {
+    protein: 15.55,
+    fat: 4.25,
+    carbs: 64.51,
+    kcal: 216,
+    fiber: 42.8,
+    sodium: 2,
+    satFat: 0.63,
+    sugar: 0.41,
   },
   "white-beans": {
     protein: 7.26,
@@ -1652,6 +2542,46 @@ export const NUTRIENTS_PER_100G: Record<string, NutrientValues> = {
     satFat: 0.18,
     sugar: 0.12,
   },
+  "white-vinegar": {
+    protein: 0,
+    fat: 0,
+    carbs: 0.04,
+    kcal: 18,
+    fiber: 0,
+    sodium: 2,
+    satFat: 0,
+    sugar: 0.04,
+  },
+  "white-wine": {
+    protein: 0.07,
+    fat: 0,
+    carbs: 2.6,
+    kcal: 82,
+    fiber: 0,
+    sodium: 5,
+    satFat: 0,
+    sugar: 0.96,
+  },
+  "white-wine-vinegar": {
+    protein: 0.04,
+    fat: 0,
+    carbs: 0.27,
+    kcal: 19,
+    fiber: 0,
+    sodium: 8,
+    satFat: 0,
+    sugar: 0,
+  },
+  "whole-chicken": {
+    protein: 18.6,
+    fat: 15.06,
+    carbs: 0,
+    kcal: 215,
+    fiber: 0,
+    sodium: 70,
+    satFat: 4.31,
+    sugar: 0,
+  },
   "whole-grain-bread": {
     protein: 13.36,
     fat: 4.23,
@@ -1661,6 +2591,16 @@ export const NUTRIENTS_PER_100G: Record<string, NutrientValues> = {
     sodium: 381,
     satFat: 0.87,
     sugar: 6.39,
+  },
+  "whole-wheat-flour": {
+    protein: 13.21,
+    fat: 2.5,
+    carbs: 71.97,
+    kcal: 340,
+    fiber: 10.7,
+    sodium: 2,
+    satFat: 0.43,
+    sugar: 0.41,
   },
   "whole-wheat-orzo": {
     protein: 13.87,
@@ -1702,6 +2642,36 @@ export const NUTRIENTS_PER_100G: Record<string, NutrientValues> = {
     satFat: 4.88,
     sugar: 2.44,
   },
+  "winter-squash": {
+    protein: 0.8,
+    fat: 0.1,
+    carbs: 10.42,
+    kcal: 40,
+    fiber: 1.5,
+    sodium: 3,
+    satFat: 0.02,
+    sugar: 0,
+  },
+  "worcestershire-sauce": {
+    protein: 0,
+    fat: 0,
+    carbs: 19.17,
+    kcal: 77,
+    fiber: 0,
+    sodium: 1300,
+    satFat: 0,
+    sugar: 10.03,
+  },
+  yeast: {
+    protein: 40.44,
+    fat: 7.61,
+    carbs: 41.22,
+    kcal: 325,
+    fiber: 26.9,
+    sodium: 51,
+    satFat: 1,
+    sugar: 0,
+  },
   "yellow-onion": {
     protein: 1.1,
     fat: 0.1,
@@ -1735,12 +2705,44 @@ export const NUTRIENTS_PER_100G: Record<string, NutrientValues> = {
 };
 
 export const INGREDIENT_SOURCES: Record<string, IngredientSource> = {
+  "all-purpose-flour": {
+    basis: "usda",
+    foods: [
+      {
+        fdcId: 168894,
+        description: "Wheat flour, white, all-purpose, enriched, bleached",
+        weight: 1,
+      },
+    ],
+  },
+  allspice: {
+    basis: "usda",
+    foods: [
+      {
+        fdcId: 171315,
+        description: "Spices, allspice, ground",
+        weight: 1,
+      },
+    ],
+    missing: ["sugar"],
+  },
   "almond-butter": {
     basis: "usda",
     foods: [
       {
         fdcId: 168588,
         description: "Nuts, almond butter, plain, without salt added",
+        weight: 1,
+      },
+    ],
+  },
+  "almond-extract": {
+    basis: "proxy",
+    note: "Vanilla extract as proxy",
+    foods: [
+      {
+        fdcId: 173471,
+        description: "Vanilla extract",
         weight: 1,
       },
     ],
@@ -1762,6 +2764,28 @@ export const INGREDIENT_SOURCES: Record<string, IngredientSource> = {
         fdcId: 171688,
         description:
           "Apples, raw, with skin (Includes foods for USDA's Food Distribution Program)",
+        weight: 1,
+      },
+    ],
+  },
+  "apple-juice": {
+    basis: "usda",
+    foods: [
+      {
+        fdcId: 173933,
+        description:
+          "Apple juice, canned or bottled, unsweetened, without added ascorbic acid",
+        weight: 1,
+      },
+    ],
+  },
+  applesauce: {
+    basis: "usda",
+    foods: [
+      {
+        fdcId: 171695,
+        description:
+          "Applesauce, canned, unsweetened, without added ascorbic acid (Includes foods for USDA's Food Distribution Program)",
         weight: 1,
       },
     ],
@@ -1827,6 +2851,16 @@ export const INGREDIENT_SOURCES: Record<string, IngredientSource> = {
       },
     ],
   },
+  "baking-soda": {
+    basis: "usda",
+    foods: [
+      {
+        fdcId: 175040,
+        description: "Leavening agents, baking soda",
+        weight: 1,
+      },
+    ],
+  },
   "balsamic-glaze": {
     basis: "estimate",
     note: "No USDA entry; typical store-label values",
@@ -1859,6 +2893,27 @@ export const INGREDIENT_SOURCES: Record<string, IngredientSource> = {
       {
         fdcId: 172232,
         description: "Basil, fresh",
+        weight: 1,
+      },
+    ],
+  },
+  "bay-leaves": {
+    basis: "usda",
+    foods: [
+      {
+        fdcId: 170917,
+        description: "Spices, bay leaf",
+        weight: 1,
+      },
+    ],
+    missing: ["sugar"],
+  },
+  beer: {
+    basis: "usda",
+    foods: [
+      {
+        fdcId: 168746,
+        description: "Alcoholic beverage, beer, regular, all",
         weight: 1,
       },
     ],
@@ -1924,6 +2979,28 @@ export const INGREDIENT_SOURCES: Record<string, IngredientSource> = {
       },
     ],
   },
+  "bran-cereal": {
+    basis: "usda",
+    foods: [
+      {
+        fdcId: 173888,
+        description: "Cereals ready-to-eat, POST Bran Flakes",
+        weight: 1,
+      },
+    ],
+  },
+  brandy: {
+    basis: "proxy",
+    note: "Distilled spirits, 86 proof",
+    foods: [
+      {
+        fdcId: 171919,
+        description:
+          "Alcoholic beverage, distilled, all (gin, rum, vodka, whiskey) 86 proof",
+        weight: 1,
+      },
+    ],
+  },
   breadcrumbs: {
     basis: "usda",
     foods: [
@@ -1955,12 +3032,32 @@ export const INGREDIENT_SOURCES: Record<string, IngredientSource> = {
       },
     ],
   },
+  "brown-sugar": {
+    basis: "usda",
+    foods: [
+      {
+        fdcId: 168833,
+        description: "Sugars, brown",
+        weight: 1,
+      },
+    ],
+  },
   bulgur: {
     basis: "usda",
     foods: [
       {
         fdcId: 170688,
         description: "Bulgur, dry",
+        weight: 1,
+      },
+    ],
+  },
+  butter: {
+    basis: "usda",
+    foods: [
+      {
+        fdcId: 173410,
+        description: "Butter, salted",
         weight: 1,
       },
     ],
@@ -1976,6 +3073,26 @@ export const INGREDIENT_SOURCES: Record<string, IngredientSource> = {
       },
     ],
   },
+  buttermilk: {
+    basis: "usda",
+    foods: [
+      {
+        fdcId: 170874,
+        description: "Milk, buttermilk, fluid, cultured, lowfat",
+        weight: 1,
+      },
+    ],
+  },
+  cabbage: {
+    basis: "usda",
+    foods: [
+      {
+        fdcId: 169975,
+        description: "Cabbage, raw",
+        weight: 1,
+      },
+    ],
+  },
   "caesar-dressing": {
     basis: "usda",
     note: "Low-calorie Caesar dressing",
@@ -1983,6 +3100,16 @@ export const INGREDIENT_SOURCES: Record<string, IngredientSource> = {
       {
         fdcId: 169877,
         description: "Salad dressing, caesar, low calorie",
+        weight: 1,
+      },
+    ],
+  },
+  "cake-flour": {
+    basis: "usda",
+    foods: [
+      {
+        fdcId: 169723,
+        description: "Wheat flour, white, cake, enriched",
         weight: 1,
       },
     ],
@@ -2133,6 +3260,17 @@ export const INGREDIENT_SOURCES: Record<string, IngredientSource> = {
       },
     ],
   },
+  "chili-sauce": {
+    basis: "usda",
+    foods: [
+      {
+        fdcId: 171186,
+        description: "Sauce, hot chile, sriracha",
+        weight: 1,
+      },
+    ],
+    missing: ["satFat"],
+  },
   chives: {
     basis: "usda",
     foods: [
@@ -2149,6 +3287,16 @@ export const INGREDIENT_SOURCES: Record<string, IngredientSource> = {
       {
         fdcId: 173469,
         description: "Vinegar, cider",
+        weight: 1,
+      },
+    ],
+  },
+  cilantro: {
+    basis: "usda",
+    foods: [
+      {
+        fdcId: 169997,
+        description: "Coriander (cilantro) leaves, raw",
         weight: 1,
       },
     ],
@@ -2173,6 +3321,16 @@ export const INGREDIENT_SOURCES: Record<string, IngredientSource> = {
       },
     ],
   },
+  "cocoa-powder": {
+    basis: "usda",
+    foods: [
+      {
+        fdcId: 169593,
+        description: "Cocoa, dry powder, unsweetened",
+        weight: 1,
+      },
+    ],
+  },
   "coconut-milk": {
     basis: "composite",
     note: "Light coconut milk modelled as canned coconut milk diluted 1:1 with water",
@@ -2192,6 +3350,26 @@ export const INGREDIENT_SOURCES: Record<string, IngredientSource> = {
       {
         fdcId: 171955,
         description: "Fish, cod, Atlantic, raw",
+        weight: 1,
+      },
+    ],
+  },
+  coffee: {
+    basis: "usda",
+    foods: [
+      {
+        fdcId: 171890,
+        description: "Beverages, coffee, brewed, prepared with tap water",
+        weight: 1,
+      },
+    ],
+  },
+  "condensed-milk": {
+    basis: "usda",
+    foods: [
+      {
+        fdcId: 171275,
+        description: "Milk, canned, condensed, sweetened",
         weight: 1,
       },
     ],
@@ -2238,12 +3416,42 @@ export const INGREDIENT_SOURCES: Record<string, IngredientSource> = {
       },
     ],
   },
+  "corn-syrup": {
+    basis: "usda",
+    foods: [
+      {
+        fdcId: 168837,
+        description: "Syrups, corn, light",
+        weight: 1,
+      },
+    ],
+  },
   "corn-tortilla": {
     basis: "usda",
     foods: [
       {
         fdcId: 175036,
         description: "Tortillas, ready-to-bake or -fry, corn",
+        weight: 1,
+      },
+    ],
+  },
+  cornmeal: {
+    basis: "usda",
+    foods: [
+      {
+        fdcId: 169697,
+        description: "Cornmeal, whole-grain, yellow",
+        weight: 1,
+      },
+    ],
+  },
+  cornstarch: {
+    basis: "usda",
+    foods: [
+      {
+        fdcId: 169698,
+        description: "Cornstarch",
         weight: 1,
       },
     ],
@@ -2259,6 +3467,17 @@ export const INGREDIENT_SOURCES: Record<string, IngredientSource> = {
       },
     ],
   },
+  couscous: {
+    basis: "usda",
+    foods: [
+      {
+        fdcId: 169699,
+        description: "Couscous, dry",
+        weight: 1,
+      },
+    ],
+    missing: ["sugar"],
+  },
   crackers: {
     basis: "usda",
     foods: [
@@ -2269,12 +3488,32 @@ export const INGREDIENT_SOURCES: Record<string, IngredientSource> = {
       },
     ],
   },
+  cranberries: {
+    basis: "usda",
+    foods: [
+      {
+        fdcId: 171722,
+        description: "Cranberries, raw",
+        weight: 1,
+      },
+    ],
+  },
   "cream-cheese": {
     basis: "usda",
     foods: [
       {
         fdcId: 173418,
         description: "Cheese, cream",
+        weight: 1,
+      },
+    ],
+  },
+  "cream-of-tartar": {
+    basis: "usda",
+    foods: [
+      {
+        fdcId: 175041,
+        description: "Leavening agents, cream of tartar",
         weight: 1,
       },
     ],
@@ -2331,6 +3570,16 @@ export const INGREDIENT_SOURCES: Record<string, IngredientSource> = {
       },
     ],
   },
+  dates: {
+    basis: "usda",
+    foods: [
+      {
+        fdcId: 171726,
+        description: "Dates, deglet noor",
+        weight: 1,
+      },
+    ],
+  },
   "deli-turkey": {
     basis: "usda",
     foods: [
@@ -2362,6 +3611,16 @@ export const INGREDIENT_SOURCES: Record<string, IngredientSource> = {
     ],
     missing: ["sugar"],
   },
+  "dried-apricots": {
+    basis: "usda",
+    foods: [
+      {
+        fdcId: 173941,
+        description: "Apricots, dried, sulfured, uncooked",
+        weight: 1,
+      },
+    ],
+  },
   "dried-cranberries": {
     basis: "usda",
     foods: [
@@ -2389,6 +3648,16 @@ export const INGREDIENT_SOURCES: Record<string, IngredientSource> = {
       {
         fdcId: 170938,
         description: "Spices, thyme, dried",
+        weight: 1,
+      },
+    ],
+  },
+  "dry-mustard": {
+    basis: "usda",
+    foods: [
+      {
+        fdcId: 170929,
+        description: "Spices, mustard seed, ground",
         weight: 1,
       },
     ],
@@ -2453,6 +3722,17 @@ export const INGREDIENT_SOURCES: Record<string, IngredientSource> = {
       {
         fdcId: 174074,
         description: "Sauce, enchilada, red, mild, ready to serve",
+        weight: 1,
+      },
+    ],
+  },
+  "evaporated-milk": {
+    basis: "usda",
+    foods: [
+      {
+        fdcId: 171276,
+        description:
+          "Milk, canned, evaporated, with added vitamin D and without added vitamin A",
         weight: 1,
       },
     ],
@@ -2597,6 +3877,17 @@ export const INGREDIENT_SOURCES: Record<string, IngredientSource> = {
       },
     ],
   },
+  "graham-cracker-crumbs": {
+    basis: "usda",
+    foods: [
+      {
+        fdcId: 174957,
+        description:
+          "Cookies, graham crackers, plain or honey (includes cinnamon)",
+        weight: 1,
+      },
+    ],
+  },
   granola: {
     basis: "usda",
     foods: [
@@ -2649,6 +3940,17 @@ export const INGREDIENT_SOURCES: Record<string, IngredientSource> = {
       },
     ],
   },
+  "green-peas": {
+    basis: "usda",
+    foods: [
+      {
+        fdcId: 170016,
+        description:
+          "Peas, green, frozen, unprepared (Includes foods for USDA's Food Distribution Program)",
+        weight: 1,
+      },
+    ],
+  },
   "ground-beef": {
     basis: "usda",
     foods: [
@@ -2669,6 +3971,26 @@ export const INGREDIENT_SOURCES: Record<string, IngredientSource> = {
       },
     ],
   },
+  "ground-cloves": {
+    basis: "usda",
+    foods: [
+      {
+        fdcId: 171321,
+        description: "Spices, cloves, ground",
+        weight: 1,
+      },
+    ],
+  },
+  "ground-ginger": {
+    basis: "usda",
+    foods: [
+      {
+        fdcId: 170926,
+        description: "Spices, ginger, ground",
+        weight: 1,
+      },
+    ],
+  },
   "ground-turkey": {
     basis: "usda",
     note: "Fat-free ground turkey (breast)",
@@ -2676,6 +3998,57 @@ export const INGREDIENT_SOURCES: Record<string, IngredientSource> = {
       {
         fdcId: 172847,
         description: "Turkey, ground, fat free, raw",
+        weight: 1,
+      },
+    ],
+  },
+  gruyere: {
+    basis: "usda",
+    foods: [
+      {
+        fdcId: 171242,
+        description: "Cheese, gruyere",
+        weight: 1,
+      },
+    ],
+  },
+  "half-and-half": {
+    basis: "proxy",
+    note: "Light cream",
+    foods: [
+      {
+        fdcId: 170857,
+        description: "Cream, fluid, light (coffee cream or table cream)",
+        weight: 1,
+      },
+    ],
+  },
+  ham: {
+    basis: "usda",
+    foods: [
+      {
+        fdcId: 173864,
+        description: "Ham, sliced, regular (approximately 11% fat)",
+        weight: 1,
+      },
+    ],
+  },
+  hazelnuts: {
+    basis: "usda",
+    foods: [
+      {
+        fdcId: 170581,
+        description: "Nuts, hazelnuts or filberts",
+        weight: 1,
+      },
+    ],
+  },
+  "heavy-cream": {
+    basis: "usda",
+    foods: [
+      {
+        fdcId: 170859,
+        description: "Cream, fluid, heavy whipping",
         weight: 1,
       },
     ],
@@ -2690,12 +4063,32 @@ export const INGREDIENT_SOURCES: Record<string, IngredientSource> = {
       },
     ],
   },
+  "hot-sauce": {
+    basis: "usda",
+    foods: [
+      {
+        fdcId: 174527,
+        description: "Sauce, ready-to-serve, pepper or hot",
+        weight: 1,
+      },
+    ],
+  },
   hummus: {
     basis: "usda",
     foods: [
       {
         fdcId: 174289,
         description: "Hummus, commercial",
+        weight: 1,
+      },
+    ],
+  },
+  "instant-coffee": {
+    basis: "usda",
+    foods: [
+      {
+        fdcId: 171893,
+        description: "Beverages, coffee, instant, regular, powder",
         weight: 1,
       },
     ],
@@ -2731,6 +4124,16 @@ export const INGREDIENT_SOURCES: Record<string, IngredientSource> = {
       },
     ],
   },
+  jam: {
+    basis: "usda",
+    foods: [
+      {
+        fdcId: 169641,
+        description: "Jams and preserves",
+        weight: 1,
+      },
+    ],
+  },
   "kalamata-olives": {
     basis: "proxy",
     note: "Ripe olives; kalamatas are similar",
@@ -2752,6 +4155,16 @@ export const INGREDIENT_SOURCES: Record<string, IngredientSource> = {
       },
     ],
   },
+  ketchup: {
+    basis: "usda",
+    foods: [
+      {
+        fdcId: 168556,
+        description: "Catsup",
+        weight: 1,
+      },
+    ],
+  },
   "kidney-beans": {
     basis: "usda",
     note: "Drained",
@@ -2759,6 +4172,16 @@ export const INGREDIENT_SOURCES: Record<string, IngredientSource> = {
       {
         fdcId: 174285,
         description: "Beans, kidney, red, mature seeds, canned, drained solids",
+        weight: 1,
+      },
+    ],
+  },
+  lard: {
+    basis: "usda",
+    foods: [
+      {
+        fdcId: 171401,
+        description: "Lard",
         weight: 1,
       },
     ],
@@ -2793,6 +4216,17 @@ export const INGREDIENT_SOURCES: Record<string, IngredientSource> = {
       },
     ],
   },
+  mace: {
+    basis: "usda",
+    foods: [
+      {
+        fdcId: 170927,
+        description: "Spices, mace, ground",
+        weight: 1,
+      },
+    ],
+    missing: ["sugar"],
+  },
   mango: {
     basis: "usda",
     foods: [
@@ -2813,12 +4247,32 @@ export const INGREDIENT_SOURCES: Record<string, IngredientSource> = {
       },
     ],
   },
+  margarine: {
+    basis: "usda",
+    foods: [
+      {
+        fdcId: 172346,
+        description: "Margarine, regular, 80% fat, composite, stick, with salt",
+        weight: 1,
+      },
+    ],
+  },
   marinara: {
     basis: "usda",
     foods: [
       {
         fdcId: 171192,
         description: "Sauce, pasta, spaghetti/marinara, ready-to-serve",
+        weight: 1,
+      },
+    ],
+  },
+  mayonnaise: {
+    basis: "usda",
+    foods: [
+      {
+        fdcId: 171009,
+        description: "Salad dressing, mayonnaise, regular",
         weight: 1,
       },
     ],
@@ -2904,6 +4358,16 @@ export const INGREDIENT_SOURCES: Record<string, IngredientSource> = {
       },
     ],
   },
+  molasses: {
+    basis: "usda",
+    foods: [
+      {
+        fdcId: 168820,
+        description: "Molasses",
+        weight: 1,
+      },
+    ],
+  },
   mozzarella: {
     basis: "usda",
     foods: [
@@ -2914,12 +4378,74 @@ export const INGREDIENT_SOURCES: Record<string, IngredientSource> = {
       },
     ],
   },
+  mushrooms: {
+    basis: "usda",
+    foods: [
+      {
+        fdcId: 169251,
+        description: "Mushrooms, white, raw",
+        weight: 1,
+      },
+    ],
+  },
+  "mustard-seed": {
+    basis: "proxy",
+    note: "Ground mustard seed",
+    foods: [
+      {
+        fdcId: 170929,
+        description: "Spices, mustard seed, ground",
+        weight: 1,
+      },
+    ],
+  },
+  nutmeg: {
+    basis: "usda",
+    foods: [
+      {
+        fdcId: 171326,
+        description: "Spices, nutmeg, ground",
+        weight: 1,
+      },
+    ],
+  },
   "olive-oil": {
     basis: "usda",
     foods: [
       {
         fdcId: 171413,
         description: "Oil, olive, salad or cooking",
+        weight: 1,
+      },
+    ],
+  },
+  "onion-powder": {
+    basis: "usda",
+    foods: [
+      {
+        fdcId: 171327,
+        description: "Spices, onion powder",
+        weight: 1,
+      },
+    ],
+  },
+  orange: {
+    basis: "usda",
+    foods: [
+      {
+        fdcId: 169097,
+        description: "Oranges, raw, all commercial varieties",
+        weight: 1,
+      },
+    ],
+  },
+  "orange-juice": {
+    basis: "usda",
+    foods: [
+      {
+        fdcId: 169098,
+        description:
+          "Orange juice, raw (Includes foods for USDA's Food Distribution Program)",
         weight: 1,
       },
     ],
@@ -2964,6 +4490,16 @@ export const INGREDIENT_SOURCES: Record<string, IngredientSource> = {
       },
     ],
   },
+  pasta: {
+    basis: "usda",
+    foods: [
+      {
+        fdcId: 169736,
+        description: "Pasta, dry, enriched",
+        weight: 1,
+      },
+    ],
+  },
   peach: {
     basis: "usda",
     foods: [
@@ -2995,6 +4531,16 @@ export const INGREDIENT_SOURCES: Record<string, IngredientSource> = {
       },
     ],
   },
+  peanuts: {
+    basis: "usda",
+    foods: [
+      {
+        fdcId: 172430,
+        description: "Peanuts, all types, raw",
+        weight: 1,
+      },
+    ],
+  },
   "peas-and-carrots": {
     basis: "usda",
     foods: [
@@ -3006,12 +4552,43 @@ export const INGREDIENT_SOURCES: Record<string, IngredientSource> = {
     ],
     missing: ["sugar"],
   },
+  pecans: {
+    basis: "usda",
+    foods: [
+      {
+        fdcId: 170182,
+        description: "Nuts, pecans",
+        weight: 1,
+      },
+    ],
+  },
   pesto: {
     basis: "usda",
     foods: [
       {
         fdcId: 171582,
         description: "Sauce, pesto, CLASSICO, basil pesto, ready-to-serve",
+        weight: 1,
+      },
+    ],
+  },
+  "pie-crust": {
+    basis: "usda",
+    foods: [
+      {
+        fdcId: 175024,
+        description:
+          "Pie crust, standard-type, frozen, ready-to-bake, enriched",
+        weight: 1,
+      },
+    ],
+  },
+  "pine-nuts": {
+    basis: "usda",
+    foods: [
+      {
+        fdcId: 170591,
+        description: "Nuts, pine nuts, dried",
         weight: 1,
       },
     ],
@@ -3026,12 +4603,53 @@ export const INGREDIENT_SOURCES: Record<string, IngredientSource> = {
       },
     ],
   },
+  "pineapple-juice": {
+    basis: "usda",
+    foods: [
+      {
+        fdcId: 169947,
+        description:
+          "Pineapple juice, canned or bottled, unsweetened, without added ascorbic acid",
+        weight: 1,
+      },
+    ],
+  },
+  pistachios: {
+    basis: "usda",
+    foods: [
+      {
+        fdcId: 170184,
+        description: "Nuts, pistachio nuts, raw",
+        weight: 1,
+      },
+    ],
+  },
   pita: {
     basis: "usda",
     foods: [
       {
         fdcId: 174916,
         description: "Bread, pita, whole-wheat",
+        weight: 1,
+      },
+    ],
+  },
+  plums: {
+    basis: "usda",
+    foods: [
+      {
+        fdcId: 169949,
+        description: "Plums, raw",
+        weight: 1,
+      },
+    ],
+  },
+  "poppy-seeds": {
+    basis: "usda",
+    foods: [
+      {
+        fdcId: 171330,
+        description: "Spices, poppy seed",
         weight: 1,
       },
     ],
@@ -3077,6 +4695,46 @@ export const INGREDIENT_SOURCES: Record<string, IngredientSource> = {
       },
     ],
   },
+  "powdered-sugar": {
+    basis: "usda",
+    foods: [
+      {
+        fdcId: 169656,
+        description: "Sugars, powdered",
+        weight: 1,
+      },
+    ],
+  },
+  "prepared-mustard": {
+    basis: "usda",
+    foods: [
+      {
+        fdcId: 172234,
+        description: "Mustard, prepared, yellow",
+        weight: 1,
+      },
+    ],
+  },
+  "pumpkin-pie-spice": {
+    basis: "usda",
+    foods: [
+      {
+        fdcId: 171332,
+        description: "Spices, pumpkin pie spice",
+        weight: 1,
+      },
+    ],
+  },
+  "pumpkin-puree": {
+    basis: "usda",
+    foods: [
+      {
+        fdcId: 168450,
+        description: "Pumpkin, canned, without salt",
+        weight: 1,
+      },
+    ],
+  },
   quinoa: {
     basis: "usda",
     foods: [
@@ -3087,6 +4745,17 @@ export const INGREDIENT_SOURCES: Record<string, IngredientSource> = {
       },
     ],
     missing: ["sugar"],
+  },
+  raisins: {
+    basis: "usda",
+    foods: [
+      {
+        fdcId: 168165,
+        description:
+          "Raisins, dark, seedless (Includes foods for USDA's Food Distribution Program)",
+        weight: 1,
+      },
+    ],
   },
   raspberries: {
     basis: "usda",
@@ -3135,6 +4804,36 @@ export const INGREDIENT_SOURCES: Record<string, IngredientSource> = {
       {
         fdcId: 170932,
         description: "Spices, pepper, red or cayenne",
+        weight: 1,
+      },
+    ],
+  },
+  "red-wine": {
+    basis: "usda",
+    foods: [
+      {
+        fdcId: 173190,
+        description: "Alcoholic beverage, wine, table, red",
+        weight: 1,
+      },
+    ],
+  },
+  "red-wine-vinegar": {
+    basis: "usda",
+    foods: [
+      {
+        fdcId: 172240,
+        description: "Vinegar, red wine",
+        weight: 1,
+      },
+    ],
+  },
+  rhubarb: {
+    basis: "usda",
+    foods: [
+      {
+        fdcId: 167758,
+        description: "Rhubarb, raw",
         weight: 1,
       },
     ],
@@ -3203,6 +4902,37 @@ export const INGREDIENT_SOURCES: Record<string, IngredientSource> = {
     ],
     missing: ["sugar"],
   },
+  rum: {
+    basis: "usda",
+    foods: [
+      {
+        fdcId: 174817,
+        description: "Alcoholic beverage, distilled, rum, 80 proof",
+        weight: 1,
+      },
+    ],
+  },
+  "rye-flour": {
+    basis: "usda",
+    foods: [
+      {
+        fdcId: 168886,
+        description: "Rye flour, medium",
+        weight: 1,
+      },
+    ],
+  },
+  saffron: {
+    basis: "usda",
+    foods: [
+      {
+        fdcId: 170934,
+        description: "Spices, saffron",
+        weight: 1,
+      },
+    ],
+    missing: ["sugar"],
+  },
   salmon: {
     basis: "usda",
     foods: [
@@ -3233,6 +4963,26 @@ export const INGREDIENT_SOURCES: Record<string, IngredientSource> = {
       },
     ],
   },
+  sauerkraut: {
+    basis: "usda",
+    foods: [
+      {
+        fdcId: 169279,
+        description: "Sauerkraut, canned, solids and liquids",
+        weight: 1,
+      },
+    ],
+  },
+  "self-rising-flour": {
+    basis: "usda",
+    foods: [
+      {
+        fdcId: 168895,
+        description: "Wheat flour, white, all-purpose, self-rising, enriched",
+        weight: 1,
+      },
+    ],
+  },
   "sesame-oil": {
     basis: "usda",
     foods: [
@@ -3253,6 +5003,49 @@ export const INGREDIENT_SOURCES: Record<string, IngredientSource> = {
       },
     ],
     missing: ["sugar"],
+  },
+  shallot: {
+    basis: "usda",
+    foods: [
+      {
+        fdcId: 170499,
+        description: "Shallots, raw",
+        weight: 1,
+      },
+    ],
+  },
+  sherry: {
+    basis: "proxy",
+    note: "Dry dessert wine",
+    foods: [
+      {
+        fdcId: 175112,
+        description: "Alcoholic beverage, wine, dessert, dry",
+        weight: 1,
+      },
+    ],
+  },
+  shortening: {
+    basis: "usda",
+    foods: [
+      {
+        fdcId: 171011,
+        description:
+          "Shortening, household, soybean (partially hydrogenated)-cottonseed (partially hydrogenated)",
+        weight: 1,
+      },
+    ],
+  },
+  "shredded-coconut": {
+    basis: "usda",
+    foods: [
+      {
+        fdcId: 168586,
+        description:
+          "Nuts, coconut meat, dried (desiccated), sweetened, shredded",
+        weight: 1,
+      },
+    ],
   },
   shrimp: {
     basis: "usda",
@@ -3318,6 +5111,16 @@ export const INGREDIENT_SOURCES: Record<string, IngredientSource> = {
     ],
     missing: ["fiber", "sugar"],
   },
+  "sour-cream": {
+    basis: "usda",
+    foods: [
+      {
+        fdcId: 171257,
+        description: "Cream, sour, cultured",
+        weight: 1,
+      },
+    ],
+  },
   "soy-sauce": {
     basis: "usda",
     foods: [
@@ -3334,6 +5137,16 @@ export const INGREDIENT_SOURCES: Record<string, IngredientSource> = {
       {
         fdcId: 167762,
         description: "Strawberries, raw",
+        weight: 1,
+      },
+    ],
+  },
+  sugar: {
+    basis: "usda",
+    foods: [
+      {
+        fdcId: 169655,
+        description: "Sugars, granulated",
         weight: 1,
       },
     ],
@@ -3370,12 +5183,33 @@ export const INGREDIENT_SOURCES: Record<string, IngredientSource> = {
       },
     ],
   },
+  tarragon: {
+    basis: "usda",
+    foods: [
+      {
+        fdcId: 170937,
+        description: "Spices, tarragon, dried",
+        weight: 1,
+      },
+    ],
+    missing: ["sugar"],
+  },
   tomato: {
     basis: "usda",
     foods: [
       {
         fdcId: 170457,
         description: "Tomatoes, red, ripe, raw, year round average",
+        weight: 1,
+      },
+    ],
+  },
+  "tomato-juice": {
+    basis: "usda",
+    foods: [
+      {
+        fdcId: 170458,
+        description: "Tomato juice, canned, with salt added",
         weight: 1,
       },
     ],
@@ -3433,6 +5267,36 @@ export const INGREDIENT_SOURCES: Record<string, IngredientSource> = {
       },
     ],
   },
+  turmeric: {
+    basis: "usda",
+    foods: [
+      {
+        fdcId: 172231,
+        description: "Spices, turmeric, ground",
+        weight: 1,
+      },
+    ],
+  },
+  "unsweetened-chocolate": {
+    basis: "usda",
+    foods: [
+      {
+        fdcId: 167568,
+        description: "Baking chocolate, unsweetened, squares",
+        weight: 1,
+      },
+    ],
+  },
+  "vanilla-extract": {
+    basis: "usda",
+    foods: [
+      {
+        fdcId: 173471,
+        description: "Vanilla extract",
+        weight: 1,
+      },
+    ],
+  },
   "vegetable-broth": {
     basis: "usda",
     foods: [
@@ -3443,12 +5307,32 @@ export const INGREDIENT_SOURCES: Record<string, IngredientSource> = {
       },
     ],
   },
+  "vegetable-oil": {
+    basis: "usda",
+    foods: [
+      {
+        fdcId: 172370,
+        description: "Oil, vegetable, soybean, refined",
+        weight: 1,
+      },
+    ],
+  },
   walnuts: {
     basis: "usda",
     foods: [
       {
         fdcId: 170187,
         description: "Nuts, walnuts, english",
+        weight: 1,
+      },
+    ],
+  },
+  "wheat-bran": {
+    basis: "usda",
+    foods: [
+      {
+        fdcId: 169722,
+        description: "Wheat bran, crude",
         weight: 1,
       },
     ],
@@ -3473,12 +5357,65 @@ export const INGREDIENT_SOURCES: Record<string, IngredientSource> = {
       },
     ],
   },
+  "white-vinegar": {
+    basis: "usda",
+    foods: [
+      {
+        fdcId: 172237,
+        description: "Vinegar, distilled",
+        weight: 1,
+      },
+    ],
+  },
+  "white-wine": {
+    basis: "usda",
+    foods: [
+      {
+        fdcId: 174837,
+        description: "Alcoholic beverage, wine, table, white",
+        weight: 1,
+      },
+    ],
+  },
+  "white-wine-vinegar": {
+    basis: "proxy",
+    note: "Red wine vinegar",
+    foods: [
+      {
+        fdcId: 172240,
+        description: "Vinegar, red wine",
+        weight: 1,
+      },
+    ],
+  },
+  "whole-chicken": {
+    basis: "usda",
+    refuse: 0.39,
+    foods: [
+      {
+        fdcId: 171447,
+        description: "Chicken, broilers or fryers, meat and skin, raw",
+        weight: 1,
+      },
+    ],
+  },
   "whole-grain-bread": {
     basis: "usda",
     foods: [
       {
         fdcId: 168013,
         description: "Bread, multi-grain (includes whole-grain)",
+        weight: 1,
+      },
+    ],
+  },
+  "whole-wheat-flour": {
+    basis: "usda",
+    foods: [
+      {
+        fdcId: 168893,
+        description:
+          "Wheat flour, whole-grain (Includes foods for USDA's Food Distribution Program)",
         weight: 1,
       },
     ],
@@ -3522,6 +5459,37 @@ export const INGREDIENT_SOURCES: Record<string, IngredientSource> = {
       {
         fdcId: 174081,
         description: "Tortillas, ready-to-bake or -fry, whole wheat",
+        weight: 1,
+      },
+    ],
+  },
+  "winter-squash": {
+    basis: "usda",
+    foods: [
+      {
+        fdcId: 168472,
+        description: "Squash, winter, acorn, raw",
+        weight: 1,
+      },
+    ],
+    missing: ["sugar"],
+  },
+  "worcestershire-sauce": {
+    basis: "usda",
+    foods: [
+      {
+        fdcId: 171610,
+        description: "Sauce, worcestershire",
+        weight: 1,
+      },
+    ],
+  },
+  yeast: {
+    basis: "usda",
+    foods: [
+      {
+        fdcId: 175043,
+        description: "Leavening agents, yeast, baker's, active dry",
         weight: 1,
       },
     ],

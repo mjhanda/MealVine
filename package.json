@@ -53,7 +53,8 @@
     "build:dev": "npx eas-cli build --profile development --platform all",
     "build:preview": "npx eas-cli build --profile preview --platform all",
     "doctor": "npx expo-doctor",
-    "e2e": "maestro test .maestro"
+    "e2e": "maestro test .maestro",
+    "recipes:import": "tsx scripts/import-cmu/export-catalog.ts && python3 scripts/import-cmu/parse_archive.py && python3 scripts/import-cmu/build_recipes.py"
   },
   "private": true,
   "jest": {

@@ -30,9 +30,15 @@ describe('stepIngredients', () => {
   it('does not match a word shared by two ingredients ("chicken" with chicken broth present)', () => {
     expect(stepIngredients(r95, 'Brown diced chicken.').map((i) => i.id)).toEqual([]);
   });
-  it('finds ingredients for most steps across the catalog', () => {
-    const pairs = RECIPES.flatMap((r) => r.steps.map((s) => stepIngredients(r, s).length > 0));
-    expect(pairs.filter(Boolean).length / pairs.length).toBeGreaterThan(0.8);
+  const share = (recipes: typeof RECIPES) => {
+    const pairs = recipes.flatMap((r) => r.steps.map((s) => stepIngredients(r, s).length > 0));
+    return pairs.filter(Boolean).length / pairs.length;
+  };
+  it('finds ingredients for most steps we wrote', () => {
+    expect(share(RECIPES.filter((r) => r.source?.kind !== 'as-posted'))).toBeGreaterThan(0.8);
+  });
+  it('finds ingredients for at least half the steps of as-posted recipes (they include commentary)', () => {
+    expect(share(RECIPES.filter((r) => r.source?.kind === 'as-posted'))).toBeGreaterThan(0.5);
   });
 });
 

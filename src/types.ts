@@ -1,4 +1,4 @@
-export type MealType = 'breakfast' | 'lunch' | 'dinner' | 'snack';
+export type MealType = 'breakfast' | 'lunch' | 'dinner' | 'snack' | 'dessert' | 'side';
 // The main protein, shown as a label on recipe cards.
 export type Protein = 'vegetarian' | 'chicken' | 'turkey' | 'fish' | 'beef' | 'pork' | 'lamb';
 export type DietId = 'classic' | 'flexitarian' | 'pescetarian' | 'vegetarian' | 'vegan' | 'low-carb' | 'keto' | 'paleo';
@@ -56,9 +56,9 @@ export interface IngredientDef {
   staple?: boolean;
 }
 
-export type VolumeUnit = 'tsp' | 'tbsp' | 'cup';
+export type VolumeUnit = 'pinch' | 'tsp' | 'tbsp' | 'cup';
 export type WeightUnit = 'oz' | 'lb';
-export type DiscreteUnit = 'can' | 'clove' | 'stalk' | 'head' | 'bunch' | 'slice' | 'pinch';
+export type DiscreteUnit = 'can' | 'clove' | 'stalk' | 'head' | 'bunch' | 'slice';
 export type Unit = VolumeUnit | WeightUnit | DiscreteUnit;
 
 export interface RecipeIngredient {
@@ -70,7 +70,9 @@ export interface RecipeIngredient {
 
 // Where a recipe came from. Absent = a Dishcart original.
 export interface RecipeSource {
-  kind: 'adapted';
+  // adapted = ingredients/method reworked and instructions rewritten by us;
+  // as-posted = the poster's own instructions (lightly cleaned), amounts converted to our units.
+  kind: 'adapted' | 'as-posted';
   title: string; // original recipe title
   author: string; // poster's name as given (never their email address)
   posted?: string; // original posting date, e.g. "1993-08-17"
@@ -92,6 +94,9 @@ export interface Recipe {
   ingredients: RecipeIngredient[];
   steps: string[];
   source?: RecipeSource;
+  // Baked goods, sauces, preserves: you make the whole batch, so a plan entry defaults to the
+  // recipe's own yield instead of the household size.
+  batch?: boolean;
 }
 
 export interface Preferences {

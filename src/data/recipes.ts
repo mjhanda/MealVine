@@ -1,10 +1,11 @@
 import { Recipe } from '../types';
 import { CMU_ARCHIVE, CMU_LICENSE } from '../utils/recipeSource';
+import { IMPORTED_RECIPES } from './importedRecipes';
 
 // Curated, originally-authored recipes. Ingredients reference src/data/ingredients.ts by id.
 // 133 recipes across breakfast, lunch, dinner, and snacks. r121+ are adapted from the CMU Recipe
 // Archive with credit in `source`; everything without `source` is a Dishcart original.
-export const RECIPES: Recipe[] = [
+const HAND_RECIPES: Recipe[] = [
   {
     id: 'r1', title: 'Greek Yogurt Berry Parfait', mealType: 'breakfast', protein: 'vegetarian',
     prep: 5, cook: 0, servings: 2, emoji: '🫐',
@@ -2456,3 +2457,6 @@ export const RECIPES: Recipe[] = [
     },
   },
 ];
+
+// Hand-written and hand-adapted recipes first, then the bulk CMU import (generated file).
+export const RECIPES: Recipe[] = [...HAND_RECIPES, ...IMPORTED_RECIPES];

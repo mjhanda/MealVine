@@ -15,7 +15,7 @@ import { MAX_SERVINGS, MIN_SERVINGS, usePlanStore } from '../store/planStore';
 import { useEatingPrefs, usePreferencesStore } from '../store/preferencesStore';
 import { colors } from '../theme';
 import { describeConflicts, DIETS, dietsFor, isExcluded, recipeConflicts } from '../utils/diets';
-import { ingredientDisplayName, recipeById } from '../utils/recipeCatalog';
+import { defaultServings, ingredientDisplayName, recipeById } from '../utils/recipeCatalog';
 import { caloriesPerServing } from '../utils/nutrition';
 import { sourceCredit } from '../utils/recipeSource';
 import { formatQuantity, scaleAmount } from '../utils/units';
@@ -30,7 +30,7 @@ export default function RecipeDetailScreen({ route, navigation }: Props) {
   const note = useRecipeNotesStore((s) => s.notes[route.params.recipeId] ?? '');
   const setNote = useRecipeNotesStore((s) => s.setNote);
   const timesCooked = useHistoryStore((s) => s.cooked.filter((e) => e.recipeId === route.params.recipeId).length);
-  const [draftServings, setDraftServings] = useState(householdSize);
+  const [draftServings, setDraftServings] = useState(() => (recipe ? defaultServings(recipe, householdSize) : householdSize));
   const [tab, setTab] = useState<'recipe' | 'nutrition'>('recipe');
   const favorites = useFavoritesStore((s) => s.favorites);
   const toggleFavorite = useFavoritesStore((s) => s.toggleFavorite);

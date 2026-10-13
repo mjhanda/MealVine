@@ -40,6 +40,10 @@ function matchesQuery(recipe: Recipe, query: string): boolean {
 
 export const totalMinutes = (r: Recipe) => r.prep + r.cook;
 
+// Servings for a new plan entry: the household, except batch recipes (a cake, a jar of sauce),
+// which you make whole.
+export const defaultServings = (r: Recipe, householdSize: number): number => (r.batch ? r.servings : householdSize);
+
 export function filterRecipes(f: RecipeFilter): Recipe[] {
   const q = f.query.trim().toLowerCase();
   return RECIPES.filter((r) => {

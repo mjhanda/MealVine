@@ -1,0 +1,25 @@
+appId: com.bionicsun.dishcart
+name: Imported archive recipe shows credit, adds as a full batch, groceries include pie crust
+---
+- runFlow: subflows/launch.yaml
+- runFlow: subflows/onboard-classic.yaml
+- tapOn: "Browse(, tab.*)?"
+- tapOn: "Search recipes or ingredients"
+- inputText: "rhubarb custard"
+- pressKey: Enter
+- tapOn: "Rhubarb Custard Pie"
+- assertVisible: "(?i)ingredients"
+# Batch recipe: the stepper starts at the recipe's yield (8), not the household (2).
+- assertVisible: "8"
+- tapOn: ".*Add to plan.*"
+- scrollUntilVisible:
+    element: "Open the original recipe"
+- assertVisible:
+    text: ".*Rhubarb Custard Pie.*as posted.*"
+- tapOn: "Back"
+- tapOn: "Plan(, tab.*)?"
+- assertVisible: ".*Rhubarb Custard Pie.*8 servings.*"
+- tapOn: "Grocery(, tab.*)?"
+- scrollUntilVisible:
+    element: ".*Pie crust.*"
+- assertVisible: ".*Rhubarb.*"

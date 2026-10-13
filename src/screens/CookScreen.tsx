@@ -14,7 +14,7 @@ import { useTimerStore } from '../store/timerStore';
 import { useUndoStore } from '../store/undoStore';
 import { colors, radius, spacing } from '../theme';
 import { formatCountdown, stepIngredients, stepMinutes } from '../utils/cooking';
-import { ingredientDisplayName, recipeById } from '../utils/recipeCatalog';
+import { defaultServings, ingredientDisplayName, recipeById } from '../utils/recipeCatalog';
 import { formatQuantity, scaleAmount } from '../utils/units';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Cook'>;
@@ -51,7 +51,7 @@ export default function CookScreen({ route, navigation }: Props) {
     );
   }
 
-  const servings = planItem?.servings ?? householdSize;
+  const servings = planItem?.servings ?? defaultServings(recipe, householdSize);
   const step = recipe.steps[index];
   const isLast = index === recipe.steps.length - 1;
   const minutes = stepMinutes(step);

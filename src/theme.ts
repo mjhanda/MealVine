@@ -39,6 +39,8 @@ export const mealLabels: Record<MealType, string> = {
   lunch: 'Lunch',
   dinner: 'Dinner',
   snack: 'Snack',
+  dessert: 'Dessert',
+  side: 'Side',
 };
 
 export const mealPlural: Record<MealType, string> = {
@@ -46,9 +48,11 @@ export const mealPlural: Record<MealType, string> = {
   lunch: 'Lunches',
   dinner: 'Dinners',
   snack: 'Snacks',
+  dessert: 'Desserts',
+  side: 'Sides & sauces',
 };
 
-export const mealTypeOrder: MealType[] = ['breakfast', 'lunch', 'dinner', 'snack'];
+export const mealTypeOrder: MealType[] = ['breakfast', 'lunch', 'dinner', 'snack', 'side', 'dessert'];
 
 // Roughly the order you walk a typical store; grocery list sections follow it.
 export const aisleOrder: Aisle[] = [

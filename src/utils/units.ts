@@ -55,10 +55,10 @@ export function formatQuantity(amount: number, unit: Unit | null): string {
 // Volume and weight units convert within their family; every other unit
 // (can, clove, stalk, …) and null (a plain count) is its own family.
 
-const TSP_PER: Record<string, number> = { tsp: 1, tbsp: 3, cup: 48 };
+export const TSP_PER: Record<string, number> = { pinch: 1 / 16, tsp: 1, tbsp: 3, cup: 48 };
 const OZ_PER: Record<string, number> = { oz: 1, lb: 16 };
 
-export type UnitFamily = 'volume' | 'weight' | 'count' | Exclude<Unit, 'tsp' | 'tbsp' | 'cup' | 'oz' | 'lb'>;
+export type UnitFamily = 'volume' | 'weight' | 'count' | Exclude<Unit, 'pinch' | 'tsp' | 'tbsp' | 'cup' | 'oz' | 'lb'>;
 
 export function unitFamily(unit: Unit | null): UnitFamily {
   if (unit === null) return 'count';
