@@ -310,6 +310,7 @@ Lemon Whippersnapers,cookies,"Janet ""Mostly Harmless"" Morrissey",https://www.c
 M&M Cookies,cookies,Sheila Wallace,https://www.cs.cmu.edu/~mjw/recipes/cookies/mp-cookie-coll-1.html#32,unmapped: m and m candy
 Orange-Ginger Cookies,cookies,Stephanie da Silva,https://www.cs.cmu.edu/~mjw/recipes/cookies/orange-ginger-cookies.html,reposted from another source (not the poster's own recipe)
 Peanut Butter Cookies,cookies,Lance Samura,https://www.cs.cmu.edu/~mjw/recipes/cookies/mp-cookie-coll-1.html#42,unmapped: block butter
+Peanut Butter Cookies,cookies,Mostly Harmless,https://www.cs.cmu.edu/~mjw/recipes/cookies/pb-cookie.html,"duplicate of Peanut Butter Cookies by Janet ""Mostly Harmless"" Morrissey"
 Peanut Butter Cookies (1),cookies,"Janet ""Mostly Harmless"" Morrissey",https://www.cs.cmu.edu/~mjw/recipes/cookies/mp-cookie-coll-1.html#40,unmapped: yellow cake mix
 Peanut Butter Kisses,cookies,Mostly Harmless,https://www.cs.cmu.edu/~mjw/recipes/cookies/pb-kisses.html,unparsed line: chocolate kisses
 Peanut Butter-Butter Cookies,cookies,Linda,https://www.cs.cmu.edu/~mjw/recipes/cookies/mp-cookie-coll-1.html#45,method text is interleaved with the ingredient list
@@ -399,7 +400,7 @@ Vaththalkozhambu (Indian hot+sour sauce/soup),ethnic/indian,Ramaswamy Krishnan,h
 'Es Cendol'--Indonesian Cold Dessert,ethnic/indonesian,a rec.food.cooking contributor,https://www.cs.cmu.edu/~mjw/recipes/ethnic/indonesian/es-cendol.html,method text is interleaved with the ingredient list; unmapped: banh lot; unmapped: coconut sugar; unparsed line: mixed together
 Enchiladas Chipotle,ethnic/mexican,Stephanie da Silva,https://www.cs.cmu.edu/~mjw/recipes/ethnic/mexican/ench-chipotle.html,reposted from another source (not the poster's own recipe)
 FAJITAS 8: Real Tex-Mex Fajitas,ethnic/mexican,a rec.food.cooking contributor,https://www.cs.cmu.edu/~mjw/recipes/ethnic/mexican/fajitas-coll.html#8,beer: no conversion can→volume; unmapped: fajita; unmapped: tenderizer
-Fajitas,ethnic/mexican,a rec.food.cooking contributor,https://www.cs.cmu.edu/~mjw/recipes/ethnic/mexican/fajitas-1.html,unmapped: seasoned salt
+Fajitas,ethnic/mexican,a rec.food.cooking contributor,https://www.cs.cmu.edu/~mjw/recipes/ethnic/mexican/fajitas-1.html,same dish as a Dishcart recipe; unmapped: seasoned salt
 Spinach Empanadas,ethnic/mexican,Tom Kreitzberg,https://www.cs.cmu.edu/~mjw/recipes/ethnic/mexican/spin-empanada.html,unmapped: bacon dripping
 Stephanie da Silva's Tamale Collection,ethnic/mexican,Stephanie da Silva,https://www.cs.cmu.edu/~mjw/recipes/ethnic/mexican/sds-tamale-coll.html,reposted from another source (not the poster's own recipe)
 Tamale Pie,ethnic/mexican,a rec.food.cooking contributor,https://www.cs.cmu.edu/~mjw/recipes/ethnic/mexican/tamale-pie.html,kalamata-olives: no conversion can→volume; unmapped: beef tamale; unmapped: ground beef don't use leanest stuff; unmapped: layer cheddar cheese previous layer; unmapped: layer corn; unmapped: layer ground beef; unmapped: layer ground beef note a layer is just enough cover; unmapped: layer tamale slice; unmapped: oz corn; unmapped: oz totato; unparsed line: -Grate cheese; unparsed line: poured out after cooking anyway); unparsed line: slices
@@ -459,6 +460,7 @@ Bob's Chicken Pesto,meat/chicken,Nancy,https://www.cs.cmu.edu/~mjw/recipes/meat/
 Cajun-Style Chicken Breasts,meat/chicken,Kevin L. Hammond,https://www.cs.cmu.edu/~mjw/recipes/meat/chicken/chick-coll-1.html#7,unmapped: breast; unmapped: garlic flakes
 Chick With Mushroom Sauce,meat/chicken,Christy Corse Kalahar,https://www.cs.cmu.edu/~mjw/recipes/meat/chicken/chick-coll-2.html#19,milk: no conversion can→volume; unmapped: condensed cream mushroom soup; unmapped: or so onion
 Chicken 'Ono Nui,meat/chicken,Stephanie da Silva,https://www.cs.cmu.edu/~mjw/recipes/meat/chicken/chick-coll-1.html#34,reposted from another source (not the poster's own recipe)
+Chicken Adobo,meat/chicken,Kirk Marple,https://www.cs.cmu.edu/~mjw/recipes/meat/chicken/chick-coll-1.html#10,method gives amounts as ratios (one part / two parts); same dish as a Dishcart recipe
 Chicken And Oyster Sauce Piquant,meat/chicken,Stephanie da Silva,https://www.cs.cmu.edu/~mjw/recipes/meat/chicken/chick-coll-1.html#13,reposted from another source (not the poster's own recipe)
 Chicken Avgolemono,meat/chicken,Stephanie da Silva,https://www.cs.cmu.edu/~mjw/recipes/meat/chicken/chick-avgo.html,reposted from another source (not the poster's own recipe)
 Chicken Cacciatore,meat/chicken,David Katz,https://www.cs.cmu.edu/~mjw/recipes/meat/chicken/chick-coll-1.html#16,method text is interleaved with the ingredient list
@@ -626,6 +628,7 @@ Milk Chocolate Mallow Fudge Sauce,sauces,Linda,https://www.cs.cmu.edu/~mjw/recip
 Mint Fudge Sauce,sauces,Linda,https://www.cs.cmu.edu/~mjw/recipes/sauces/mp-choc-sauces-coll.html#8,unmapped: chocolate coated mint cream patty
 Mint Sauce,sauces,Stephanie da Silva,https://www.cs.cmu.edu/~mjw/recipes/sauces/div-sauce-coll.html#25,reposted from another source (not the poster's own recipe)
 Mock Sausage Gravy,sauces,Tara McDermott,https://www.cs.cmu.edu/~mjw/recipes/sauces/div-sauce-coll.html#26,method text is interleaved with the ingredient list; method uses whole-wheat-flour not in the list; unmapped: tvp
+Mornay Sauce,sauces,Thomas P Collins,https://www.cs.cmu.edu/~mjw/recipes/sauces/mornay-sauce.html,duplicate of Mornay Sauce by Thomas P Collins
 Mustard Sauce,sauces,Stephanie da Silva,https://www.cs.cmu.edu/~mjw/recipes/sauces/div-sauce-coll.html#31,reposted from another source (not the poster's own recipe)
 My Grandma's Salsa,sauces,Lorance Romero,https://www.cs.cmu.edu/~mjw/recipes/sauces/salsa-coll-3.html#14,unmapped: anehiem pepper; unmapped: celantro is; unmapped: tomato are better
 Ninfa's Green Sauce,sauces,Stephanie da Silva,https://www.cs.cmu.edu/~mjw/recipes/sauces/div-sauce-coll.html#32,reposted from another source (not the poster's own recipe)
@@ -742,7 +745,7 @@ Hot and Sour Vegetable Soup,soup/hot-sour,F Andrew McMichael,https://www.cs.cmu.
 Christo's Lentil-Spinach Soup,soup/lentil,Susan Kennedy,https://www.cs.cmu.edu/~mjw/recipes/soup/lentil/lentil-soup-coll.html#2,unmapped: green lentils; unmapped: recipe calory mg sodium gm fat
 Leek And Lentil Soup,soup/lentil,Stephanie da Silva,https://www.cs.cmu.edu/~mjw/recipes/soup/lentil/lentil-soup-coll.html#3,reposted from another source (not the poster's own recipe)
 Lentil & Brown Rice Soup,soup/lentil,Todd M Cocks,https://www.cs.cmu.edu/~mjw/recipes/soup/lentil/lentil-brown-rice-soup.html,unmapped: onion soup mix; unmapped: tomato undrained
-Lentil Soup,soup/lentil,Little red-headed girl,https://www.cs.cmu.edu/~mjw/recipes/soup/lentil/lentil-soup-coll.html#7,"method text is interleaved with the ingredient list; method uses tomato not in the list; unparsed line: Herbs:   bay leaf, basil, marjoram, rosemary; unparsed line: oil, not virgin olive"
+Lentil Soup,soup/lentil,Little red-headed girl,https://www.cs.cmu.edu/~mjw/recipes/soup/lentil/lentil-soup-coll.html#7,"method text is interleaved with the ingredient list; method uses tomato not in the list; same dish as a Dishcart recipe; unparsed line: Herbs:   bay leaf, basil, marjoram, rosemary; unparsed line: oil, not virgin olive"
 Lentil Soup (1),soup/lentil,Stephanie da Silva,https://www.cs.cmu.edu/~mjw/recipes/soup/lentil/lentil-soup-coll.html#4,reposted from another source (not the poster's own recipe)
 Lentil Soup (2),soup/lentil,Stephanie da Silva,https://www.cs.cmu.edu/~mjw/recipes/soup/lentil/lentil-soup-coll.html#5,reposted from another source (not the poster's own recipe)
 Lentil Soup (3),soup/lentil,Stephanie da Silva,https://www.cs.cmu.edu/~mjw/recipes/soup/lentil/lentil-soup-coll.html#6,reposted from another source (not the poster's own recipe)

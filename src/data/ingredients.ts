@@ -222,7 +222,6 @@ const DEFS: Def[] = [
   ["cake-flour", "Cake flour", S, ['gluten', 'grain', 'starchy']],
   ["whole-wheat-flour", "Whole wheat flour", S, ['gluten', 'grain', 'starchy']],
   ["cornmeal", "Cornmeal", S, ['grain', 'starchy']],
-  ["couscous", "Couscous", G, ['gluten', 'grain', 'starchy']],
   ["sugar", "Sugar", S, ['added-sugar'], { staple: true }],
   ["brown-sugar", "Brown sugar", S, ['added-sugar'], { staple: true }],
   ["powdered-sugar", "Powdered sugar", S, ['added-sugar']],

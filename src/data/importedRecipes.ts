@@ -9,7 +9,7 @@ const src = (title: string, author: string, posted: string | null, url: string):
   license: CMU_LICENSE_AS_POSTED, changes: CMU_AS_POSTED_CHANGES,
 });
 
-// 168 recipes.
+// 165 recipes.
 export const IMPORTED_RECIPES: Recipe[] = [
   {
     id: "cmu-meat-spiedies", title: "Spiedies", mealType: 'dinner', protein: 'vegetarian',
@@ -63,24 +63,6 @@ export const IMPORTED_RECIPES: Recipe[] = [
       "At the time you add the last two ingredients mix 2-4 tablespoons of corn- starch with the reserved liquid (which should have cooled by this time) and slowly add this mixture to the pepper steak to thicken the dish and cook at least (bubbling) 10 min.",
     ],
     source: src("East Coast Pepper Steak", "LORETTA METCALF", "1993-08-26", "https://www.cs.cmu.edu/~mjw/recipes/meat/beef/pepper-steak.html"),
-  },
-  {
-    id: "cmu-meat-chicken-chick-coll-1-10", title: "Chicken Adobo", mealType: 'dinner', protein: 'chicken',
-    prep: 15, cook: 120, servings: 2, emoji: "🍗",
-    ingredients: [
-      { id: "chicken-breast", amount: 12, unit: 'oz' },
-      { id: "soy-sauce", amount: 0.5, unit: 'cup' },
-      { id: "white-vinegar", amount: 0.5, unit: 'cup' },
-      { id: "garlic", amount: 4, unit: 'clove', prep: "crushed" },
-      { id: "couscous", amount: 1, unit: 'tbsp', prep: "as needed" },
-    ],
-    steps: [
-      "I use one chicken breast (boneless or bones-in, it doesn't matter) per person. In a large pot, mix one part each soy sauce and white vinegar with two parts water.",
-      "(For two people, one part = 1/2 cup, adjust for greater number of servings.) Add crushed garlic cloves to taste (3-4 cloves, more for true garlic hounds).",
-      "Bring pot to simmer. Add chicken to pot. Simmer covered for 1 1/2 to 2 hours (until chicken is tender and very dark from the sauce).",
-      "Serve chicken over plain couscous (or rice) with sauce poured over both.",
-    ],
-    source: src("Chicken Adobo", "Kirk Marple", null, "https://www.cs.cmu.edu/~mjw/recipes/meat/chicken/chick-coll-1.html#10"),
   },
   {
     id: "cmu-meat-chicken-chick-coll-1-12", title: "Chicken And Dutch Dumplings", mealType: 'dinner', protein: 'chicken',
@@ -1812,7 +1794,7 @@ export const IMPORTED_RECIPES: Recipe[] = [
     source: src("Malai Sauce", "Kirk Blackburn", null, "https://www.cs.cmu.edu/~mjw/recipes/sauces/div-sauce-coll.html#23"),
   },
   {
-    id: "cmu-sauces-div-sauce-coll-27", title: "Mornay Sauce · Thomas", mealType: 'side', protein: 'vegetarian',
+    id: "cmu-sauces-div-sauce-coll-27", title: "Mornay Sauce", mealType: 'side', protein: 'vegetarian',
     prep: 21, cook: 5, servings: 8, emoji: "🥫", batch: true,
     ingredients: [
       { id: "butter", amount: 1.5, unit: 'tbsp' },
@@ -1932,25 +1914,6 @@ export const IMPORTED_RECIPES: Recipe[] = [
       "Combine the ingredients, let stand for a month or two. Use liberally on everything.",
     ],
     source: src("Hot Sauce", "Tom Kreitzberg", "1993-07-30", "https://www.cs.cmu.edu/~mjw/recipes/sauces/hot-sauce.html"),
-  },
-  {
-    id: "cmu-sauces-mornay-sauce", title: "Mornay Sauce · Thomas 2", mealType: 'side', protein: 'vegetarian',
-    prep: 21, cook: 5, servings: 8, emoji: "🥫", batch: true,
-    ingredients: [
-      { id: "butter", amount: 1.5, unit: 'tbsp' },
-      { id: "all-purpose-flour", amount: 1.5, unit: 'tbsp' },
-      { id: "milk", amount: 0.75, unit: 'cup' },
-      { id: "gruyere", amount: 6, unit: 'tbsp', prep: "grated" },
-      { id: "parmesan", amount: 2, unit: 'tbsp', prep: "grated" },
-      { id: "nutmeg", amount: 0.125, unit: 'tsp', prep: "grated" },
-      { id: "cayenne", amount: 0.25, unit: 'tsp' },
-      { id: "salt", amount: 0.25, unit: 'tsp' },
-    ],
-    steps: [
-      "Melt the butter over low heat in saucepan, add flour and cook roux 1 to 2 minutes. Add heated milk and cook over medium heat until it thickens. Stir in gruyere, parmesan, nutmeg, salt and pepper.",
-      "If you're not using it right away, put some pats of butter on top to prevent skin from forming.",
-    ],
-    source: src("Mornay Sauce", "Thomas P Collins", "1993-08-09", "https://www.cs.cmu.edu/~mjw/recipes/sauces/mornay-sauce.html"),
   },
   {
     id: "cmu-sauces-mp-bbq-sauce-coll-2", title: "Barbecue Sauces", mealType: 'side', protein: 'fish',
@@ -2872,27 +2835,6 @@ export const IMPORTED_RECIPES: Recipe[] = [
       "Bake until tester insterted into center comes out with moist crumbs still attached and to feels firm to touch, about 35 minutes. Cool. Cut into squares. Serve with sauce.",
     ],
     source: src("The Judge's Hazelnut Brownies With Raspberry Sauce", "Mary Jane Kelly", null, "https://www.cs.cmu.edu/~mjw/recipes/cookies/mp-cookie-coll-2.html#8"),
-  },
-  {
-    id: "cmu-cookies-pb-cookie", title: "Peanut Butter Cookies · Mostly", mealType: 'dessert', protein: 'vegetarian',
-    prep: 23, cook: 10, servings: 3, emoji: "🍪", batch: true,
-    ingredients: [
-      { id: "shortening", amount: 0.5, unit: 'cup' },
-      { id: "peanut-butter", amount: 0.5, unit: 'cup' },
-      { id: "sugar", amount: 0.5, unit: 'cup' },
-      { id: "brown-sugar", amount: 0.5, unit: 'cup' },
-      { id: "eggs", amount: 1, unit: null },
-      { id: "all-purpose-flour", amount: 1.25, unit: 'cup' },
-      { id: "baking-soda", amount: 0.5, unit: 'tsp' },
-      { id: "baking-powder", amount: 0.5, unit: 'tsp' },
-      { id: "salt", amount: 0.25, unit: 'tsp' },
-    ],
-    steps: [
-      "Cream shortening and peanut butter until blended; gradually add sugars; beat until fluffy. Agg egg and beat thoroughly.",
-      "Sift remaining ingredients together; divide in half and add to creamed mixture, one at a time, mixing till well blended after each addition. Shape dough into 1 1/4-inch balls and place 3 inches apart on lightly greased cookie sheets.",
-      "Flatten with fork making criss-cross pattern, or use cookie stamps. Bake at 375F for about 10 minutes.",
-    ],
-    source: src("Peanut Butter Cookies", "Mostly Harmless", "1993-07-15", "https://www.cs.cmu.edu/~mjw/recipes/cookies/pb-cookie.html"),
   },
   {
     id: "cmu-cookies-snickerdoodles-2", title: "Snickerdoodles", mealType: 'dessert', protein: 'vegetarian',

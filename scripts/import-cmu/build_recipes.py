@@ -571,6 +571,17 @@ def text_servings(rec):
     return s if s and 0 < s <= 24 else None
 
 
+# Amounts given only as proportions ("mix one part each soy sauce and vinegar… one part = 1/2 cup").
+RATIO = re.compile(r"\bone part (each|=)|\bparts? =\s*\d", re.I)
+
+
+def title_key(t):
+    """Title for duplicate checks: case, punctuation, plurals, and our "· Poster" suffix ignored."""
+    t = re.sub(r" · .*$", "", t.lower())
+    t = re.sub(r"[^a-z ]", " ", t)
+    return " ".join(w[:-1] if w.endswith("s") and len(w) > 3 else w for w in t.split() if w not in ("the", "a", "with", "and", "easy", "my", "best", "quick"))
+
+
 def slug(key):
     return "cmu-" + re.sub(r"[^a-z0-9]+", "-", key.lower().replace(".html", "")).strip("-")
 
@@ -581,6 +592,9 @@ def build():
     # Already hand-adapted (r121+): skip by URL.
     existing_src = open(os.path.join(ROOT, "src/data/recipes.ts")).read()
     adapted_urls = set(re.findall(r"url: '([^']+)'", existing_src))
+    hand_titles = {title_key(t) for t in re.findall(r"title: '((?:[^'\\]|\\.)*)'", existing_src)}
+    hand_titles |= {title_key(t) for t in re.findall(r'title: "([^"]*)"', existing_src)}
+    rec_by_id = {}
 
     recipes, review = [], []
     for rec in parsed:
@@ -647,6 +661,10 @@ def build():
                     if ing_id not in have and not (ing_id in ("salt", "black-pepper") and "salt" in have):
                         problems.append(f"method uses {ing_id} not in the list")
                     break
+        if RATIO.search(" ".join(steps)):
+            problems.append("method gives amounts as ratios (one part / two parts)")
+        if title_key(clean_title(rec["title"], rec["category"])) in hand_titles:
+            problems.append("same dish as a Dishcart recipe")
         if rec.get("interrupted"):
             problems.append("method text is interleaved with the ingredient list")
         if problems:
@@ -683,6 +701,18 @@ def build():
             "steps": steps,
             "source": {"title": rec["title"], "author": rec["author"], "posted": rec.get("posted"), "url": rec["url"]},
         })
+        rec_by_id[recipes[-1]["id"]] = rec
+    # The same recipe posted twice (same name, same ingredients): keep the first.
+    kept, first_by_sig = [], {}
+    for r in recipes:
+        sig = (title_key(r["title"]), tuple(sorted(i["id"] for i in r["ingredients"])))
+        if sig in first_by_sig:
+            other = first_by_sig[sig]
+            review.append((rec_by_id[r["id"]], [f"duplicate of {other['title']} by {other['source']['author']}"]))
+            continue
+        first_by_sig[sig] = r
+        kept.append(r)
+    recipes = kept
     # Disambiguate duplicate titles with the poster's first name.
     counts = Counter(r["title"].lower() for r in recipes)
     seen = Counter()
@@ -833,6 +863,9 @@ def emit(table, recipes, review):
              "Names a company or brand" if p.startswith("names a company") else
              "Method interleaved with the ingredient list (layout we can't read reliably)" if p.startswith("method text") else
              "Method uses an ingredient missing from the list" if p.startswith("method uses") else
+             "Amounts given as ratios (one part / two parts)" if p.startswith("method gives") else
+             "Same dish as a Dishcart recipe" if p.startswith("same dish") else
+             "Same recipe posted twice" if p.startswith("duplicate of") else
              "Ingredient not in Dishcart's catalog" if p.startswith("unmapped") else
              "Amount we can't convert" if "no conversion" in p else
              "Unreadable ingredient line" if p.startswith("unparsed") else

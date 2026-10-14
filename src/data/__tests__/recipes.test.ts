@@ -90,3 +90,28 @@ describe('recipe sources', () => {
     adapted.forEach((r) => expect([r.id, JSON.stringify(r.source)]).not.toEqual([r.id, expect.stringMatching(/[\w.-]+@[\w.-]+/)]));
   });
 });
+
+describe('duplicates', () => {
+  // Same idea as title_key in scripts/import-cmu/build_recipes.py.
+  const key = (t: string) =>
+    t
+      .toLowerCase()
+      .replace(/ · .*$/, '')
+      .replace(/[^a-z ]/g, ' ')
+      .split(/\s+/)
+      .filter((w) => w && !['the', 'a', 'with', 'and', 'easy', 'my', 'best', 'quick'].includes(w))
+      .map((w) => (w.endsWith('s') && w.length > 3 ? w.slice(0, -1) : w))
+      .join(' ');
+
+  it('no imported recipe repeats a dish we already have by hand', () => {
+    const hand = new Set(RECIPES.filter((r) => r.source?.kind !== 'as-posted').map((r) => key(r.title)));
+    expect(RECIPES.filter((r) => r.source?.kind === 'as-posted' && hand.has(key(r.title))).map((r) => r.title)).toEqual([]);
+  });
+
+  it('no two recipes share a name and the same ingredients', () => {
+    const sig = (r: (typeof RECIPES)[number]) => `${key(r.title)}|${r.ingredients.map((i) => i.id).sort().join(',')}`;
+    const seen = new Set<string>();
+    const dupes = RECIPES.filter((r) => (seen.has(sig(r)) ? true : (seen.add(sig(r)), false))).map((r) => r.id);
+    expect(dupes).toEqual([]);
+  });
+});

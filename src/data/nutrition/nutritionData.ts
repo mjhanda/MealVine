@@ -752,16 +752,6 @@ export const NUTRIENTS_PER_100G: Record<string, NutrientValues> = {
     satFat: 1.24,
     sugar: 4,
   },
-  couscous: {
-    protein: 12.76,
-    fat: 0.64,
-    carbs: 77.43,
-    kcal: 376,
-    fiber: 5,
-    sodium: 10,
-    satFat: 0.12,
-    sugar: 0,
-  },
   crackers: {
     protein: 10.58,
     fat: 14.13,
@@ -3466,17 +3456,6 @@ export const INGREDIENT_SOURCES: Record<string, IngredientSource> = {
         weight: 1,
       },
     ],
-  },
-  couscous: {
-    basis: "usda",
-    foods: [
-      {
-        fdcId: 169699,
-        description: "Couscous, dry",
-        weight: 1,
-      },
-    ],
-    missing: ["sugar"],
   },
   crackers: {
     basis: "usda",
