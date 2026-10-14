@@ -11,7 +11,7 @@ is the planning snapshot; the issues are the source of truth.
 - **Partly done:** T20 (CI workflow waits for the `workflow` token scope),
   T21 (config/docs done; needs assets, accounts), T23 (needs device pass),
   T25 (name/publisher/price decided; launch date open).
-- **Open:** T15–T17, T26–T35.
+- **Open:** T15–T17, T26–T39 (T37–T39 added 2026-10-14: grocery meal links and substitutes).
 
 > T25's original context (paid app, "Mealime alternative" positioning) is
 > superseded: **Dishcart is free with ads; $0.99/month removes ads.**
@@ -832,3 +832,105 @@ which answers the main complaint about how Mealime shut down. See T25.
 - **Priority:** P3 - Low
 - **Target date:** 2026-10-12
 - **Additional Notes:** —
+
+## T36 — Decide: ship CMU archive recipes as posted, or rewrite before store release
+
+- **Summary:** 165 imported recipes use the posters' own instruction text (credited, no license stated). Decide how they ship.
+- **Requester:** Claude Code (raised during the import)
+- **Assignee(s) / AI agent:** Owner (decision); Claude Code (rewrite or release-build filter)
+- **Reviewer(s):** Owner
+- **End user(s):** All users
+- **Context:** See docs/recipes/cmu-import-report.md. The 13 hand-adapted recipes (r121–r133) were rewritten; the bulk import (`source.kind: 'as-posted'`) was not.
+- **Data Classification:** No sensitive data involved
+- **Notes on data handling:** Credits never include emails (enforced by test).
+- **In scope:** Choose: ship as posted / rewrite the keepers / exclude from release builds.
+- **Out of scope:** Further archive imports.
+- **Acceptance Criteria:**
+  - [ ] Decision recorded; release builds match it
+- **Test Strategy:** If excluded or rewritten, a test enforces it (e.g. no `as-posted` recipes in release data).
+- **Dependencies / Blockers:** None
+- **Priority:** P1 - High
+- **Target date:** 2026-10-26
+- **Additional Notes:** Recommendation: rewrite ~60 of the best savory/breakfast recipes, exclude the rest from release.
+
+## T37 — Grocery list: show which meals each item is for
+
+- **Summary:** Each grocery line shows the planned meals that use it ("Garlic — Shrimp Scampi, Lemon Salmon"), with how much each meal needs, so you know what to skip if you drop a meal or what a lone item is for.
+- **Requester:** Owner
+- **Assignee(s) / AI agent:** Claude Code
+- **Reviewer(s):** Owner
+- **End user(s):** Everyone shopping from the list
+- **Context:** Owner request 2026-10-14 (screenshot of the Grocery tab). Lines are merged per canonical ingredient in `src/utils/grocery.ts`, which already walks every plan entry, so the per-meal breakdown is available at aggregation time and just isn't kept. Mealime shows the recipe names under each grocery item.
+- **Data Classification:** No sensitive data involved
+- **Notes on data handling:** Derived from the plan; nothing new persisted.
+- **In scope:**
+  - `GroceryLine` gains `uses: { planItemId, recipeId, amount, unit }[]` (computed, not persisted).
+  - A one-line subtitle under each item with the meal names (truncate after 2: "Shrimp Scampi + 1 more").
+  - Tapping the subtitle expands a per-meal breakdown (amount each meal needs, scaled to that entry's servings); a meal name opens the recipe.
+  - Pantry-staple section and checked items show it too; manual items show nothing.
+  - Accessibility label includes the meals ("Garlic, 5 cloves, for Shrimp Scampi and Lemon Salmon").
+- **Out of scope:** Removing a meal from the grocery screen; meal names in the shared/exported text (follow-up if wanted).
+- **Acceptance Criteria:**
+  - [ ] Every recipe-derived line lists exactly the plan entries that use it; amounts per meal sum to the line total (same unit family)
+  - [ ] Two entries of the same recipe show as "Recipe ×2" with the combined amount
+  - [ ] Removing a meal from the plan updates the subtitles immediately
+  - [ ] No layout overflow at the largest text size
+- **Test Strategy:** Unit tests in `grocery.test.ts` for `uses` (multi-meal, same recipe twice, unit conversion, pantry items); a11y static test; Maestro step in `03-grocery-list.yaml` asserting the meal name under an item; visual check on iOS and Android.
+- **Dependencies / Blockers:** None
+- **Priority:** P1 - High
+- **Target date:** 2026-10-21
+- **Additional Notes:** Prerequisite for T39 (a substitute has to know which meals it affects).
+
+## T38 — Substitution catalog (data + safety rules)
+
+- **Summary:** A curated table of substitutes for catalog ingredients (with amount ratios and when they work), filtered so a suggestion never breaks the user's allergies, diet, or dislikes.
+- **Requester:** Owner
+- **Assignee(s) / AI agent:** Claude Code (draft table + rules + tests); Owner (spot-check the table)
+- **Reviewer(s):** Owner
+- **End user(s):** Everyone shopping from the list; especially users with allergies
+- **Context:** Owner request 2026-10-14. 270 catalog ingredients in `src/data/ingredients.ts`. Allergen tags are a safety surface (`.claude/rules/security.md` rule 8): a substitute must be checked against the user's allergies with the same conservative tags.
+- **Data Classification:** Health-related or sensitive personal data
+- **Notes on data handling:** Allergy filtering runs on-device against existing preferences; nothing new stored or sent.
+- **In scope:**
+  - `src/data/substitutes.ts`: `ingredientId → { id, ratio, unit?, note?, context? }[]`, e.g. shrimp → chicken breast (1:1); fresh parsley → dried parsley (⅓); lemon (juiced) → lime (1:1) or bottled lemon juice; buttermilk → milk + 1 tbsp lemon juice per cup; brown sugar → sugar + molasses. `context` flags where a swap fails ("not for baking", "texture changes").
+  - Coverage target: every non-staple ingredient used in ≥3 recipes has ≥1 substitute; staples optional.
+  - `src/utils/substitutes.ts`: `safeSubstitutes(ingredientId, prefs)` drops any substitute whose tags hit the user's allergies, diet (via `src/utils/diets.ts`), or dislikes; ordered by closeness.
+  - Composite substitutes (milk + lemon juice) are handled; amounts convert via `units.ts`/`GRAMS`.
+- **Out of scope:** UI (T39); recipe-level rewriting of steps; brand products.
+- **Acceptance Criteria:**
+  - [ ] Every substitute id exists in the catalog and its amount converts (validated in tests, like the unit-family test)
+  - [ ] Property test: for every ingredient × every allergen/diet, `safeSubstitutes` never returns a substitute tagged with an excluded allergen or that breaks the diet
+  - [ ] Coverage target met; owner signs off on a 30-item sample
+- **Test Strategy:** Data validation tests in `src/data/__tests__/`; util tests with ≥80% coverage; exhaustive allergen/diet sweep.
+- **Dependencies / Blockers:** None (can run in parallel with T37)
+- **Priority:** P2 - Medium
+- **Target date:** 2026-10-28
+- **Additional Notes:** Substitution ratios come from common kitchen practice, written by us; no copied charts. Never suggest a substitute for an allergy-relevant swap without showing its allergen note.
+
+## T39 — Grocery list: substitutes when the store is out or you already have an alternative
+
+- **Summary:** From a grocery item, see safe substitutes and swap: "Store's out of shrimp? Use chicken breast (12 oz)." If a substitute is already in your pantry, suggest it first so you don't buy the item at all.
+- **Requester:** Owner
+- **Assignee(s) / AI agent:** Claude Code
+- **Reviewer(s):** Owner
+- **End user(s):** Everyone shopping from the list
+- **Context:** Owner request 2026-10-14. Pantry state is `GroceryState.pantry` ('have'/'need') plus catalog `staple`. Builds on T37 (which meals are affected) and T38 (safe substitutes).
+- **Data Classification:** Health-related or sensitive personal data
+- **Notes on data handling:** Uses on-device allergy preferences only.
+- **In scope:**
+  - A "Substitutes" action on each grocery line (row menu or long-press) opening a sheet: safe substitutes with converted amounts, any context note, and the meals affected (from T37).
+  - "In your pantry" badge on substitutes marked 'have' (or staples), listed first; a subtle hint on the line when one exists ("You may have a substitute").
+  - Swap: the line is replaced by the substitute (merged if it's already on the list) and labelled "Swapped for shrimp"; undo via the global undo bar; "Use original" reverts.
+  - Recipe page and cooking mode for affected meals show "(using chicken breast instead of shrimp)" next to that ingredient.
+  - Persist swaps in the grocery store, keyed by plan entry + ingredient, with a version bump, migration, and backup support (`backupActions.ts` STORES/MIGRATORS); a swap is cleared when its meal leaves the plan.
+- **Out of scope:** Rewriting step text; nutrition recalculation for swaps (show "nutrition is for the original" note); swaps outside the grocery list.
+- **Acceptance Criteria:**
+  - [ ] No substitute shown or applied conflicts with the user's allergies, diet, or dislikes
+  - [ ] Swapping updates the list, the affected recipes' ingredient display, and undo restores exactly
+  - [ ] Pantry substitutes appear first and the hint shows only when one exists
+  - [ ] Swaps survive app restart and backup/restore; removing the meal clears its swaps
+- **Test Strategy:** Unit tests for swap application in `grocery.ts`; migration test with a fixture blob; Maestro flow: add a shrimp recipe → open substitutes → swap to chicken → verify list + recipe page → undo; device pass on iOS and Android.
+- **Dependencies / Blockers:** T37, T38
+- **Priority:** P2 - Medium
+- **Target date:** 2026-11-04
+- **Additional Notes:** Keep it one tap from the line; Mealime has no substitutes, so this is a differentiator.
