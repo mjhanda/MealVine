@@ -15,10 +15,9 @@ import { usePlanStore } from '../store/planStore';
 import { useEatingPrefs, usePreferencesStore } from '../store/preferencesStore';
 import { useUndoStore } from '../store/undoStore';
 import { colors, mealLabels, mealTypeOrder } from '../theme';
-import { MealType } from '../types';
 import { DIETS } from '../utils/diets';
 import { cookStats } from '../utils/history';
-import { defaultServings, filterRecipes, recipeById, RecipeFilter, RelaxableFilter, relaxSuggestions } from '../utils/recipeCatalog';
+import { defaultServings, filterRecipes, MealFilter, recipeById, RecipeFilter, RelaxableFilter, relaxSuggestions } from '../utils/recipeCatalog';
 
 type Nav = NativeStackNavigationProp<RootStackParamList & MainTabParamList>;
 
@@ -79,7 +78,7 @@ export default function BrowseScreen() {
   const showUndo = useUndoStore((s) => s.show);
 
   const [search, setSearch] = useState('');
-  const [filter, setFilter] = useState<MealType | 'all'>('all');
+  const [filter, setFilter] = useState<MealFilter>('all');
   const [showAllDiets, setShowAllDiets] = useState(false);
   const [maxMinutes, setMaxMinutes] = useState<number | null>(null);
   const [maxKcal, setMaxKcal] = useState<number | null>(null);
@@ -90,10 +89,11 @@ export default function BrowseScreen() {
   const stats = useMemo(() => cookStats(history), [history]);
   const ratings = useRecipeNotesStore((s) => s.ratings);
 
-  const chips: { id: MealType | 'all'; label: string }[] = useMemo(() => {
+  const chips: { id: MealFilter; label: string }[] = useMemo(() => {
     const selected = mealTypes.length > 0 ? mealTypes : mealTypeOrder;
     return [
       { id: 'all' as const, label: 'All' },
+      { id: 'quick' as const, label: 'Quick meals' },
       ...selected.map((id) => ({ id, label: mealLabels[id] })),
     ];
   }, [mealTypes]);

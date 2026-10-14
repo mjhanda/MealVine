@@ -1,0 +1,20 @@
+appId: com.bionicsun.dishcart
+name: Quick meals chip shows meals ready in 30 minutes or less
+---
+- runFlow: subflows/launch.yaml
+- runFlow: subflows/onboard-classic.yaml
+- tapOn: "Browse(, tab.*)?"
+- tapOn: "Quick meals"
+- assertVisible: "\\d+ recipes"
+# Chicken Adobo is 30 minutes total: in. Shrimp Creole is 50: out.
+- tapOn: "Search recipes or ingredients"
+- inputText: "adobo"
+- pressKey: Enter
+- assertVisible: "Chicken Adobo"
+- tapOn: "Clear search"
+- tapOn: "Search recipes or ingredients"
+- inputText: "shrimp creole"
+- pressKey: Enter
+- assertVisible: "No recipes match."
+- tapOn: "All meal types \\(1\\)"
+- assertVisible: "Shrimp Creole"

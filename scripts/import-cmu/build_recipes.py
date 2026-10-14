@@ -443,6 +443,8 @@ def meal_type_of(rec):
         return "snack"
     if cat.startswith("bread"):
         return "breakfast" if re.search(r"banana|zucchini|pumpkin|date|nut|apple|cranberry|cinnamon|sweet|raisin|orange|lemon|carrot", title) else "side"
+    if re.search(r"\b(naan|tortillas?|chapatis?|rotis?|pitas?|flatbreads?|biscuits|rolls|bread)\b", title) and not re.search(r"sandwich|pudding|salad|soup", title):
+        return "side"
     if cat.startswith("salad"):
         return "lunch"
     if cat in ("vegetables", "vegetables/potato", "vegetables/capsicum", "vegetables/zuchinni", "grain", "misc") or re.search(r"\b(marinated|pickled|side|relish|stuffing|dressing)\b", title):
@@ -575,6 +577,40 @@ def text_servings(rec):
 RATIO = re.compile(r"\bone part (each|=)|\bparts? =\s*\d", re.I)
 
 
+MEAT_WORDS = re.compile(r"\b(steaks?|chicken|beef|pork|lamb|veal|turkey|shrimp|prawns?|fish|salmon|tuna|cod|crab|lobster|scallops?|clams?|mussels?|ham|bacon|sausages?|wings?|drumsticks?|thighs?|breasts?|fillets?|ribs?|roast|meatballs?|hamburger|venison|duck|goose|anchov(?:y|ies))\b(?!\s+(?:broth|stock|bouillon|soup base|cubes?|flavou?r))", re.I)
+# Title words that name a style, not an ingredient ("Pound Cake", "Hot Sauce").
+TITLE_IGNORE = {"pound", "hot", "sweet", "sour", "green", "red", "white", "black", "brown", "yellow", "cream", "sauce",
+                "dressing", "soup", "salad", "bread", "cake", "pie", "cookies", "cookie", "muffin", "muffins", "spice",
+                "spiced", "dip", "punch", "pudding", "sponge", "mock", "dutch", "french", "italian", "chinese", "thai",
+                "indian", "mexican", "greek", "jerked", "jerk", "fried", "baked", "stuffed", "easy", "quick", "fudge",
+                "glaze", "frosting", "icing", "topping", "filling", "syrup", "butter", "stock", "broth", "salsa", "pepper",
+                # the thing being made, or what a sauce is served with
+                "ketchup", "pita", "tortilla", "tortillas", "spaghetti", "linguine", "lasagna", "primavera", "fettucine",
+                "fettuccine", "coffee", "pasta", "noodle", "noodles"}
+
+
+_PASTA = {"pasta", "whole-wheat-spaghetti", "whole-wheat-penne", "lasagna-noodles", "egg-noodles", "soba", "white-rice", "whole-wheat-orzo"}
+_RICE = {"white-rice", "brown-rice", "cooked-white-rice", "cooked-brown-rice"}
+DEFINITE_STARCH = {"noodles": _PASTA, "pasta": _PASTA, "spaghetti": _PASTA, "linguine": _PASTA, "fettuccine": _PASTA,
+                   "macaroni": _PASTA, "rice": _RICE, "tortillas": {"flour-tortilla", "corn-tortilla", "whole-wheat-tortilla"}}
+
+
+def same_family(ing_id, have, table):
+    """Title says "Berry Muffins" and the list has raspberries; "Cheese" with cheddar, etc."""
+    groups = [{"mixed-berries", "raspberries", "strawberries", "blueberries", "cranberries"},
+              {"cheddar", "parmesan", "mozzarella", "swiss-cheese", "gruyere", "feta", "ricotta", "cream-cheese", "cottage-cheese", "fresh-mozzarella"},
+              {"chicken-breast", "chicken-thighs", "whole-chicken", "ground-chicken"},
+              {"yellow-onion", "red-onion", "green-onion", "shallot"},
+              {"sirloin", "ground-beef"}, {"pork-tenderloin", "pork-chops", "ground-pork", "pork-sausage", "ham", "bacon"},
+              {"cod", "salmon", "tuna", "anchovies"}, {"pasta", "whole-wheat-spaghetti", "whole-wheat-penne", "lasagna-noodles", "egg-noodles"},
+              {"white-rice", "brown-rice", "cooked-white-rice", "cooked-brown-rice"}, {"tomato", "cherry-tomatoes", "diced-tomatoes", "tomato-sauce", "tomato-paste"},
+              {"all-purpose-flour", "whole-wheat-flour", "cake-flour", "self-rising-flour", "rye-flour"},
+              {"dark-chocolate-chips", "unsweetened-chocolate", "cocoa-powder"}, {"lemon", "lime", "orange"},
+              {"apple", "applesauce", "apple-juice"}, {"pineapple-chunks", "pineapple-juice"}, {"orange", "orange-juice"},
+              {"peanuts", "peanut-butter"}, {"corn-kernels", "cornmeal"}, {"pumpkin-puree", "winter-squash"}, {"coffee", "instant-coffee"}]
+    return any(ing_id in g and g & have for g in groups)
+
+
 def title_key(t):
     """Title for duplicate checks: case, punctuation, plurals, and our "· Poster" suffix ignored."""
     t = re.sub(r" · .*$", "", t.lower())
@@ -661,6 +697,30 @@ def build():
                     if ing_id not in have and not (ing_id in ("salt", "black-pepper") and "salt" in have):
                         problems.append(f"method uses {ing_id} not in the list")
                     break
+        # The dish's main ingredient must be in the list: anything the title names, and any meat or
+        # fish the method cooks. A missing protein would also mislabel the recipe as vegetarian.
+        tw = re.findall(r"[a-z]+", clean_title(rec["title"], rec["category"]).lower())
+        for n in (2, 1):
+            for k in range(len(tw) - n + 1):
+                phrase = " ".join(tw[k:k + n])
+                if any(w in TITLE_IGNORE for w in phrase.split()):
+                    continue
+                ing_id, _ = resolve(phrase, None, "")
+                if ing_id and ing_id != "SKIP" and ing_id not in have and not same_family(ing_id, have, table):
+                    problems.append(f"title names {ing_id} but the list lacks it")
+        meat_tags = {"poultry", "red-meat", "pork", "fish", "shellfish"}
+        # Sauces and sides often say "serve over chicken"; only dinners/lunches, or a meat word in the
+        # title, must actually contain the meat.
+        meat_in_title = MEAT_WORDS.search(rec["title"])
+        if (meal_type_of(rec) in ("dinner", "lunch") or meat_in_title) and not any(set(table[i]["tags"]) & meat_tags - ({"poultry"} if i == "chicken-broth" else set()) - ({"red-meat"} if i == "beef-broth" else set()) for i in have):
+            m = MEAT_WORDS.search(" ".join(steps) + " " + rec["title"])
+            if m:
+                problems.append(f"method cooks {m.group(1).lower()} but the list has no meat or fish")
+        # "Cook the noodles" refers to something in the list; it has to be there.
+        for word, family in DEFINITE_STARCH.items():
+            if re.search(rf"\bthe {word}\b", " ".join(steps), re.I) and not (have & family) and word not in rec["title"].lower():
+                problems.append(f"method uses the {word} but the list has none")
+                break
         if RATIO.search(" ".join(steps)):
             problems.append("method gives amounts as ratios (one part / two parts)")
         if title_key(clean_title(rec["title"], rec["category"])) in hand_titles:
@@ -866,6 +926,7 @@ def emit(table, recipes, review):
              "Amounts given as ratios (one part / two parts)" if p.startswith("method gives") else
              "Same dish as a Dishcart recipe" if p.startswith("same dish") else
              "Same recipe posted twice" if p.startswith("duplicate of") else
+             "Main ingredient missing from the list" if p.startswith(("title names", "method cooks", "method uses the")) else
              "Ingredient not in Dishcart's catalog" if p.startswith("unmapped") else
              "Amount we can't convert" if "no conversion" in p else
              "Unreadable ingredient line" if p.startswith("unparsed") else

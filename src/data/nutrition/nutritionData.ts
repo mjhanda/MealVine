@@ -282,16 +282,6 @@ export const NUTRIENTS_PER_100G: Record<string, NutrientValues> = {
     satFat: 0.03,
     sugar: 1.18,
   },
-  "bran-cereal": {
-    protein: 9.9,
-    fat: 2.1,
-    carbs: 80.5,
-    kcal: 328,
-    fiber: 18.3,
-    sodium: 540,
-    satFat: 0.4,
-    sugar: 18.6,
-  },
   brandy: {
     protein: 0,
     fat: 0,
@@ -1272,16 +1262,6 @@ export const NUTRIENTS_PER_100G: Record<string, NutrientValues> = {
     satFat: 0.5,
     sugar: 1,
   },
-  hazelnuts: {
-    protein: 14.95,
-    fat: 60.75,
-    carbs: 16.7,
-    kcal: 628,
-    fiber: 9.7,
-    sodium: 0,
-    satFat: 4.46,
-    sugar: 4.34,
-  },
   "heavy-cream": {
     protein: 2.84,
     fat: 36.08,
@@ -1802,16 +1782,6 @@ export const NUTRIENTS_PER_100G: Record<string, NutrientValues> = {
     satFat: 0.01,
     sugar: 9.85,
   },
-  "pineapple-juice": {
-    protein: 0.36,
-    fat: 0.12,
-    carbs: 12.87,
-    kcal: 53,
-    fiber: 0.2,
-    sodium: 2,
-    satFat: 0.01,
-    sugar: 9.98,
-  },
   pistachios: {
     protein: 20.16,
     fat: 45.32,
@@ -1901,16 +1871,6 @@ export const NUTRIENTS_PER_100G: Record<string, NutrientValues> = {
     sodium: 2,
     satFat: 0,
     sugar: 97.81,
-  },
-  "prepared-mustard": {
-    protein: 3.74,
-    fat: 3.34,
-    carbs: 5.83,
-    kcal: 60,
-    fiber: 4,
-    sodium: 1104,
-    satFat: 0.21,
-    sugar: 0.92,
   },
   "pumpkin-pie-spice": {
     protein: 5.76,
@@ -2969,16 +2929,6 @@ export const INGREDIENT_SOURCES: Record<string, IngredientSource> = {
       },
     ],
   },
-  "bran-cereal": {
-    basis: "usda",
-    foods: [
-      {
-        fdcId: 173888,
-        description: "Cereals ready-to-eat, POST Bran Flakes",
-        weight: 1,
-      },
-    ],
-  },
   brandy: {
     basis: "proxy",
     note: "Distilled spirits, 86 proof",
@@ -4012,16 +3962,6 @@ export const INGREDIENT_SOURCES: Record<string, IngredientSource> = {
       },
     ],
   },
-  hazelnuts: {
-    basis: "usda",
-    foods: [
-      {
-        fdcId: 170581,
-        description: "Nuts, hazelnuts or filberts",
-        weight: 1,
-      },
-    ],
-  },
   "heavy-cream": {
     basis: "usda",
     foods: [
@@ -4582,17 +4522,6 @@ export const INGREDIENT_SOURCES: Record<string, IngredientSource> = {
       },
     ],
   },
-  "pineapple-juice": {
-    basis: "usda",
-    foods: [
-      {
-        fdcId: 169947,
-        description:
-          "Pineapple juice, canned or bottled, unsweetened, without added ascorbic acid",
-        weight: 1,
-      },
-    ],
-  },
   pistachios: {
     basis: "usda",
     foods: [
@@ -4680,16 +4609,6 @@ export const INGREDIENT_SOURCES: Record<string, IngredientSource> = {
       {
         fdcId: 169656,
         description: "Sugars, powdered",
-        weight: 1,
-      },
-    ],
-  },
-  "prepared-mustard": {
-    basis: "usda",
-    foods: [
-      {
-        fdcId: 172234,
-        description: "Mustard, prepared, yellow",
         weight: 1,
       },
     ],

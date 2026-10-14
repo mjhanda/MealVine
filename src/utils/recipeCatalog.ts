@@ -17,8 +17,21 @@ export function recipeById(id: string | undefined): Recipe | undefined {
   return RECIPES.find((r) => r.id === id);
 }
 
+// "Quick meals": a breakfast, lunch, or dinner ready in 30 minutes or less, prep + cook.
+export const QUICK_MINUTES = 30;
+const QUICK_MEAL_TYPES: MealType[] = ['breakfast', 'lunch', 'dinner'];
+export type MealFilter = MealType | 'all' | 'quick';
+
+export const isQuickMeal = (r: Recipe): boolean => QUICK_MEAL_TYPES.includes(r.mealType) && r.prep + r.cook <= QUICK_MINUTES;
+
+function matchesMealFilter(r: Recipe, f: MealFilter): boolean {
+  if (f === 'all') return true;
+  if (f === 'quick') return isQuickMeal(r);
+  return r.mealType === f;
+}
+
 export interface RecipeFilter {
-  mealType: MealType | 'all';
+  mealType: MealFilter;
   query: string;
   prefs: EatingPrefs;
   // Relaxes the diet only — allergies and dislikes always exclude.
@@ -47,7 +60,7 @@ export const defaultServings = (r: Recipe, householdSize: number): number => (r.
 export function filterRecipes(f: RecipeFilter): Recipe[] {
   const q = f.query.trim().toLowerCase();
   return RECIPES.filter((r) => {
-    if (f.mealType !== 'all' && r.mealType !== f.mealType) return false;
+    if (!matchesMealFilter(r, f.mealType)) return false;
     if (f.maxMinutes && totalMinutes(r) > f.maxMinutes) return false;
     if (f.maxKcal && caloriesPerServing(r) > f.maxKcal) return false;
     if (f.onlyIds && !f.onlyIds.has(r.id)) return false;

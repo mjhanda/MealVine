@@ -2,7 +2,7 @@ import { INGREDIENTS } from '../../data/ingredients';
 import { RECIPES } from '../../data/recipes';
 import { EatingPrefs, fitsDiet } from '../diets';
 import { caloriesPerServing } from '../nutrition';
-import { filterRecipes, ingredientDisplayName, recipeById, relaxSuggestions, totalMinutes } from '../recipeCatalog';
+import { filterRecipes, ingredientDisplayName, isQuickMeal, QUICK_MINUTES, recipeById, relaxSuggestions, totalMinutes } from '../recipeCatalog';
 
 const classic: EatingPrefs = { diet: 'classic', allergies: [], dislikes: [] };
 
@@ -110,5 +110,23 @@ describe('calorie filter', () => {
   it('is offered as a relax suggestion', () => {
     const s = relaxSuggestions({ mealType: 'dinner', query: '', prefs: classic, maxKcal: 50 });
     expect(s.map((x) => x.filter)).toContain('maxKcal');
+  });
+});
+
+describe('quick meals', () => {
+  const quick = filterRecipes({ mealType: 'quick', query: '', prefs: classic });
+
+  it('are breakfasts, lunches, and dinners ready in 30 minutes or less', () => {
+    expect(quick.length).toBeGreaterThanOrEqual(30);
+    quick.forEach((r) => {
+      expect(['breakfast', 'lunch', 'dinner']).toContain(r.mealType);
+      expect(r.prep + r.cook).toBeLessThanOrEqual(QUICK_MINUTES);
+    });
+  });
+
+  it('include every recipe that qualifies and leave out desserts, sides, and snacks', () => {
+    const expected = RECIPES.filter(isQuickMeal).filter((r) => filterRecipes({ mealType: 'all', query: '', prefs: classic }).includes(r));
+    expect(quick.map((r) => r.id).sort()).toEqual(expected.map((r) => r.id).sort());
+    expect(RECIPES.some((r) => r.mealType === 'dessert' && r.prep + r.cook <= QUICK_MINUTES && isQuickMeal(r))).toBe(false);
   });
 });
