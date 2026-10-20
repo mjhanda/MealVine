@@ -1,7 +1,10 @@
 import { RECIPES } from '../../data/recipes';
 import { aisleOrder } from '../../theme';
 import { groceryItemsFromPlan, groceryLinesFromPlan, pruneChecked, sortForShopping } from '../grocery';
+import { Unit } from '../../types';
+import { groceryIngredients } from '../homemade';
 import { recipeById } from '../recipeCatalog';
+import { toBase, unitFamily } from '../units';
 
 const planOf = (...entries: [string, number][]) => ({
   items: entries.map(([recipeId, servings], i) => ({ id: `i${i}`, recipeId, servings })),
@@ -84,5 +87,62 @@ describe('purchase rounding in the grocery list', () => {
     groceryLinesFromPlan(planOf(...RECIPES.map((r) => [r.id, r.servings] as [string, number])))
       .filter((l) => l.unit !== null && !['tsp', 'tbsp', 'cup', 'oz', 'lb'].includes(l.unit) || l.unit === null)
       .forEach((l) => expect([l.ingredientId, Number.isInteger(l.amount)]).toEqual([l.ingredientId, true]));
+  });
+});
+
+describe('per-meal uses (which meals each line is for)', () => {
+  const baseSum = (uses: { amount: number; unit: Unit | null }[]) => uses.reduce((t, u) => t + toBase(u.amount, u.unit), 0);
+  const fullCatalogPlan = () => planOf(...RECIPES.map((r) => [r.id, r.servings] as [string, number]));
+
+  it('lists every entry that uses the ingredient, in plan order, converting across units', () => {
+    const cupRecipe = RECIPES.find((r) => r.ingredients.some((i) => i.id === 'greek-yogurt' && i.unit === 'cup'))!;
+    const tbspRecipe = RECIPES.find((r) => r.ingredients.some((i) => i.id === 'greek-yogurt' && i.unit === 'tbsp'))!;
+    const merged = line(planOf([cupRecipe.id, cupRecipe.servings], [tbspRecipe.id, tbspRecipe.servings]), 'greek-yogurt')!;
+    expect(merged.uses.map((u) => [u.planItemId, u.recipeId, u.unit])).toEqual([
+      ['i0', cupRecipe.id, 'cup'],
+      ['i1', tbspRecipe.id, 'tbsp'],
+    ]);
+    expect(baseSum(merged.uses)).toBeCloseTo(toBase(merged.amount, merged.unit));
+  });
+
+  it('keeps two entries of the same recipe apart, each scaled to its own servings', () => {
+    const r1 = recipeById('r1')!; // 2 cups greek yogurt
+    expect(line(planOf(['r1', r1.servings], ['r1', r1.servings * 2]), 'greek-yogurt')!.uses).toEqual([
+      { planItemId: 'i0', recipeId: 'r1', amount: 2, unit: 'cup' },
+      { planItemId: 'i1', recipeId: 'r1', amount: 4, unit: 'cup' },
+    ]);
+  });
+
+  it('attributes pantry staples too', () => {
+    const staples = groceryLinesFromPlan(planOf(['r8', 2])).filter((l) => l.staple);
+    expect(staples.length).toBeGreaterThan(0);
+    staples.forEach((l) => expect(l.uses.map((u) => u.recipeId)).toEqual(['r8']));
+  });
+
+  it("credits a homemade sauce's ingredients to the meal it's made for", () => {
+    const entry = { id: 'a', recipeId: 'r8', servings: 2, storeBought: [] as string[] };
+    const lines = groceryLinesFromPlan({ items: [entry] });
+    expect(lines.find((l) => l.ingredientId === 'mayonnaise')!.uses.map((u) => [u.planItemId, u.recipeId])).toEqual([['a', 'r8']]);
+    // Parmesan is in both the salad and the dressing: still one use, holding the whole amount.
+    const parmesan = lines.find((l) => l.ingredientId === 'parmesan')!;
+    expect(parmesan.uses).toHaveLength(1);
+    expect(baseSum(parmesan.uses)).toBeCloseTo(toBase(parmesan.amount, parmesan.unit));
+    const bought = groceryLinesFromPlan({ items: [{ ...entry, storeBought: ['caesar-dressing'] }] });
+    expect(bought.find((l) => l.ingredientId === 'mayonnaise')).toBeUndefined();
+  });
+
+  it('across the whole catalog, uses cover exactly the entries that need each line and add up to it', () => {
+    const plan = fullCatalogPlan();
+    groceryLinesFromPlan(plan).forEach((l) => {
+      const expected = plan.items
+        .filter((item) => groceryIngredients(recipeById(item.recipeId)!, item.servings).some((i) => i.id === l.ingredientId))
+        .map((item) => item.id);
+      expect([l.ingredientId, l.uses.map((u) => u.planItemId)]).toEqual([l.ingredientId, expected]);
+      const sum = baseSum(l.uses);
+      const total = toBase(l.amount, l.unit);
+      const family = unitFamily(l.unit);
+      const shown = family === 'volume' || family === 'weight' ? sum : Math.max(1, Math.ceil(sum - 1e-6)); // counts round up to buy
+      expect([l.ingredientId, shown]).toEqual([l.ingredientId, expect.closeTo(total, 5)]);
+    });
   });
 });

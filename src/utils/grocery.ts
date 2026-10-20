@@ -1,6 +1,6 @@
 import { ingredientById } from '../data/ingredients';
 import { aisleOrder } from '../theme';
-import { Aisle, GroceryLine, MealPlan, Unit } from '../types';
+import { Aisle, GroceryLine, GroceryUse, MealPlan, Unit } from '../types';
 import { groceryIngredients } from './homemade';
 import { recipeById } from './recipeCatalog';
 import { fromBase, roundForPurchase, toBase, unitFamily, UnitFamily } from './units';
@@ -14,6 +14,14 @@ interface Accumulator {
   family: UnitFamily;
   sampleUnit: Unit | null;
   base: number;
+  // Per plan entry (keyed by plan item id), in base units.
+  uses: Map<string, { recipeId: string; base: number }>;
+}
+
+function addUse(acc: Accumulator, planItemId: string, recipeId: string, base: number) {
+  const use = acc.uses.get(planItemId);
+  if (use) use.base += base;
+  else acc.uses.set(planItemId, { recipeId, base });
 }
 
 function accumulate(plan: MealPlan): Map<string, Accumulator> {
@@ -23,18 +31,14 @@ function accumulate(plan: MealPlan): Map<string, Accumulator> {
     if (!recipe) return;
     // Already scaled to the entry's servings, with from-scratch sauces swapped for their ingredients.
     groceryIngredients(recipe, item.servings, item.storeBought).forEach((ing) => {
-      const scaled = ing.amount;
-      const existing = map.get(ing.id);
-      if (existing) {
-        existing.base += toBase(scaled, ing.unit);
-      } else {
-        map.set(ing.id, {
-          ingredientId: ing.id,
-          family: unitFamily(ing.unit),
-          sampleUnit: ing.unit,
-          base: toBase(scaled, ing.unit),
-        });
+      const base = toBase(ing.amount, ing.unit);
+      let acc = map.get(ing.id);
+      if (!acc) {
+        acc = { ingredientId: ing.id, family: unitFamily(ing.unit), sampleUnit: ing.unit, base: 0, uses: new Map() };
+        map.set(ing.id, acc);
       }
+      acc.base += base;
+      addUse(acc, item.id, recipe.id, base);
     });
   });
   return map;
@@ -55,6 +59,11 @@ function toLine(acc: Accumulator): GroceryLine | null {
     amount,
     aisle: def.aisle,
     staple: !!def.staple,
+    uses: Array.from(acc.uses, ([planItemId, use]): GroceryUse => ({
+      planItemId,
+      recipeId: use.recipeId,
+      ...fromBase(use.base, acc.family, acc.sampleUnit),
+    })),
   };
 }
 
