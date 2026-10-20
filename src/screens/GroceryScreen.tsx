@@ -8,6 +8,7 @@ import Confetti from '../components/grocery/Confetti';
 import GroceryRow from '../components/grocery/GroceryRow';
 import ManualItemEditor from '../components/grocery/ManualItemEditor';
 import { manualKey, useGroceryStore } from '../store/groceryStore';
+import { useUserRecipes } from '../store/customRecipesStore';
 import { usePlanStore } from '../store/planStore';
 import { useUndoStore } from '../store/undoStore';
 import { colors } from '../theme';
@@ -16,6 +17,8 @@ import { buildShoppingList, formatShareText, isAllPickedUp } from '../utils/shop
 
 export default function GroceryScreen() {
   const plan = usePlanStore((s) => s.plan);
+  // Editing one of your recipes changes what the plan needs, so the list recomputes.
+  const userRecipes = useUserRecipes();
   const checked = useGroceryStore((s) => s.checked);
   const manualItems = useGroceryStore((s) => s.manualItems);
   const pantry = useGroceryStore((s) => s.pantry);
@@ -33,7 +36,7 @@ export default function GroceryScreen() {
 
   const list = useMemo(
     () => buildShoppingList({ lines: groceryLinesFromPlan(plan), manualItems, checked, pantry, manualKey }),
-    [plan, manualItems, checked, pantry]
+    [plan, manualItems, checked, pantry, userRecipes] // eslint-disable-line react-hooks/exhaustive-deps
   );
   const editing = manualItems.find((m) => m.id === editingId);
   const isEmpty = list.total === 0 && list.pantry.length === 0;

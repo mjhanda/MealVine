@@ -1,3 +1,5 @@
+import { RecipeDraft } from '../utils/customRecipes';
+
 export type RootStackParamList = {
   Onboarding: undefined;
   RemoveAds: undefined;
@@ -6,6 +8,8 @@ export type RootStackParamList = {
   RecipeDetail: { recipeId: string; planItemId?: string };
   // storeBought: the make/buy sauce choices when cooking a recipe that isn't in the plan.
   Cook: { recipeId: string; planItemId?: string; storeBought?: string[] };
+  // Your own recipes: recipeId = edit that one; draft = start from a pre-filled draft; neither = new.
+  RecipeEditor: { recipeId?: string; draft?: RecipeDraft } | undefined;
 };
 
 export type MainTabParamList = {

@@ -62,7 +62,11 @@ export type DiscreteUnit = 'can' | 'clove' | 'stalk' | 'head' | 'bunch' | 'slice
 export type Unit = VolumeUnit | WeightUnit | DiscreteUnit;
 
 export interface RecipeIngredient {
+  // A catalog ingredient id, or `custom:<slug>` for a free-text ingredient in a user's own recipe.
   id: string;
+  // Free-text ingredients only: the name as the user wrote it. Not in the catalog, so it has no
+  // aisle, allergen tags, or nutrition; it's shown as "not checked for allergies".
+  custom?: string;
   amount: number;
   unit: Unit | null; // null = count ("2 carrots")
   prep?: string; // "diced", "hard-boiled" — shown in the recipe, ignored by the grocery list
@@ -152,4 +156,6 @@ export interface GroceryLine {
   amount: number;
   aisle: Aisle;
   staple: boolean;
+  // A free-text ingredient from a user's own recipe: not checked for allergies.
+  unverified?: boolean;
 }

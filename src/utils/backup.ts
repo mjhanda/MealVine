@@ -1,4 +1,4 @@
-import { CookedEntry, GroceryState, MealPlan, Preferences } from '../types';
+import { CookedEntry, GroceryState, MealPlan, Preferences, Recipe } from '../types';
 
 // A backup is each store's persisted state plus the version it was saved at, so importing an
 // old backup runs the exact same migrations as upgrading the app does.
@@ -13,6 +13,7 @@ export interface AppData {
   favorites: { favorites: string[] };
   grocery: GroceryState;
   notes: { notes: Record<string, string>; ratings: Record<string, 'up' | 'down'> };
+  recipes: { recipes: Recipe[] }; // your own recipes (T47)
 }
 
 export type StoreName = keyof AppData;
@@ -32,7 +33,7 @@ export interface BackupFile {
 // Each store's own migrate function (supplied by the store layer, keeping this module pure).
 export type Migrators = { [K in StoreName]: (state: unknown, version: number) => AppData[K] };
 
-export const STORE_NAMES: StoreName[] = ['preferences', 'plan', 'history', 'favorites', 'grocery', 'notes'];
+export const STORE_NAMES: StoreName[] = ['preferences', 'plan', 'history', 'favorites', 'grocery', 'notes', 'recipes'];
 
 export function buildBackup(stores: Record<StoreName, Snapshot>, now: Date = new Date()): BackupFile {
   return { format: BACKUP_FORMAT, backupVersion: BACKUP_VERSION, exportedAt: now.toISOString(), stores };
@@ -95,6 +96,8 @@ export function mergeData(current: AppData, incoming: Partial<AppData>): AppData
       notes: { ...(incoming.notes?.notes ?? {}), ...current.notes.notes },
       ratings: { ...(incoming.notes?.ratings ?? {}), ...current.notes.ratings },
     },
+    // Your copy of a recipe wins over the backup's (same id = same recipe, possibly edited since).
+    recipes: { recipes: unionBy(current.recipes.recipes, incoming.recipes?.recipes ?? [], (r) => r.id) },
   };
 }
 

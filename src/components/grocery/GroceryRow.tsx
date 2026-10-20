@@ -20,12 +20,15 @@ export default function GroceryRow({ row, onToggle, action, muted = false }: Pro
         style={styles.main}
         accessibilityRole="checkbox"
         accessibilityState={{ checked: row.checked }}
-        accessibilityLabel={row.quantity ? `${row.name}, ${row.quantity}` : row.name}
+        accessibilityLabel={[row.name, row.quantity, row.note].filter(Boolean).join(', ')}
       >
         <View style={[styles.checkbox, row.checked && styles.checkboxChecked]}>
           {row.checked && <Feather name="check" size={13} color="#fff" />}
         </View>
-        <Text style={[styles.name, row.checked && styles.nameChecked]}>{row.name}</Text>
+        <View style={styles.nameWrap}>
+          <Text style={[styles.name, row.checked && styles.nameChecked]}>{row.name}</Text>
+          {row.note && <Text style={styles.note}>{row.note}</Text>}
+        </View>
         {row.quantity && <Text style={styles.amount}>{row.quantity}</Text>}
       </Pressable>
       {action ? (
@@ -57,7 +60,9 @@ const styles = StyleSheet.create({
     alignItems: 'center', justifyContent: 'center',
   },
   checkboxChecked: { backgroundColor: colors.sage, borderColor: colors.sage },
-  name: { flex: 1, fontSize: 14, color: colors.ink },
+  nameWrap: { flex: 1 },
+  name: { fontSize: 14, color: colors.ink },
+  note: { fontSize: 11.5, color: colors.rustText, marginTop: 2 },
   nameChecked: { color: colors.inkSoft, textDecorationLine: 'line-through' },
   amount: { fontSize: 13, color: colors.inkSoft, fontWeight: '600' },
   action: { width: 44, height: 44, alignItems: 'center', justifyContent: 'center' },

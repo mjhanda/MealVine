@@ -1,5 +1,6 @@
 import { ingredientById } from '../data/ingredients';
 import { Recipe, RecipeIngredient } from '../types';
+import { ingredientLabel } from './customIngredients';
 
 // "simmer 15 minutes", "bake 20–25 min", "cook 1 hour", "3-4 minutes per side" → minutes for a timer.
 // Ranges use the upper bound (better to check early than to burn). Returns null when there's no time.
@@ -23,8 +24,8 @@ const STOP = new Set([
 ]);
 const CHEESES = new Set(['cheddar', 'mozzarella', 'fresh-mozzarella', 'parmesan', 'feta', 'ricotta', 'cottage-cheese', 'cream-cheese']);
 
-const baseName = (id: string) => (ingredientById(id)?.name ?? '').toLowerCase().replace(/\s*\(.*\)/, '').replace(/,.*$/, '');
-const significant = (id: string) => words(baseName(id)).filter((w) => w.length > 2 && !STOP.has(w));
+const baseName = (ing: RecipeIngredient) => ingredientLabel(ing).toLowerCase().replace(/\s*\(.*\)/, '').replace(/,.*$/, '');
+const significant = (ing: RecipeIngredient) => words(baseName(ing)).filter((w) => w.length > 2 && !STOP.has(w));
 const variants = (w: string) => [w, `${w}s`, `${w}es`, w.replace(/s$/, '')];
 
 // Terms that identify an ingredient in prose: its full name/plural, plus any distinctive word of
@@ -32,11 +33,10 @@ const variants = (w: string) => [w, `${w}s`, `${w}es`, w.replace(/s$/, '')];
 // plus "cheese" when it's the recipe's only cheese.
 function matchTerms(ing: RecipeIngredient, recipe: Recipe): string[] {
   const def = ingredientById(ing.id);
-  if (!def) return [];
   const others = recipe.ingredients.filter((o) => o.id !== ing.id);
-  const otherWords = new Set(others.flatMap((o) => significant(o.id)));
-  const names = [baseName(ing.id), (def.plural ?? '').toLowerCase()].filter(Boolean);
-  const distinctive = significant(ing.id).filter((w) => !otherWords.has(w)).flatMap(variants);
+  const otherWords = new Set(others.flatMap(significant));
+  const names = [baseName(ing), (def?.plural ?? '').toLowerCase()].filter(Boolean);
+  const distinctive = significant(ing).filter((w) => !otherWords.has(w)).flatMap(variants);
   const onlyCheese = CHEESES.has(ing.id) && !others.some((o) => CHEESES.has(o.id)) ? ['cheese'] : [];
   return [...names, ...distinctive, ...onlyCheese];
 }

@@ -8,6 +8,8 @@ import CookScreen from '../screens/CookScreen';
 import OnboardingScreen from '../screens/OnboardingScreen';
 import RemoveAdsScreen from '../screens/RemoveAdsScreen';
 import RecipeDetailScreen from '../screens/RecipeDetailScreen';
+import RecipeEditorScreen from '../screens/RecipeEditorScreen';
+import { useCustomRecipesStore } from '../store/customRecipesStore';
 import { useStorageHealth } from '../store/persistence';
 import { usePlanStore } from '../store/planStore';
 import { usePreferencesStore } from '../store/preferencesStore';
@@ -22,7 +24,9 @@ export default function RootNavigator() {
   const prefsHydrated = usePreferencesStore((s) => s.hasHydrated);
   const planHydrated = usePlanStore((s) => s.hasHydrated);
   const subHydrated = useSubscriptionStore((s) => s.hasHydrated);
-  const hasHydrated = prefsHydrated && planHydrated && subHydrated;
+  // Your recipes load before anything renders, so plan entries that use them resolve.
+  const recipesHydrated = useCustomRecipesStore((s) => s.hasHydrated);
+  const hasHydrated = prefsHydrated && planHydrated && subHydrated && recipesHydrated;
   const onboardingComplete = usePreferencesStore((s) => s.onboardingComplete);
   const failedStores = useStorageHealth((s) => s.failedStores);
   const dismissStorageFailure = useStorageHealth((s) => s.dismiss);
@@ -53,6 +57,7 @@ export default function RootNavigator() {
           <>
             <Stack.Screen name="Main" component={MainTabs} />
             <Stack.Screen name="RecipeDetail" component={RecipeDetailScreen} options={{ presentation: 'modal' }} />
+            <Stack.Screen name="RecipeEditor" component={RecipeEditorScreen} options={{ presentation: 'modal' }} />
             <Stack.Screen name="Cook" component={CookScreen} options={{ presentation: 'fullScreenModal' }} />
             <Stack.Screen name="RemoveAds" component={RemoveAdsScreen} options={{ presentation: 'modal' }} />
           </>

@@ -1,6 +1,7 @@
 import { INGREDIENTS } from '../data/ingredients';
 import { aisleOrder } from '../theme';
 import { Aisle, GroceryLine, ManualGroceryItem, PantryOverride } from '../types';
+import { NOT_CHECKED_NOTE } from './customIngredients';
 import { sortForShopping } from './grocery';
 import { formatQuantity } from './units';
 
@@ -11,6 +12,7 @@ export interface ShoppingRow {
   checked: boolean;
   ingredientId?: string;
   manualId?: string;
+  note?: string; // e.g. "Not checked for allergies" for a free-text ingredient
 }
 
 export interface ShoppingSection {
@@ -46,6 +48,7 @@ export function buildShoppingList({ lines, manualItems, checked, pantry, manualK
     quantity: formatQuantity(l.amount, l.unit),
     checked: !!checked[l.key],
     ingredientId: l.ingredientId,
+    ...(l.unverified ? { note: NOT_CHECKED_NOTE } : {}),
   });
   const manualRow = (m: ManualGroceryItem): ShoppingRow => {
     const key = manualKey(m.id);

@@ -1,16 +1,24 @@
 import { ingredientById } from '../data/ingredients';
 import { aisleOrder } from '../theme';
-import { Aisle, GroceryLine, MealPlan, Unit } from '../types';
+import { Aisle, GroceryLine, MealPlan, RecipeIngredient, Unit } from '../types';
+import { isCustomIngredient } from './customIngredients';
 import { groceryIngredients } from './homemade';
 import { recipeById } from './recipeCatalog';
 import { fromBase, roundForPurchase, toBase, unitFamily, UnitFamily } from './units';
 
-// Every ingredient uses one unit family across the catalog (enforced by the catalog test),
-// so the ingredient id alone identifies a grocery line.
+// Every ingredient uses one unit family across the catalog (enforced by the catalog test, and by
+// the recipe editor for your own recipes), so the ingredient id alone identifies a grocery line.
 export const groceryKey = (ingredientId: string): string => ingredientId;
 
+// Free-text ingredients can be written in any unit, so "2 cups" and "1 lb" of the same name stay
+// separate lines rather than being added together.
+const lineKey = (ing: RecipeIngredient): string =>
+  isCustomIngredient(ing) ? `${ing.id}:${unitFamily(ing.unit)}` : groceryKey(ing.id);
+
 interface Accumulator {
+  key: string;
   ingredientId: string;
+  customName?: string;
   family: UnitFamily;
   sampleUnit: Unit | null;
   base: number;
@@ -24,12 +32,15 @@ function accumulate(plan: MealPlan): Map<string, Accumulator> {
     // Already scaled to the entry's servings, with from-scratch sauces swapped for their ingredients.
     groceryIngredients(recipe, item.servings, item.storeBought).forEach((ing) => {
       const scaled = ing.amount;
-      const existing = map.get(ing.id);
+      const key = lineKey(ing);
+      const existing = map.get(key);
       if (existing) {
         existing.base += toBase(scaled, ing.unit);
       } else {
-        map.set(ing.id, {
+        map.set(key, {
+          key,
           ingredientId: ing.id,
+          customName: ing.custom,
           family: unitFamily(ing.unit),
           sampleUnit: ing.unit,
           base: toBase(scaled, ing.unit),
@@ -42,13 +53,17 @@ function accumulate(plan: MealPlan): Map<string, Accumulator> {
 
 function toLine(acc: Accumulator): GroceryLine | null {
   const def = ingredientById(acc.ingredientId);
-  if (!def) return null;
   const converted = fromBase(acc.base, acc.family, acc.sampleUnit);
   const unit = converted.unit;
   const amount = roundForPurchase(converted.amount, acc.family);
+  if (!def) {
+    // A free-text ingredient goes on the list as written, in "Other", flagged as unchecked.
+    if (!acc.customName) return null;
+    return { key: acc.key, ingredientId: acc.ingredientId, name: acc.customName, unit, amount, aisle: 'Other', staple: false, unverified: true };
+  }
   const name = unit === null && amount > 1 && def.plural ? def.plural : def.name;
   return {
-    key: groceryKey(acc.ingredientId),
+    key: acc.key,
     ingredientId: acc.ingredientId,
     name,
     unit,

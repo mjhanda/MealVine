@@ -1,4 +1,5 @@
 import { AppData, buildBackup, mergeData, Migrators, ParseResult, parseBackup, replaceData, Snapshot, StoreName } from '../utils/backup';
+import { migrateCustomRecipes, useCustomRecipesStore } from './customRecipesStore';
 import { migrateFavorites, useFavoritesStore } from './favoritesStore';
 import { migrateGrocery, useGroceryStore } from './groceryStore';
 import { migrateHistory, useHistoryStore } from './historyStore';
@@ -13,11 +14,15 @@ const MIGRATORS: Migrators = {
   favorites: migrateFavorites,
   grocery: migrateGrocery,
   notes: migrateNotes,
+  recipes: migrateCustomRecipes,
 };
 
 // The persisted stores that make up a backup. Each one's own persist options supply the
 // version and the partialize function, so a backup holds exactly what's on disk.
+// Your recipes come first: restoring them before the plan means the plan (and the grocery
+// check-off sync that watches it) never sees an entry whose recipe isn't there yet.
 const STORES = {
+  recipes: useCustomRecipesStore,
   preferences: usePreferencesStore,
   plan: usePlanStore,
   history: useHistoryStore,
@@ -63,6 +68,7 @@ const EMPTY: AppData = {
   favorites: { favorites: [] },
   grocery: { checked: {}, manualItems: [], pantry: {} },
   notes: { notes: {}, ratings: {} },
+  recipes: { recipes: [] },
 };
 
 export function applyBackup(incoming: Partial<AppData>, mode: 'merge' | 'replace'): void {
