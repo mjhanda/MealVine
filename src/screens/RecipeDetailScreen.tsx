@@ -7,6 +7,7 @@ import AdSlot from '../ads/AdSlot';
 import ProteinTag from '../components/ProteinTag';
 import NutritionPanel from '../components/NutritionPanel';
 import RatingButtons from '../components/RatingButtons';
+import SauceChoice from '../components/SauceChoice';
 import { RootStackParamList } from '../navigation/types';
 import { useFavoritesStore } from '../store/favoritesStore';
 import { useHistoryStore } from '../store/historyStore';
@@ -16,6 +17,7 @@ import { useEatingPrefs, usePreferencesStore } from '../store/preferencesStore';
 import { colors } from '../theme';
 import { describeConflicts, DIETS, dietsFor, isExcluded, recipeConflicts } from '../utils/diets';
 import { defaultServings, ingredientDisplayName, recipeById } from '../utils/recipeCatalog';
+import { recipeAsCooked, sauceOptions, saucesToMake } from '../utils/homemade';
 import { caloriesPerServing } from '../utils/nutrition';
 import { sourceCredit } from '../utils/recipeSource';
 import { formatQuantity, scaleAmount } from '../utils/units';
@@ -37,9 +39,20 @@ export default function RecipeDetailScreen({ route, navigation }: Props) {
   const plan = usePlanStore((s) => s.plan);
   const addItem = usePlanStore((s) => s.addItem);
   const updateServings = usePlanStore((s) => s.updateServings);
+  const setStoreBought = usePlanStore((s) => s.setStoreBought);
+  const [draftStoreBought, setDraftStoreBought] = useState<string[]>([]);
   // Opened from the plan → the stepper edits that entry (and so the grocery list) directly.
   const planItem = plan.items.find((item) => item.id === route.params.planItemId);
   const servings = planItem ? planItem.servings : draftServings;
+  // Sauces to buy rather than make: the plan entry's choice, or a draft carried into "Add to plan".
+  const storeBought = planItem ? (planItem.storeBought ?? []) : draftStoreBought;
+  const chooseBuy = (ingredientId: string, buy: boolean) => {
+    if (planItem) {
+      setStoreBought(planItem.id, ingredientId, buy);
+      return;
+    }
+    setDraftStoreBought((list) => (buy ? [...list.filter((x) => x !== ingredientId), ingredientId] : list.filter((x) => x !== ingredientId)));
+  };
   const changeServings = (delta: number) => {
     if (planItem) {
       updateServings(planItem.id, planItem.servings + delta);
@@ -61,6 +74,10 @@ export default function RecipeDetailScreen({ route, navigation }: Props) {
   const conflictText = describeConflicts(conflicts, prefs);
   const fits = dietsFor(recipe).map((d) => DIETS[d].label);
   const inPlanCount = plan.items.filter((item) => item.recipeId === recipe.id).length;
+  const sauces = new Map(sauceOptions(recipe).map((o) => [o.ingredient.id, o]));
+  const batches = new Map(saucesToMake(recipe, servings, storeBought).map((s) => [s.ingredient.id, s.batches]));
+  // From-scratch sauces' steps come first, as in cooking mode.
+  const steps = recipeAsCooked(recipe, servings, storeBought).steps;
 
   return (
     <SafeAreaView style={styles.container} edges={['top', 'bottom']}>
@@ -142,7 +159,7 @@ export default function RecipeDetailScreen({ route, navigation }: Props) {
           <Text style={styles.inPlanNote}>In your plan — changing servings updates your grocery list.</Text>
         ) : (
           <>
-            <Pressable onPress={() => addItem(recipe.id, servings)} style={styles.addBtn} accessibilityRole="button">
+            <Pressable onPress={() => addItem(recipe.id, servings, draftStoreBought)} style={styles.addBtn} accessibilityRole="button">
               <Feather name="plus" size={18} color="#fff" />
               <Text style={styles.addBtnLabel}>
                 {inPlanCount > 0 ? 'Add another to plan' : 'Add to plan'}
@@ -157,7 +174,7 @@ export default function RecipeDetailScreen({ route, navigation }: Props) {
         )}
 
         <Pressable
-          onPress={() => navigation.navigate('Cook', { recipeId: recipe.id, planItemId: planItem?.id })}
+          onPress={() => navigation.navigate('Cook', { recipeId: recipe.id, planItemId: planItem?.id, storeBought })}
           style={styles.cookBtn}
           accessibilityRole="button"
         >
@@ -187,10 +204,22 @@ export default function RecipeDetailScreen({ route, navigation }: Props) {
             <View style={{ gap: 8 }}>
               {recipe.ingredients.map((ing, i) => {
                 const amount = scaleAmount(ing.amount, recipe.servings, servings);
+                const sauce = sauces.get(ing.id);
                 return (
-                  <View key={i} style={styles.ingredientRow}>
-                    <Text style={styles.ingredientName}>{ingredientDisplayName(ing, amount)}</Text>
-                    <Text style={styles.ingredientAmount}>{formatQuantity(amount, ing.unit)}</Text>
+                  <View key={i}>
+                    <View style={[styles.ingredientRow, sauce && styles.ingredientRowSauce]}>
+                      <Text style={styles.ingredientName}>{ingredientDisplayName(ing, amount)}</Text>
+                      <Text style={styles.ingredientAmount}>{formatQuantity(amount, ing.unit)}</Text>
+                    </View>
+                    {sauce && (
+                      <SauceChoice
+                        option={sauce}
+                        buy={storeBought.includes(ing.id)}
+                        batches={batches.get(ing.id) ?? 1}
+                        onChange={(buy) => chooseBuy(ing.id, buy)}
+                        onOpenRecipe={() => navigation.push('RecipeDetail', { recipeId: sauce.sauce.id })}
+                      />
+                    )}
                   </View>
                 );
               })}
@@ -198,7 +227,7 @@ export default function RecipeDetailScreen({ route, navigation }: Props) {
 
             <Text style={styles.sectionHeader}>Steps</Text>
             <View style={{ gap: 14 }}>
-              {recipe.steps.map((step, i) => (
+              {steps.map((step, i) => (
                 <View key={i} style={styles.stepRow}>
                   <View style={styles.stepBadge}>
                     <Text style={styles.stepBadgeText}>{i + 1}</Text>
@@ -313,7 +342,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 9,
     borderBottomWidth: 1, borderBottomColor: colors.line,
   },
-  ingredientName: { color: colors.ink, fontSize: 14 },
+  ingredientRowSauce: { borderBottomWidth: 0 },
+  ingredientName: { flex: 1, color: colors.ink, fontSize: 14, marginRight: 12 },
   ingredientAmount: { color: colors.inkSoft, fontWeight: '600', fontSize: 14 },
   stepRow: { flexDirection: 'row', gap: 12 },
   stepBadge: {

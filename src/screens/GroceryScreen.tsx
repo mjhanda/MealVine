@@ -1,8 +1,10 @@
 import { Feather } from '@expo/vector-icons';
-import React, { useMemo, useState } from 'react';
-import { Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
+import { useIsFocused } from '@react-navigation/native';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { AccessibilityInfo, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { confirmAction, shareText } from '../components/dialogs';
+import Confetti from '../components/grocery/Confetti';
 import GroceryRow from '../components/grocery/GroceryRow';
 import ManualItemEditor from '../components/grocery/ManualItemEditor';
 import { manualKey, useGroceryStore } from '../store/groceryStore';
@@ -10,7 +12,7 @@ import { usePlanStore } from '../store/planStore';
 import { useUndoStore } from '../store/undoStore';
 import { colors } from '../theme';
 import { groceryLinesFromPlan } from '../utils/grocery';
-import { buildShoppingList, formatShareText } from '../utils/shoppingList';
+import { buildShoppingList, formatShareText, isAllPickedUp } from '../utils/shoppingList';
 
 export default function GroceryScreen() {
   const plan = usePlanStore((s) => s.plan);
@@ -35,6 +37,8 @@ export default function GroceryScreen() {
   );
   const editing = manualItems.find((m) => m.id === editingId);
   const isEmpty = list.total === 0 && list.pantry.length === 0;
+  const allPickedUp = isAllPickedUp(list);
+  const celebrating = useCelebration(allPickedUp, list.checkedCount, list.total);
 
   const handleAdd = () => {
     const name = newItem.trim();
@@ -63,7 +67,7 @@ export default function GroceryScreen() {
             <Text style={styles.eyebrow}>Auto-generated</Text>
             <Text style={styles.title}>Grocery list</Text>
             <Text style={styles.subtitle}>
-              {list.checkedCount} of {list.total} picked up
+              {allPickedUp ? `All ${list.total} picked up` : `${list.checkedCount} of ${list.total} picked up`}
             </Text>
           </View>
           <View style={styles.headerActions}>
@@ -103,6 +107,15 @@ export default function GroceryScreen() {
 
       <ScrollView contentContainerStyle={styles.scroll} keyboardShouldPersistTaps="handled">
         {isEmpty && <Text style={styles.emptyText}>Add meals to your plan to generate your list.</Text>}
+        {allPickedUp && (
+          <View style={styles.doneBanner} accessibilityRole="summary">
+            <Feather name="check-circle" size={22} color={colors.forest} />
+            <View style={styles.doneTextWrap}>
+              <Text style={styles.doneTitle}>All picked up</Text>
+              <Text style={styles.doneText}>Everything on your list is checked. Nothing missed.</Text>
+            </View>
+          </View>
+        )}
 
         {list.sections.map((section) => (
           <View key={section.aisle}>
@@ -157,6 +170,8 @@ export default function GroceryScreen() {
         )}
       </ScrollView>
 
+      {celebrating.active && <Confetti onDone={celebrating.stop} />}
+
       {editing && (
         <ManualItemEditor
           item={editing}
@@ -173,6 +188,31 @@ export default function GroceryScreen() {
       )}
     </SafeAreaView>
   );
+}
+
+// Fires once when the user checks off the last item on this tab: confetti (unless reduce motion is
+// on) plus a screen-reader announcement. Reaching "all picked up" any other way — opening the tab
+// with everything checked, or the last unchecked lines leaving because a meal was cooked, removed,
+// or switched to a bought sauce while on another tab — shows only the banner.
+function useCelebration(allPickedUp: boolean, checkedCount: number, total: number) {
+  const focused = useIsFocused();
+  const [active, setActive] = useState(false);
+  const wasDone = useRef(allPickedUp);
+  const prevChecked = useRef(checkedCount);
+  useEffect(() => {
+    const checkedOne = checkedCount > prevChecked.current;
+    prevChecked.current = checkedCount;
+    if (allPickedUp && !wasDone.current && checkedOne && focused) {
+      AccessibilityInfo.announceForAccessibility(`All ${total} items picked up. Nothing missed.`);
+      AccessibilityInfo.isReduceMotionEnabled()
+        .then((reduce) => setActive(!reduce))
+        .catch(() => setActive(true));
+    }
+    wasDone.current = allPickedUp;
+  }, [allPickedUp, checkedCount, total, focused]);
+  const stop = useCallback(() => setActive(false), []);
+  // Unchecking an item mid-burst ends the celebration at once.
+  return { active: active && allPickedUp, stop };
 }
 
 const styles = StyleSheet.create({
@@ -206,4 +246,11 @@ const styles = StyleSheet.create({
   },
   pantryHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
   pantryHint: { fontSize: 12, color: colors.inkSoft, marginBottom: 2 },
+  doneBanner: {
+    flexDirection: 'row', alignItems: 'center', gap: 12, padding: 14, borderRadius: 14,
+    backgroundColor: colors.sageLight, borderWidth: 1, borderColor: colors.sage,
+  },
+  doneTextWrap: { flex: 1 },
+  doneTitle: { fontSize: 15, fontWeight: '700', color: colors.forest },
+  doneText: { fontSize: 13, color: colors.ink, marginTop: 2 },
 });

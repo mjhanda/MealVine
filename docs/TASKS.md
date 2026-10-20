@@ -1,7 +1,7 @@
 # Dishcart — Task List (Mealime parity → launch)
 
 Written 2026-10-05 (as "MealApp"); T26–T35 added after the Dishcart / ads
-decisions; T40–T42 added 2026-10-18. Each task follows
+decisions; T40–T42 added 2026-10-18; T44–T46 added 2026-10-20 (#43 is a Dependabot PR). Each task follows
 `.github/ISSUE_TEMPLATE/ai-task.yml` and is mirrored as a GitHub issue in
 **mjhanda/MealVine** (issue #N = TN). This file is the planning snapshot; the
 issues are the source of truth.
@@ -20,7 +20,7 @@ issues are the source of truth.
   - T25 — name, publisher, and price decided; launch date open.
   - T32 — Maestro E2E passes on the iOS simulator and Android emulator;
     physical-device pass and purchase steps still open.
-- **Open:** T15, T26–T31, T33–T39, T42.
+- **Open:** T15, T26–T31, T33–T39, T42, T44–T46.
 - **Not needed for personal use:** T26–T31, T33, T34 (store, ads, legal).
 
 > T25's original context (paid app, "Mealime alternative" positioning) is
@@ -1015,4 +1015,81 @@ which answers the main complaint about how Mealime shut down. See T25.
 - **Dependencies / Blockers:** Owner's choice of route and approval to create the hosting project.
 - **Priority:** P1 - High
 - **Target date:** 2026-10-25
+- **Additional Notes:** —
+
+## T44 — Grocery list: celebrate when everything is picked up
+
+- **Summary:** When the last item on the grocery list is checked, show a short celebration (confetti) and a clear "All picked up" state, so it's obvious at a glance that nothing was missed.
+- **Requester:** Owner
+- **Assignee(s) / AI agent:** Claude Code
+- **Reviewer(s):** Owner
+- **End user(s):** Everyone shopping from the list
+- **Context:** Owner request 2026-10-20 while testing on Android: "just need a signifier that all is checked so nothing is missed while shopping." Today the only signal is the "N of N picked up" subtitle.
+- **Data Classification:** No sensitive data involved
+- **Notes on data handling:** Nothing new persisted.
+- **In scope:**
+  - Confetti burst (built with RN `Animated`, no new dependency) the moment the count reaches N of N, once per completion.
+  - A persistent "All picked up" banner at the top of the list while everything stays checked; subtitle reads "All N picked up".
+  - Screen-reader announcement; reduced-motion setting skips the confetti but keeps the banner.
+- **Out of scope:** Sounds, haptics settings, pantry items (not counted toward the total).
+- **Acceptance Criteria:**
+  - [ ] Checking the last item shows confetti and the banner; unchecking any item removes the banner
+  - [ ] Opening the tab with everything already checked shows the banner without replaying confetti
+  - [ ] No confetti with reduce motion on
+- **Test Strategy:** Unit test for the completion rule in `shoppingList.test.ts`; a11y static test; visual check on the Android emulator.
+- **Dependencies / Blockers:** None
+- **Priority:** P2 - Medium
+- **Target date:** 2026-10-20
+- **Additional Notes:** —
+
+## T45 — Buttons and text fit the screen (Browse chip rows cut off)
+
+- **Summary:** The Browse filter rows can't scroll their last chip fully into view on Android ("Hide planned" stays cut off at the right edge). Fix it, and sweep the other screens for buttons or text that don't fit.
+- **Requester:** Owner
+- **Assignee(s) / AI agent:** Claude Code
+- **Reviewer(s):** Owner
+- **End user(s):** Everyone
+- **Context:** Owner screenshot 2026-10-20 (Android emulator, 1080×2400). The horizontal `ScrollView`s in `BrowseScreen.tsx` put `paddingHorizontal` on the scroll view's `style` instead of `contentContainerStyle`, which clips the content on Android.
+- **Data Classification:** No sensitive data involved
+- **Notes on data handling:** —
+- **In scope:**
+  - Move the inset into the content container so both ends scroll fully into view.
+  - Check every tab and the recipe, cook, and onboarding screens on the emulator for clipped buttons or text.
+- **Out of scope:** Tablet layouts.
+- **Acceptance Criteria:**
+  - [ ] Scrolled to the end, every Browse chip is fully visible with the same margin as the screen edge
+  - [ ] No clipped buttons or text found on the other screens
+- **Test Strategy:** Visual check on the Android emulator (scrolled to both ends).
+- **Dependencies / Blockers:** None
+- **Priority:** P1 - High
+- **Target date:** 2026-10-20
+- **Additional Notes:** —
+
+## T46 — Make-it-yourself recipes for dressings and sauces, with store-bought as the shortcut
+
+- **Summary:** Every recipe that calls for a bottled dressing or sauce shows how to make it from scratch, with buying it as the time-saving alternative (e.g. "buy Caesar dressing to save time"). The grocery list follows the choice.
+- **Requester:** Owner
+- **Assignee(s) / AI agent:** Claude Code
+- **Reviewer(s):** Owner
+- **End user(s):** Everyone cooking from the app
+- **Context:** Owner request 2026-10-20. Eight store-bought sauces appear in our recipes: Caesar dressing, peanut sauce, pesto, marinara, salsa, enchilada sauce, cocktail sauce, balsamic glaze (21 uses across r8–r118).
+- **Data Classification:** No sensitive data involved
+- **Notes on data handling:** The per-meal choice is stored on the plan entry (plan store v2, with migration).
+- **In scope:**
+  - Eight new Dishcart "Sides & sauces" recipes (r134–r141), one per sauce, from ingredients already in the catalog.
+  - `src/data/homemade.ts` maps each store-bought ingredient to its recipe and batch yield (same unit family, enforced by test).
+  - Recipe page: under the sauce ingredient, a Make it / Buy it choice and a link to the sauce recipe. Default is make it; buy it is labeled as the time saver.
+  - Plan entries remember the choice (`storeBought` list). Plan store v1 → v2 migration keeps existing entries on store-bought so current grocery lists don't change.
+  - Grocery list: making it swaps the bottled item for the sauce recipe's ingredients (whole batches).
+  - Cooking mode: when making it, a first step says to make the sauce, with its method.
+  - Allergy, diet, and avoided-ingredient checks cover both versions (a recipe is flagged if either the bottled or the homemade sauce conflicts). Measured impact: r82 no longer fits low-carb/keto; new allergen flags soy (r8, r82), gluten (r82), sesame (r66), sulfite (r63).
+- **Out of scope:** Nutrition and total time per choice (both stay on the store-bought version; e.g. making pesto adds 13 minutes the Quick meals chip doesn't count); "Cook again" from history starts over at make-it (history doesn't record the choice); sauces made inline in a recipe's own steps (vinaigrettes) are already from scratch.
+- **Acceptance Criteria:**
+  - [ ] Each of the 21 uses shows the choice and links to the right recipe
+  - [ ] Switching to make it replaces the bottled line on the grocery list with the sauce's ingredients; switching back restores it
+  - [ ] Existing plans are unchanged after the update
+- **Test Strategy:** Unit tests for the homemade map, grocery expansion, and conflicts; migration test with a v1 fixture; catalog validation for r134–r141; visual check on the Android emulator.
+- **Dependencies / Blockers:** None
+- **Priority:** P1 - High
+- **Target date:** 2026-10-21
 - **Additional Notes:** —

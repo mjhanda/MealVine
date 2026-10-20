@@ -174,6 +174,7 @@ const DEFS: Def[] = [
   ['pesto', 'Basil pesto', O, ['dairy', 'tree-nut']],
   ['rice-vinegar', 'Rice vinegar', O, [], staple],
   ['salsa', 'Salsa', O, ['nightshade']],
+  ['horseradish', 'Prepared horseradish', O, ['sulfite']],
   ['sesame-oil', 'Toasted sesame oil', O, ['sesame'], staple],
   ['soy-sauce', 'Low-sodium soy sauce', O, ['soy', 'legume', 'gluten'], staple],
   ['tahini', 'Tahini', O, ['sesame']],

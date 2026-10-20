@@ -5,7 +5,7 @@ import { MigrationError, useStorageHealth } from '../persistence';
 import { migrateHistory } from '../historyStore';
 import { migratePlan, usePlanStore } from '../planStore';
 import { migratePreferences, usePreferencesStore } from '../preferencesStore';
-import { favoritesV0, groceryV0, groceryV1, listPlanV0, preferencesV0, weeklyPlanV0 } from './fixtures';
+import { favoritesV0, groceryV0, groceryV1, listPlanV0, planV1, preferencesV0, weeklyPlanV0 } from './fixtures';
 
 afterEach(() => jest.restoreAllMocks());
 
@@ -24,8 +24,22 @@ describe('pure migrations', () => {
     expect(plan.items.map((i) => i.recipeId)).toEqual(['r1', 'r2', 'r3']);
   });
 
-  it('plan v0 list passes through unchanged', () => {
-    expect(migratePlan(listPlanV0.state, 0).plan.items).toEqual(listPlanV0.state.plan.items);
+  it('plan v0 list keeps its entries (no bottled sauces to keep buying in r5)', () => {
+    expect(migratePlan(listPlanV0.state, 0).plan.items).toEqual([{ ...listPlanV0.state.plan.items[0], storeBought: [] }]);
+  });
+
+  it('plan v1 → v2 keeps buying each entry\'s bottled sauces', () => {
+    const items = migratePlan(planV1.state, 1).plan.items;
+    expect(items.map((i) => [i.recipeId, i.storeBought])).toEqual([
+      ['r8', ['caesar-dressing']],
+      ['r22', ['marinara']],
+      ['r1', []],
+    ]);
+  });
+
+  it('plan v2 passes through unchanged', () => {
+    const v2 = { plan: { items: [{ id: 'a', recipeId: 'r8', servings: 2, storeBought: [] }] } };
+    expect(migratePlan(v2, 2)).toEqual(v2);
   });
 
   it('plan v0 with no plan yields empty list', () => {
@@ -84,8 +98,17 @@ describe('rehydration from real storage', () => {
     expect(state.hasHydrated).toBe(true);
     expect(state.plan.items).toHaveLength(3);
     const saved = JSON.parse((await AsyncStorage.getItem('mealplan:plan'))!);
-    expect(saved.version).toBe(1);
+    expect(saved.version).toBe(2);
     expect(saved.state.hasHydrated).toBeUndefined();
+  });
+
+  it('upgrades a v1 plan to v2 without changing what it buys', async () => {
+    await seed('mealplan:plan', planV1);
+    await usePlanStore.persist.rehydrate();
+    expect(usePlanStore.getState().plan.items[0].storeBought).toEqual(['caesar-dressing']);
+    const saved = JSON.parse((await AsyncStorage.getItem('mealplan:plan'))!);
+    expect(saved.version).toBe(2);
+    expect(saved.state.plan.items[1].storeBought).toEqual(['marinara']);
   });
 
   it('keeps every other store intact across the upgrade', async () => {

@@ -31,7 +31,7 @@ export default function RecentlyCooked({ entries, onCookAgain, onOpen }: Props) 
               <Pressable style={styles.main} onPress={() => onOpen(recipe.id)} accessibilityRole="button">
                 <Text style={styles.emoji}>{recipe.emoji}</Text>
                 <View style={styles.text}>
-                  <Text style={styles.title} numberOfLines={1}>
+                  <Text style={styles.title} numberOfLines={2}>
                     {recipe.title}
                   </Text>
                   <Text style={styles.meta}>{cookedAgo(entry.cookedAt, now)}</Text>

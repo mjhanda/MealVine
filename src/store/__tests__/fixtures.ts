@@ -15,6 +15,21 @@ export const listPlanV0 = {
   version: 0,
 };
 
+// Plan v1 (versioned list, before make-it-yourself sauces): r8 uses bottled Caesar dressing,
+// r22 uses bottled marinara, r1 has no bottled sauce.
+export const planV1 = {
+  state: {
+    plan: {
+      items: [
+        { id: 'item-1', recipeId: 'r8', servings: 2 },
+        { id: 'item-2', recipeId: 'r22', servings: 3 },
+        { id: 'item-3', recipeId: 'r1', servings: 2 },
+      ],
+    },
+  },
+  version: 1,
+};
+
 export const preferencesV0 = {
   state: { householdSize: 4, diet: 'vegetarian', mealTypes: ['dinner'], onboardingComplete: true, hasHydrated: true },
   version: 0,

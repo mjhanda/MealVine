@@ -1302,6 +1302,16 @@ export const NUTRIENTS_PER_100G: Record<string, NutrientValues> = {
     satFat: 0,
     sugar: 82.12,
   },
+  horseradish: {
+    protein: 1.18,
+    fat: 0.69,
+    carbs: 11.29,
+    kcal: 48,
+    fiber: 3.3,
+    sodium: 420,
+    satFat: 0.09,
+    sugar: 7.99,
+  },
   "hot-sauce": {
     protein: 0.51,
     fat: 0.37,
@@ -4039,6 +4049,16 @@ export const INGREDIENT_SOURCES: Record<string, IngredientSource> = {
       {
         fdcId: 169640,
         description: "Honey",
+        weight: 1,
+      },
+    ],
+  },
+  horseradish: {
+    basis: "usda",
+    foods: [
+      {
+        fdcId: 173472,
+        description: "Horseradish, prepared",
         weight: 1,
       },
     ],

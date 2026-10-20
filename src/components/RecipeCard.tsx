@@ -31,7 +31,7 @@ export default function RecipeCard({ recipe, onPress, right, servings, warning, 
           <Text style={styles.emoji}>{recipe.emoji}</Text>
         </View>
         <View style={styles.body}>
-          <Text style={styles.title} numberOfLines={1}>
+          <Text style={styles.title} numberOfLines={2}>
             {recipe.title}
           </Text>
           <View style={styles.metaRow}>
@@ -57,7 +57,7 @@ export default function RecipeCard({ recipe, onPress, right, servings, warning, 
           {warning && (
             <View style={styles.warningRow}>
               <Feather name="alert-triangle" size={12} color={colors.rust} />
-              <Text style={styles.warningText} numberOfLines={1}>
+              <Text style={styles.warningText} numberOfLines={2}>
                 {warning}
               </Text>
             </View>

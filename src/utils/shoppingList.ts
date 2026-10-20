@@ -72,6 +72,11 @@ export function buildShoppingList({ lines, manualItems, checked, pantry, manualK
   return { sections, pantry: pantryRows, total: all.length, checkedCount: all.filter((r) => r.checked).length };
 }
 
+// Everything on the list is checked (pantry rows don't count). An empty list is never "done".
+export function isAllPickedUp(list: Pick<ShoppingList, 'total' | 'checkedCount'>): boolean {
+  return list.total > 0 && list.checkedCount === list.total;
+}
+
 // Plain text for the share sheet: unchecked items only, grouped by aisle.
 export function formatShareText(list: ShoppingList): string {
   const blocks = list.sections

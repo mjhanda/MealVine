@@ -13,9 +13,10 @@ import { useRecipeNotesStore } from '../store/recipeNotesStore';
 import { useTimerStore } from '../store/timerStore';
 import { useUndoStore } from '../store/undoStore';
 import { colors, radius, spacing } from '../theme';
-import { formatCountdown, stepIngredients, stepMinutes } from '../utils/cooking';
+import { formatCountdown, stepMinutes } from '../utils/cooking';
+import { cookingSteps } from '../utils/homemade';
 import { defaultServings, ingredientDisplayName, recipeById } from '../utils/recipeCatalog';
-import { formatQuantity, scaleAmount } from '../utils/units';
+import { formatQuantity } from '../utils/units';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Cook'>;
 
@@ -52,10 +53,12 @@ export default function CookScreen({ route, navigation }: Props) {
   }
 
   const servings = planItem?.servings ?? defaultServings(recipe, householdSize);
-  const step = recipe.steps[index];
-  const isLast = index === recipe.steps.length - 1;
+  // Scaled to `servings`, with any sauce made from scratch cooked first.
+  const steps = cookingSteps(recipe, servings, planItem?.storeBought ?? route.params.storeBought ?? []);
+  const step = steps[index].text;
+  const isLast = index === steps.length - 1;
   const minutes = stepMinutes(step);
-  const ingredients = stepIngredients(recipe, step);
+  const ingredients = steps[index].ingredients;
   const remaining = timer ? timer.endsAt - now : 0;
   const timerLabel = `${recipe.title}: step ${index + 1}`;
 
@@ -77,15 +80,15 @@ export default function CookScreen({ route, navigation }: Props) {
         <Pressable onPress={() => navigation.goBack()} hitSlop={10} accessibilityRole="button" accessibilityLabel="Close cooking mode">
           <Feather name="x" size={24} color={colors.forest} />
         </Pressable>
-        <Text style={styles.headerTitle} numberOfLines={1}>
+        <Text style={styles.headerTitle} numberOfLines={2}>
           {recipe.title}
         </Text>
         <Text style={styles.counter}>
-          {index + 1}/{recipe.steps.length}
+          {index + 1}/{steps.length}
         </Text>
       </View>
       <View style={styles.progress}>
-        <View style={[styles.progressFill, { width: `${((index + 1) / recipe.steps.length) * 100}%` }]} />
+        <View style={[styles.progressFill, { width: `${((index + 1) / steps.length) * 100}%` }]} />
       </View>
 
       {timer && (
@@ -125,15 +128,12 @@ export default function CookScreen({ route, navigation }: Props) {
         {ingredients.length > 0 && (
           <View style={styles.ingredients}>
             <Text style={styles.ingLabel}>For this step</Text>
-            {ingredients.map((ing) => {
-              const amount = scaleAmount(ing.amount, recipe.servings, servings);
-              return (
-                <View key={ing.id} style={styles.ingRow}>
-                  <Text style={styles.ingName}>{ingredientDisplayName(ing, amount)}</Text>
-                  <Text style={styles.ingAmount}>{formatQuantity(amount, ing.unit)}</Text>
-                </View>
-              );
-            })}
+            {ingredients.map((ing) => (
+              <View key={ing.id} style={styles.ingRow}>
+                <Text style={styles.ingName}>{ingredientDisplayName(ing, ing.amount)}</Text>
+                <Text style={styles.ingAmount}>{formatQuantity(ing.amount, ing.unit)}</Text>
+              </View>
+            ))}
           </View>
         )}
       </ScrollView>

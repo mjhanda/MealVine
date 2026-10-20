@@ -1,5 +1,5 @@
 import { GroceryLine } from '../../types';
-import { buildShoppingList, formatShareText, guessAisle, isInPantry } from '../shoppingList';
+import { buildShoppingList, formatShareText, guessAisle, isAllPickedUp, isInPantry } from '../shoppingList';
 
 const manualKey = (id: string) => `manual__${id}`;
 const line = (ingredientId: string, aisle: GroceryLine['aisle'], staple = false, amount = 1): GroceryLine => ({
@@ -84,4 +84,15 @@ describe('guessAisle', () => {
     ['birthday candles', 'Other'],
     ['', 'Other'],
   ])('%p → %p', (name, aisle) => expect(guessAisle(name)).toBe(aisle));
+});
+
+describe('isAllPickedUp', () => {
+  it('is true only when every counted item is checked', () => {
+    expect(isAllPickedUp({ total: 3, checkedCount: 3 })).toBe(true);
+    expect(isAllPickedUp({ total: 3, checkedCount: 2 })).toBe(false);
+  });
+
+  it('is false for an empty list', () => {
+    expect(isAllPickedUp({ total: 0, checkedCount: 0 })).toBe(false);
+  });
 });

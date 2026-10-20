@@ -112,6 +112,9 @@ export interface PlanItem {
   id: string;
   recipeId: string;
   servings: number;
+  // Bottled sauces (ingredient ids) this entry buys instead of making from scratch; any sauce with
+  // a make-it-yourself recipe (src/data/homemade.ts) that isn't listed is made. Since plan v2.
+  storeBought?: string[];
 }
 
 export interface MealPlan {

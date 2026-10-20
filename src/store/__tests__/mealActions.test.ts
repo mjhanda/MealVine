@@ -44,7 +44,7 @@ describe('markCooked', () => {
     const a = usePlanStore.getState().addItem('r1', 3);
     const removed = markCooked(a)!;
     undoCooked(removed);
-    expect(usePlanStore.getState().plan.items).toEqual([{ id: a, recipeId: 'r1', servings: 3 }]);
+    expect(usePlanStore.getState().plan.items).toEqual([{ id: a, recipeId: 'r1', servings: 3, storeBought: [] }]);
     expect(useHistoryStore.getState().cooked).toEqual([]);
     undoCooked(removed); // double undo doesn't duplicate
     expect(usePlanStore.getState().plan.items).toHaveLength(1);
@@ -54,7 +54,7 @@ describe('markCooked', () => {
 describe('cookAgain', () => {
   it('re-adds with the same servings and returns the new id', () => {
     const id = cookAgain('r95', 6);
-    expect(usePlanStore.getState().plan.items).toEqual([{ id, recipeId: 'r95', servings: 6 }]);
+    expect(usePlanStore.getState().plan.items).toEqual([{ id, recipeId: 'r95', servings: 6, storeBought: [] }]);
   });
 });
 

@@ -1,8 +1,9 @@
 import { ingredientById } from '../data/ingredients';
 import { aisleOrder } from '../theme';
 import { Aisle, GroceryLine, MealPlan, Unit } from '../types';
+import { groceryIngredients } from './homemade';
 import { recipeById } from './recipeCatalog';
-import { fromBase, roundForPurchase, scaleAmount, toBase, unitFamily, UnitFamily } from './units';
+import { fromBase, roundForPurchase, toBase, unitFamily, UnitFamily } from './units';
 
 // Every ingredient uses one unit family across the catalog (enforced by the catalog test),
 // so the ingredient id alone identifies a grocery line.
@@ -20,8 +21,9 @@ function accumulate(plan: MealPlan): Map<string, Accumulator> {
   plan.items.forEach((item) => {
     const recipe = recipeById(item.recipeId);
     if (!recipe) return;
-    recipe.ingredients.forEach((ing) => {
-      const scaled = scaleAmount(ing.amount, recipe.servings, item.servings);
+    // Already scaled to the entry's servings, with from-scratch sauces swapped for their ingredients.
+    groceryIngredients(recipe, item.servings, item.storeBought).forEach((ing) => {
+      const scaled = ing.amount;
       const existing = map.get(ing.id);
       if (existing) {
         existing.base += toBase(scaled, ing.unit);

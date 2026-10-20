@@ -165,7 +165,7 @@ export default function BrowseScreen() {
     <SafeAreaView style={styles.container} edges={['top']}>
       <View style={styles.header}>
         <Text style={styles.eyebrow}>{swapRecipe ? 'Swap a meal' : 'Browse'}</Text>
-        <Text style={styles.title} numberOfLines={1}>
+        <Text style={styles.title} numberOfLines={2}>
           {swapRecipe ? `Replace ${swapRecipe.title}` : 'All recipes'}
         </Text>
         {swapRecipe && (
@@ -197,7 +197,7 @@ export default function BrowseScreen() {
           horizontal
           showsHorizontalScrollIndicator={false}
           style={styles.filterRow}
-          contentContainerStyle={{ gap: 8 }}
+          contentContainerStyle={styles.filterRowContent}
         >
           {chips.map((f) => {
             const active = filter === f.id;
@@ -217,7 +217,7 @@ export default function BrowseScreen() {
         </ScrollView>
       )}
 
-      <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.filterRow} contentContainerStyle={{ gap: 8 }}>
+      <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.filterRow} contentContainerStyle={styles.filterRowContent}>
         {TIME_LIMITS.map((mins) => (
           <RefinePill
             key={mins}
@@ -329,7 +329,10 @@ const styles = StyleSheet.create({
     borderRadius: 12, borderWidth: 1, borderColor: colors.line, backgroundColor: colors.card,
   },
   searchInput: { flex: 1, fontSize: 13.5, color: colors.ink },
-  filterRow: { marginTop: 12, paddingHorizontal: 20, flexGrow: 0, flexShrink: 0 },
+  // The inset goes on the content, not the ScrollView: padding on the ScrollView itself clips the
+  // last chip on Android so it can never scroll fully into view.
+  filterRow: { marginTop: 12, flexGrow: 0, flexShrink: 0 },
+  filterRowContent: { gap: 8, paddingHorizontal: 20 },
   filterPill: { paddingHorizontal: 14, paddingVertical: 8, borderRadius: 20 },
   refinePill: {
     flexDirection: 'row', alignItems: 'center', gap: 5, paddingHorizontal: 12, paddingVertical: 7,

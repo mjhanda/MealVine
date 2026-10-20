@@ -1,5 +1,6 @@
 import { ingredientById, INGREDIENTS } from '../data/ingredients';
 import { AllergenTag, DietId, IngredientTag, Recipe } from '../types';
+import { homemadeSauceIngredientIds, homemadeSauceTags } from './homemade';
 
 // Any animal flesh. A recipe with none of these is vegetarian.
 export const MEAT_TAGS: IngredientTag[] = ['poultry', 'red-meat', 'pork', 'fish', 'shellfish'];
@@ -57,8 +58,10 @@ export const ALLERGENS: { id: AllergenTag; label: string }[] = [
 
 export const allergenLabel = (tag: AllergenTag) => ALLERGENS.find((a) => a.id === tag)?.label ?? tag;
 
+// Includes the from-scratch versions of any bottled sauce (src/data/homemade.ts): the user picks
+// make or buy per plan entry, so a recipe is flagged if either version conflicts.
 export function recipeTags(recipe: Recipe): Set<IngredientTag> {
-  const tags = new Set<IngredientTag>();
+  const tags = homemadeSauceTags(recipe);
   recipe.ingredients.forEach((ing) => ingredientById(ing.id)?.tags.forEach((t) => tags.add(t)));
   return tags;
 }
@@ -86,7 +89,8 @@ export interface Conflicts {
 
 export function recipeConflicts(recipe: Recipe, prefs: EatingPrefs): Conflicts {
   const tags = recipeTags(recipe);
-  const ids = new Set(recipe.ingredients.map((i) => i.id));
+  // Like the tags, avoided ingredients count in either version of a bottled sauce.
+  const ids = new Set([...recipe.ingredients.map((i) => i.id), ...homemadeSauceIngredientIds(recipe)]);
   return {
     diet: !fitsDiet(recipe, prefs.diet),
     allergens: prefs.allergies.filter((a) => tags.has(a)),

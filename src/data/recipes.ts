@@ -2747,6 +2747,158 @@ const HAND_RECIPES: Recipe[] = [
       changes: 'Oil reduced from 5 to 3 tbsp; 350 g beef → 12 oz; rice rounded to 1/4 cup.',
     },
   },
+
+  // Make-it-yourself versions of the store-bought sauces our recipes call for (T46). Each is
+  // linked from the bottled ingredient in src/data/homemade.ts, which also records its yield.
+  {
+    id: 'r134', title: 'Caesar Dressing', mealType: 'side', protein: 'fish',
+    prep: 10, cook: 0, servings: 6, emoji: '🥗', batch: true,
+    ingredients: [
+      { id: 'mayonnaise', amount: 0.5, unit: 'cup' },
+      { id: 'greek-yogurt', amount: 2, unit: 'tbsp' },
+      { id: 'parmesan', amount: 0.25, unit: 'cup' },
+      { id: 'lemon', amount: 1, unit: null, prep: 'juiced' },
+      { id: 'garlic', amount: 1, unit: 'clove', prep: 'grated' },
+      { id: 'worcestershire-sauce', amount: 1, unit: 'tsp' },
+      { id: 'dry-mustard', amount: 0.5, unit: 'tsp' },
+      { id: 'black-pepper', amount: 0.25, unit: 'tsp' },
+    ],
+    steps: [
+      'Grate the garlic clove into a small bowl with a fine grater, then squeeze in 2 tablespoons of lemon juice and let it sit 2 minutes to soften the raw garlic bite.',
+      'Whisk in the mayonnaise, Greek yogurt, Worcestershire sauce, dry mustard, and black pepper until smooth.',
+      'Stir in the grated Parmesan. Thin with a teaspoon of water at a time until it pours slowly off a spoon.',
+      'Taste and add more lemon juice or pepper if you like. Makes about 3/4 cup; it keeps 5 days covered in the fridge.',
+    ],
+  },
+  {
+    id: 'r135', title: 'Peanut Sauce', mealType: 'side', protein: 'vegetarian',
+    prep: 10, cook: 0, servings: 6, emoji: '🥜', batch: true,
+    ingredients: [
+      { id: 'peanut-butter', amount: 0.5, unit: 'cup' },
+      { id: 'soy-sauce', amount: 2, unit: 'tbsp' },
+      { id: 'lime', amount: 1, unit: null, prep: 'juiced' },
+      { id: 'honey', amount: 1, unit: 'tbsp' },
+      { id: 'ginger', amount: 1, unit: 'tsp', prep: 'grated' },
+      { id: 'garlic', amount: 1, unit: 'clove', prep: 'grated' },
+      { id: 'sesame-oil', amount: 1, unit: 'tsp' },
+    ],
+    steps: [
+      'Put the peanut butter in a bowl. If it is stiff, warm it 15 seconds in the microwave so it stirs easily.',
+      'Whisk in the soy sauce, the lime juice, honey, sesame oil, ginger, and garlic until combined; it will look thick and grainy at first.',
+      'Whisk in 3 to 4 tablespoons of warm water, a spoonful at a time, until the sauce is smooth and pourable.',
+      'Taste and balance it: more lime for tang, honey for sweetness, soy sauce for salt. Makes about 3/4 cup; it thickens in the fridge, so loosen with warm water before using.',
+    ],
+  },
+  {
+    id: 'r136', title: 'Basil Pesto', mealType: 'side', protein: 'vegetarian',
+    prep: 10, cook: 3, servings: 6, emoji: '🌿', batch: true,
+    ingredients: [
+      { id: 'basil', amount: 2, unit: 'cup', prep: 'leaves, packed' },
+      { id: 'pine-nuts', amount: 0.25, unit: 'cup' },
+      { id: 'parmesan', amount: 0.5, unit: 'cup' },
+      { id: 'garlic', amount: 1, unit: 'clove' },
+      { id: 'olive-oil', amount: 0.5, unit: 'cup' },
+      { id: 'lemon', amount: 0.5, unit: null, prep: 'juiced' },
+      { id: 'salt', amount: 0.25, unit: 'tsp' },
+    ],
+    steps: [
+      'Toast the pine nuts in a dry skillet over medium-low heat for 3 minutes, shaking the pan, until golden in spots. Tip them onto a plate to cool.',
+      'Pulse the garlic and the toasted pine nuts in a food processor until finely chopped.',
+      'Add the basil, Parmesan, and salt and pulse to a coarse paste, scraping down the sides once.',
+      'With the machine running, pour in the olive oil in a thin stream until the pesto is smooth. Stir in the lemon juice and taste for salt. Makes about 3/4 cup; press plastic wrap on the surface so it stays green.',
+    ],
+  },
+  {
+    id: 'r137', title: 'Marinara Sauce', mealType: 'side', protein: 'vegetarian',
+    prep: 5, cook: 30, servings: 6, emoji: '🍅', batch: true,
+    ingredients: [
+      { id: 'diced-tomatoes', amount: 2, unit: 'can' },
+      { id: 'olive-oil', amount: 2, unit: 'tbsp' },
+      { id: 'yellow-onion', amount: 0.5, unit: null, prep: 'finely chopped' },
+      { id: 'garlic', amount: 3, unit: 'clove', prep: 'thinly sliced' },
+      { id: 'dried-oregano', amount: 1, unit: 'tsp' },
+      { id: 'red-pepper-flakes', amount: 1, unit: 'pinch' },
+      { id: 'basil', amount: 2, unit: 'tbsp', prep: 'chopped' },
+      { id: 'salt', amount: 0.5, unit: 'tsp' },
+    ],
+    steps: [
+      'Heat the olive oil in a saucepan over medium heat. Cook the onion 5 minutes, stirring, until soft and translucent.',
+      'Add the garlic, oregano, and red pepper flakes and stir 1 minute, until the garlic smells sweet but has not browned.',
+      'Pour in the diced tomatoes with their juice and the salt. Bring to a simmer, then lower the heat and simmer 25 minutes, stirring now and then, until thickened.',
+      'Crush the tomatoes with a potato masher, or blend briefly for a smooth sauce. Stir in the basil and taste for salt. Makes about 3 cups; it keeps 5 days in the fridge or 3 months frozen.',
+    ],
+  },
+  {
+    id: 'r138', title: 'Fresh Tomato Salsa', mealType: 'side', protein: 'vegetarian',
+    prep: 15, cook: 0, servings: 6, emoji: '🌶️', batch: true,
+    ingredients: [
+      { id: 'tomato', amount: 3, unit: null, prep: 'diced' },
+      { id: 'red-onion', amount: 0.5, unit: null, prep: 'finely diced' },
+      { id: 'jalapeno', amount: 1, unit: null, prep: 'seeded and minced' },
+      { id: 'cilantro', amount: 0.25, unit: 'cup', prep: 'chopped' },
+      { id: 'garlic', amount: 1, unit: 'clove', prep: 'minced' },
+      { id: 'lime', amount: 1, unit: null, prep: 'juiced' },
+      { id: 'salt', amount: 0.5, unit: 'tsp' },
+    ],
+    steps: [
+      'Dice the tomatoes and put them in a sieve over a bowl with the salt for 5 minutes so the excess juice drains off.',
+      'Meanwhile, finely dice the red onion, mince the jalapeno (keep the seeds if you like it hot), mince the garlic, and chop the cilantro.',
+      'Tip the drained tomatoes into a bowl and stir in the red onion, jalapeno, garlic, cilantro, and the lime juice.',
+      'Let the salsa sit 10 minutes for the flavors to meet, then taste for salt and lime. Makes about 1 1/2 cups; best the day it is made.',
+    ],
+  },
+  {
+    id: 'r139', title: 'Red Enchilada Sauce', mealType: 'side', protein: 'vegetarian',
+    prep: 5, cook: 15, servings: 4, emoji: '🫕', batch: true,
+    ingredients: [
+      { id: 'vegetable-oil', amount: 2, unit: 'tbsp' },
+      { id: 'all-purpose-flour', amount: 2, unit: 'tbsp' },
+      { id: 'chili-powder', amount: 2, unit: 'tbsp' },
+      { id: 'cumin', amount: 1, unit: 'tsp' },
+      { id: 'garlic-powder', amount: 0.5, unit: 'tsp' },
+      { id: 'dried-oregano', amount: 0.5, unit: 'tsp' },
+      { id: 'tomato-sauce', amount: 1, unit: 'cup' },
+      { id: 'vegetable-broth', amount: 1, unit: 'cup' },
+      { id: 'salt', amount: 0.25, unit: 'tsp' },
+    ],
+    steps: [
+      'Heat the vegetable oil in a small saucepan over medium heat. Whisk in the flour and cook 1 minute, whisking, until it smells toasty.',
+      'Whisk in the chili powder, cumin, garlic powder, and oregano and cook 30 seconds; watch closely so the spices do not scorch.',
+      'Slowly whisk in the tomato sauce and the vegetable broth until smooth, then add the salt.',
+      'Bring to a simmer and cook 10 minutes, whisking now and then, until it coats the back of a spoon. Taste for salt. Makes about 2 cups.',
+    ],
+  },
+  {
+    id: 'r140', title: 'Cocktail Sauce', mealType: 'side', protein: 'vegetarian',
+    prep: 5, cook: 0, servings: 4, emoji: '🍤', batch: true,
+    ingredients: [
+      { id: 'ketchup', amount: 0.5, unit: 'cup' },
+      { id: 'horseradish', amount: 1, unit: 'tbsp' },
+      { id: 'lemon', amount: 0.5, unit: null, prep: 'juiced' },
+      { id: 'hot-sauce', amount: 0.5, unit: 'tsp' },
+      { id: 'black-pepper', amount: 0.125, unit: 'tsp' },
+    ],
+    steps: [
+      'Spoon the ketchup into a small bowl.',
+      'Stir in the prepared horseradish, the lemon juice, the hot sauce, and the black pepper until evenly mixed.',
+      'Taste and adjust: more horseradish for a sharper kick, more lemon for brightness, more hot sauce for heat.',
+      'Chill at least 15 minutes so the horseradish mellows into the ketchup. Makes about 1/2 cup; it keeps 2 weeks covered in the fridge.',
+    ],
+  },
+  {
+    id: 'r141', title: 'Balsamic Glaze', mealType: 'side', protein: 'vegetarian',
+    prep: 1, cook: 20, servings: 4, emoji: '🍇', batch: true,
+    ingredients: [
+      { id: 'balsamic-vinegar', amount: 1, unit: 'cup' },
+      { id: 'honey', amount: 1, unit: 'tbsp' },
+    ],
+    steps: [
+      'Pour the balsamic vinegar into a small saucepan and stir in the honey. Open a window or turn on the fan; reducing vinegar is pungent.',
+      'Bring to a gentle boil over medium heat, then lower the heat so it simmers steadily without foaming over.',
+      'Simmer 15 to 20 minutes, stirring now and then, until reduced to about 1/4 cup and it coats the back of a spoon. It thickens a lot as it cools, so stop while it still runs.',
+      'Let it cool in the pan for 10 minutes, then pour into a jar. Makes about 1/4 cup; it keeps for weeks at room temperature.',
+    ],
+  },
 ];
 
 // Hand-written and hand-adapted recipes first, then the bulk CMU import (generated file).
