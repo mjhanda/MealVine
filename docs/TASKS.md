@@ -1,7 +1,7 @@
 # Dishcart — Task List (Mealime parity → launch)
 
 Written 2026-10-05 (as "MealApp"); T26–T35 added after the Dishcart / ads
-decisions; T40–T42 added 2026-10-18; T44–T46 added 2026-10-20 (#43 is a Dependabot PR). Each task follows
+decisions; T40–T42 added 2026-10-18; T44–T46 added 2026-10-20 (#43 is a Dependabot PR); T47–T48 added 2026-10-20. Each task follows
 `.github/ISSUE_TEMPLATE/ai-task.yml` and is mirrored as a GitHub issue in
 **mjhanda/MealVine** (issue #N = TN). This file is the planning snapshot; the
 issues are the source of truth.
@@ -20,7 +20,7 @@ issues are the source of truth.
   - T25 — name, publisher, and price decided; launch date open.
   - T32 — Maestro E2E passes on the iOS simulator and Android emulator;
     physical-device pass and purchase steps still open.
-- **Open:** T15, T26–T31, T33–T39, T42, T44–T46.
+- **Open:** T15, T26–T31, T33–T39, T42, T47, T48.
 - **Not needed for personal use:** T26–T31, T33, T34 (store, ads, legal).
 
 > T25's original context (paid app, "Mealime alternative" positioning) is
@@ -1090,6 +1090,58 @@ which answers the main complaint about how Mealime shut down. See T25.
   - [ ] Existing plans are unchanged after the update
 - **Test Strategy:** Unit tests for the homemade map, grocery expansion, and conflicts; migration test with a v1 fixture; catalog validation for r134–r141; visual check on the Android emulator.
 - **Dependencies / Blockers:** None
+- **Priority:** P1 - High
+- **Target date:** 2026-10-21
+- **Additional Notes:** —
+
+## T47 — Your own recipes: create and edit by hand
+
+- **Summary:** Add, edit, and delete your own recipes in the app (title, meal type, servings, times, emoji, ingredients, steps). They behave like catalog recipes: browse, search, favorite, add to the plan, grocery list, cooking mode.
+- **Requester:** Owner
+- **Assignee(s) / AI agent:** Claude Code
+- **Reviewer(s):** Owner
+- **End user(s):** Owner (personal use first)
+- **Context:** Owner request 2026-10-20. Mealime is shutting down and Dishcart replaces it for the owner, who has their own dishes. Today every recipe is compiled into the bundle (`src/data/recipes.ts`).
+- **Data Classification:** User-entered content; on-device only
+- **Notes on data handling:** New persisted store (`customRecipesStore`), included in backups (`STORES`/`MIGRATORS` in `backupActions.ts`). Never transmitted.
+- **In scope:**
+  - Persisted store of user recipes (ids `u-…`, never clashing with catalog ids), with `persistOptions` versioning and a migration test.
+  - `recipeById` and Browse/search/favorites/plan/grocery/cooking all see user recipes; a "My recipes" chip in Browse.
+  - Editor screen: ingredients picked from the catalog (search by name, unit limited to that ingredient's unit family) so the grocery list, nutrition, and allergy checks keep working; a free-text ingredient is allowed and goes to the grocery list's "Other" aisle as-is, marked "not checked for allergies".
+  - Recipe page shows "Your recipe" with Edit / Delete (delete uses the undo bar); deleting removes it from the plan via the undo-able path.
+- **Out of scope:** Photos; sharing recipes with others; editing catalog recipes (a "Duplicate and edit" could follow).
+- **Acceptance Criteria:**
+  - [ ] Create a recipe with catalog and free-text ingredients, add it to the plan, see it on the grocery list, cook it
+  - [ ] Allergy/diet checks apply to catalog ingredients; free-text ones are flagged as unchecked
+  - [ ] Survives app restart and backup → restore
+- **Test Strategy:** Store + migration tests; util tests for validation and catalog integration; a11y static test; emulator walkthrough.
+- **Dependencies / Blockers:** None
+- **Priority:** P1 - High
+- **Target date:** 2026-10-21
+- **Additional Notes:** Prerequisite for T48.
+
+## T48 — Import a recipe from a website (personal use)
+
+- **Summary:** Paste a recipe page's link; Dishcart reads the page's recipe data, maps the ingredients to the catalog, and opens the T47 editor pre-filled so you can fix anything before saving. Also accept pasted recipe text when a site can't be read.
+- **Requester:** Owner
+- **Assignee(s) / AI agent:** Claude Code
+- **Reviewer(s):** Owner
+- **End user(s):** Owner (personal use)
+- **Context:** Owner request 2026-10-20: "pull in recipes from a site for personal use." Most recipe sites publish schema.org `Recipe` JSON-LD (name, recipeIngredient, recipeInstructions, recipeYield, times). For personal use only: imported recipes stay on the device and are never redistributed.
+- **Data Classification:** Third-party copyrighted content, saved privately on the user's device
+- **Notes on data handling:** First network call in the app: one user-initiated GET to the URL the user pasted; nothing about the user is sent. Per `.claude/rules/security.md` rule 4, update `docs/project/security.md` and the rules file (data in transit, the URL fetch) in the same change. Keep the source URL and site name on the recipe as credit.
+- **In scope:**
+  - Pure parser in `src/utils/` for JSON-LD `Recipe` (including `@graph`, HowToStep/HowToSection), ingredient-line parsing (amount, unit, name) and catalog matching, reusing the unit rules; well tested against saved HTML fixtures.
+  - Fetch on native (iOS/Android); on web, where browsers block most cross-site reads, offer paste-the-text instead.
+  - "Paste recipe text" fallback using the same line parser.
+  - Unmatched ingredients become free-text lines (T47 rules) for the user to map or keep.
+- **Out of scope:** Scraping sites without structured data beyond the paste fallback; bulk import; sharing imported recipes; any server.
+- **Acceptance Criteria:**
+  - [ ] A typical recipe URL imports into the editor with title, servings, ingredients (most matched), and steps
+  - [ ] A page without recipe data shows a clear message and the paste option
+  - [ ] Security docs updated for the new network call
+- **Test Strategy:** Parser unit tests with fixture pages (at least 3 structures); manual import on the Android emulator.
+- **Dependencies / Blockers:** T47
 - **Priority:** P1 - High
 - **Target date:** 2026-10-21
 - **Additional Notes:** —
