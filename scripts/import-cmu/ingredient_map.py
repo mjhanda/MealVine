@@ -184,3 +184,19 @@ GROUPS.pop("instant-coffee-x"); GROUPS.pop("brown-sugar-x")
 MAP = {name: ing_id for ing_id, names in GROUPS.items() for name in names}
 MAP.update({"palm sugar": "brown-sugar", "jaggery": "brown-sugar", "instant espresso coffee powder": "instant-coffee",
             "crumbled bacon": "bacon", "bacon bit": "bacon", "drop pepper sauce": "hot-sauce"})
+
+# Second pass (2026-10-18): spelling variants and parse leftovers from the review queue that are
+# plainly an ingredient we already stock. Only unambiguous ones; anything that's a different product
+# (white bread, fruit juice, concentrate, milk powder) stays unmapped.
+MAP.update({
+    "cantaloupe": "cantaloupe", "mandarin orange": "orange", "broccoli flowerette": "broccoli-florets",
+    "quick rise instant yeast": "yeast", "whole-what flour": "whole-wheat-flour", "wholemeal": "whole-wheat-flour",
+    "folled oats": "rolled-oats", "cooked brown rice": "cooked-brown-rice", "extra-ripe banana": "banana",
+    "fully banana": "banana", "tap ground cinnamon": "cinnamon", "tap cinnamon": "cinnamon",
+    "pummpkin pie spice": "pumpkin-pie-spice", "egg unbeten": "eggs", "tablespon sweet butter": "butter",
+    "and cooled salted butter": "butter", "sweet butter": "butter", "yogourt": "greek-yogurt",
+    "evap skim milk": "evaporated-milk", "baking bran": "wheat-bran", "baking bran flakes": "wheat-bran",
+    "german chocolate": "dark-chocolate-chips", "german' sweet chocolate": "dark-chocolate-chips",
+    "dark coating chocolate": "dark-chocolate-chips", "shortening and": "shortening",
+    "tahini sesame seed": "tahini", "loosely flour": "all-purpose-flour", "flour sieved with": "all-purpose-flour",
+})

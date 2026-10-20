@@ -282,6 +282,16 @@ export const NUTRIENTS_PER_100G: Record<string, NutrientValues> = {
     satFat: 0.03,
     sugar: 1.18,
   },
+  "bran-cereal": {
+    protein: 9.9,
+    fat: 2.1,
+    carbs: 80.5,
+    kcal: 328,
+    fiber: 18.3,
+    sodium: 540,
+    satFat: 0.4,
+    sugar: 18.6,
+  },
   brandy: {
     protein: 0,
     fat: 0,
@@ -421,6 +431,16 @@ export const NUTRIENTS_PER_100G: Record<string, NutrientValues> = {
     sodium: 2348,
     satFat: 0.23,
     sugar: 0.41,
+  },
+  cardamom: {
+    protein: 10.76,
+    fat: 6.7,
+    carbs: 68.47,
+    kcal: 311,
+    fiber: 28,
+    sodium: 18,
+    satFat: 0.68,
+    sugar: 0,
   },
   carrot: {
     protein: 0.93,
@@ -1472,6 +1492,16 @@ export const NUTRIENTS_PER_100G: Record<string, NutrientValues> = {
     satFat: 0.22,
     sugar: 4.91,
   },
+  marjoram: {
+    protein: 12.66,
+    fat: 7.04,
+    carbs: 60.56,
+    kcal: 271,
+    fiber: 40.3,
+    sodium: 77,
+    satFat: 0.53,
+    sugar: 4.09,
+  },
   mayonnaise: {
     protein: 0.96,
     fat: 74.85,
@@ -1591,6 +1621,16 @@ export const NUTRIENTS_PER_100G: Record<string, NutrientValues> = {
     sodium: 16,
     satFat: 25.94,
     sugar: 2.99,
+  },
+  "oat-bran": {
+    protein: 17.3,
+    fat: 7.03,
+    carbs: 66.22,
+    kcal: 246,
+    fiber: 15.4,
+    sodium: 4,
+    satFat: 1.33,
+    sugar: 1.45,
   },
   "olive-oil": {
     protein: 0,
@@ -2929,6 +2969,16 @@ export const INGREDIENT_SOURCES: Record<string, IngredientSource> = {
       },
     ],
   },
+  "bran-cereal": {
+    basis: "usda",
+    foods: [
+      {
+        fdcId: 173888,
+        description: "Cereals ready-to-eat, POST Bran Flakes",
+        weight: 1,
+      },
+    ],
+  },
   brandy: {
     basis: "proxy",
     note: "Distilled spirits, 86 proof",
@@ -3073,6 +3123,17 @@ export const INGREDIENT_SOURCES: Record<string, IngredientSource> = {
         weight: 1,
       },
     ],
+  },
+  cardamom: {
+    basis: "usda",
+    foods: [
+      {
+        fdcId: 170919,
+        description: "Spices, cardamom",
+        weight: 1,
+      },
+    ],
+    missing: ["sugar"],
   },
   carrot: {
     basis: "usda",
@@ -4186,6 +4247,16 @@ export const INGREDIENT_SOURCES: Record<string, IngredientSource> = {
       },
     ],
   },
+  marjoram: {
+    basis: "usda",
+    foods: [
+      {
+        fdcId: 170928,
+        description: "Spices, marjoram, dried",
+        weight: 1,
+      },
+    ],
+  },
   mayonnaise: {
     basis: "usda",
     foods: [
@@ -4324,6 +4395,16 @@ export const INGREDIENT_SOURCES: Record<string, IngredientSource> = {
       {
         fdcId: 171326,
         description: "Spices, nutmeg, ground",
+        weight: 1,
+      },
+    ],
+  },
+  "oat-bran": {
+    basis: "usda",
+    foods: [
+      {
+        fdcId: 168872,
+        description: "Oat bran, raw",
         weight: 1,
       },
     ],

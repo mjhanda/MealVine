@@ -1,17 +1,27 @@
 # Dishcart — Task List (Mealime parity → launch)
 
 Written 2026-10-05 (as "MealApp"); T26–T35 added after the Dishcart / ads
-decisions. Each task follows `.github/ISSUE_TEMPLATE/ai-task.yml` and is
-mirrored as a GitHub issue in **mjhanda/DishCart** (issue #N = TN). This file
-is the planning snapshot; the issues are the source of truth.
+decisions; T40–T42 added 2026-10-18. Each task follows
+`.github/ISSUE_TEMPLATE/ai-task.yml` and is mirrored as a GitHub issue in
+**mjhanda/MealVine** (issue #N = TN). This file is the planning snapshot; the
+issues are the source of truth.
 
-### Status (2026-10-05)
+### Status (2026-10-20)
 
-- **Done:** T01–T14, T18, T19, T22, T24 (code in `main`).
-- **Partly done:** T20 (CI workflow waits for the `workflow` token scope),
-  T21 (config/docs done; needs assets, accounts), T23 (needs device pass),
-  T25 (name/publisher/price decided; launch date open).
-- **Open:** T15–T17, T26–T39 (T37–T39 added 2026-10-14: grocery meal links and substitutes).
+- **Done:** T01–T14, T17–T19, T22–T24 (code in `main`, issues closed).
+- **Done 2026-10-18:** T40 (detailed steps for the recipes we wrote),
+  T41 (second archive pass: more recipes pulled from the review queue).
+- **Partly done:**
+  - T16 — 291 recipes, 76 dinners (54 original, 11 adapted, 11 archive); the
+    ≥ 20 dinners-per-diet target and the owner taste check are still open.
+  - T20 — tests and lint run locally; `.github/workflows/ci.yml` was never
+    pushed (needs the `workflow` token scope), so there is no CI yet.
+  - T21 — config/docs done; needs assets and store accounts.
+  - T25 — name, publisher, and price decided; launch date open.
+  - T32 — Maestro E2E passes on the iOS simulator and Android emulator;
+    physical-device pass and purchase steps still open.
+- **Open:** T15, T26–T31, T33–T39, T42.
+- **Not needed for personal use:** T26–T31, T33, T34 (store, ads, legal).
 
 > T25's original context (paid app, "Mealime alternative" positioning) is
 > superseded: **Dishcart is free with ads; $0.99/month removes ads.**
@@ -815,12 +825,12 @@ which answers the main complaint about how Mealime shut down. See T25.
 
 ## T35 — Retire the old element-dot/MealApp repository
 
-- **Summary:** After the move to mjhanda/DishCart is verified, archive the old repo so nobody works in two places.
+- **Summary:** After the move to mjhanda/MealVine is verified, archive the old repo so nobody works in two places.
 - **Requester:** Owner
 - **Assignee(s) / AI agent:** Claude Code
 - **Reviewer(s):** Owner
 - **End user(s):** Contributors
-- **Context:** Full history was pushed to mjhanda/DishCart on 2026-10-05 and issues were recreated there. The old repo still has the original issue threads.
+- **Context:** Full history was pushed to mjhanda/MealVine on 2026-10-05 and issues were recreated there. The old repo still has the original issue threads.
 - **Data Classification:** No sensitive data involved
 - **Notes on data handling:** —
 - **In scope:** Add a README pointer to the new repo; archive element-dot/MealApp (reversible); remove the `old-origin` remote locally.
@@ -934,3 +944,75 @@ which answers the main complaint about how Mealime shut down. See T25.
 - **Priority:** P2 - Medium
 - **Target date:** 2026-11-04
 - **Additional Notes:** Keep it one tap from the line; Mealime has no substitutes, so this is a differentiator.
+
+## T40 — Detailed cooking steps for the recipes we wrote
+
+- **Summary:** Rewrite the steps of all 133 Dishcart recipes (originals r1–r120 and adapted r121–r133) into full methods a cook can follow in cooking mode, and add a test so they can't slide back.
+- **Requester:** Owner
+- **Assignee(s) / AI agent:** Claude Code
+- **Reviewer(s):** Owner
+- **End user(s):** Everyone cooking from the app
+- **Context:** Owner request 2026-10-18: "preparation instructions need to be more detailed, specifically for the items that you made." Many methods were 2–3 lines or said "cook according to package directions", which cooking mode can't time or split.
+- **Data Classification:** No sensitive data involved
+- **Notes on data handling:** —
+- **In scope:**
+  - New step text for r1–r133 that names each step's ingredients and times (cooking mode derives timers and per-step ingredients from the text).
+  - Fix data errors found along the way (r97 asked for 12 bunches of asparagus; now 1).
+  - Guard test in `src/data/__tests__/recipes.test.ts`: our recipes have ≥ 4 steps and ≥ 250 characters, and never say "package directions".
+- **Out of scope:** Archive `as-posted` recipes (their text is the poster's; see T36).
+- **Acceptance Criteria:**
+  - [x] Every original and adapted recipe passes the guard test
+  - [x] Cooking-mode tests still pass
+- **Test Strategy:** `npm test` (catalog + cooking tests); owner spot-check in cooking mode.
+- **Dependencies / Blockers:** None
+- **Priority:** P1 - High
+- **Target date:** 2026-10-18
+- **Additional Notes:** Done 2026-10-18.
+
+## T41 — Second archive pass: recover more recipes from the review queue
+
+- **Summary:** Pull more CMU Recipe Archive recipes in by mapping spelling variants and parse leftovers in the review queue to ingredients we already stock, plus four catalog additions with USDA nutrition.
+- **Requester:** Owner
+- **Assignee(s) / AI agent:** Claude Code
+- **Reviewer(s):** Owner
+- **End user(s):** Everyone browsing recipes
+- **Context:** Owner request 2026-10-18: "pull in the other menu items." The review queue (`docs/recipes/cmu-import-review.csv`) had 175 recipes blocked only on unknown ingredient names, many of them typos ("whole-what flour", "yogourt").
+- **Data Classification:** No sensitive data involved
+- **Notes on data handling:** Same rules as the first import: credit the poster, no email addresses, skip cookbook/brand/repost sources.
+- **In scope:**
+  - Unambiguous aliases in `scripts/import-cmu/ingredient_map.py` (different products, e.g. fruit juice concentrate, stay unmapped).
+  - Catalog additions now in use: oat bran, cardamom, bran flakes cereal, dried marjoram — with USDA mappings, grams per unit, and conservative allergen tags.
+  - Regenerate `importedRecipes.ts`, the import report, and `nutritionData.ts`.
+- **Out of scope:** Recipes blocked for other reasons (reposts, interleaved methods, missing main ingredient).
+- **Acceptance Criteria:**
+  - [x] Imported recipes 142 → 158 (dessert 57, breakfast 51, side 37, dinner 11, snack 2); catalog 291
+  - [x] Every new ingredient has nutrition data; typecheck, lint, and tests pass
+- **Test Strategy:** `npm test` (catalog validation, nutrition coverage, no-email check).
+- **Dependencies / Blockers:** None
+- **Priority:** P2 - Medium
+- **Target date:** 2026-10-20
+- **Additional Notes:** Done 2026-10-20.
+
+## T42 — Personal deployment: get Dishcart onto the owner's own devices
+
+- **Summary:** Make the app usable day to day by the owner without the App Store or Play Store — e.g. a hosted web build (installable as a home-screen app) or an EAS internal-distribution build.
+- **Requester:** Owner
+- **Assignee(s) / AI agent:** Claude Code
+- **Reviewer(s):** Owner
+- **End user(s):** Owner (others welcome later)
+- **Context:** Owner, 2026-10-18: "I want to get it deployed at least for myself to use. it's really a personal app and if others want to use it, great!" Store tasks (T26–T31, T33, T34) aren't needed for this. All data is on-device, so a static web host works; no hosting project exists yet.
+- **Data Classification:** No sensitive data involved (nothing leaves the device; allergies stay in local storage)
+- **Notes on data handling:** A web build stores data in the browser's local storage per device; use backup/restore to move it.
+- **In scope:**
+  - Owner picks the route (static web hosting vs. EAS internal build).
+  - Production web export (`npx expo export --platform web`) checked in a browser, plus hosting config.
+  - Deploy, after the owner's go-ahead to create the hosting project.
+- **Out of scope:** Store listings, ads, subscription setup.
+- **Acceptance Criteria:**
+  - [ ] Owner can open Dishcart on their phone and their data survives a reload
+  - [ ] Deploy steps written in `docs/release/`
+- **Test Strategy:** Manual check on the owner's phone; Maestro web/device flow where practical.
+- **Dependencies / Blockers:** Owner's choice of route and approval to create the hosting project.
+- **Priority:** P1 - High
+- **Target date:** 2026-10-25
+- **Additional Notes:** —

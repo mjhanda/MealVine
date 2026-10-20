@@ -61,6 +61,16 @@ describe('recipe catalog integrity', () => {
     recipe.ingredients.forEach((ing) => expect(ing.amount).toBeGreaterThan(0));
   });
 
+  // Recipes we wrote (originals and hand-adapted) are cooked from in cooking mode: full methods,
+  // never "cook according to package directions".
+  it('our own recipes have detailed steps', () => {
+    const ours = RECIPES.filter((r) => !r.source || r.source.kind === 'adapted');
+    const thin = ours.filter((r) => r.steps.length < 4 || r.steps.join(' ').length < 250).map((r) => r.id);
+    const vague = ours.filter((r) => r.steps.some((s) => /package directions|cook the rice\.|cook the soba,/i.test(s)));
+    expect(thin).toEqual([]);
+    expect(vague.map((r) => r.id)).toEqual([]);
+  });
+
   it('protein label matches ingredients', () => {
     const tagsOf = (r: (typeof RECIPES)[number]) => new Set(r.ingredients.flatMap((i) => INGREDIENTS[i.id]?.tags ?? []));
     const wrong = RECIPES.filter((r) => {

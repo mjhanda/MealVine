@@ -17,11 +17,9 @@ Hummus,appetizers/dip,Peter Barker,https://www.cs.cmu.edu/~mjw/recipes/appetizer
 Refried Bean Dip,appetizers/dip,Stephanie da Silva,https://www.cs.cmu.edu/~mjw/recipes/appetizers/dip/mp-diverse-dips-coll.html#14,reposted from another source (not the poster's own recipe)
 Soft Cheese Dip,appetizers/dip,Stephanie da Silva,https://www.cs.cmu.edu/~mjw/recipes/appetizers/dip/mp-diverse-dips-coll.html#15,reposted from another source (not the poster's own recipe)
 Tsatsiki,appetizers/dip,Evangelos Doussis,https://www.cs.cmu.edu/~mjw/recipes/appetizers/dip/tsatsiki.html,method text is interleaved with the ingredient list; unmapped: flavour yogurt; unmapped: garlic death; unparsed line: assembly; unparsed line: mix first four ingredients
-90 Minute Cinnamon Rolls,bread,a rec.food.cooking contributor,https://www.cs.cmu.edu/~mjw/recipes/bread/90min-cin-rolls.html,unmapped: quick rise instant yeast
 Basic Country Loaf,bread,Stephanie da Silva,https://www.cs.cmu.edu/~mjw/recipes/bread/basic-country-loaf.html,reposted from another source (not the poster's own recipe)
 Corn pone,bread,kjalcock,https://www.cs.cmu.edu/~mjw/recipes/bread/corn-pone.html,method text is interleaved with the ingredient list; unparsed line: Mix in; unparsed line: Rub in
 Dusty Potato Bread,bread,Emily L.,https://www.cs.cmu.edu/~mjw/recipes/bread/dusty-potato-bread.html,method text is interleaved with the ingredient list; title names potato but the list lacks it
-Fluffy Biscuits,bread,Sarah Henderson,https://www.cs.cmu.edu/~mjw/recipes/bread/fluffy-biscuits.html,unmapped: shortening and
 Fried Biscuits,bread,Rick Clark,https://www.cs.cmu.edu/~mjw/recipes/bread/fried-biscuits.html,unparsed line: or 1/6 cup yeast
 High Altitude Zucchinni Bread,bread,Denise A. Hunter,https://www.cs.cmu.edu/~mjw/recipes/bread/hi-alt-zuc-bread.html,unmapped: feet okay
 Lebanese thyme bread,bread,Sophie Laplante,https://www.cs.cmu.edu/~mjw/recipes/bread/lebanese-thyme-bread.html,title names dried-thyme but the list lacks it; unmapped: zaatar heaped thyme
@@ -52,12 +50,10 @@ Bran,bread/muffin,a rec.food.cooking contributor,https://www.cs.cmu.edu/~mjw/rec
 Bran and Raisin,bread/muffin,a rec.food.cooking contributor,https://www.cs.cmu.edu/~mjw/recipes/bread/muffin/sds-muffin-coll-5.html#32,title names wheat-bran but the list lacks it; unmapped: sunflower
 Breakfast Muesli,bread/muffin,a rec.food.cooking contributor,https://www.cs.cmu.edu/~mjw/recipes/bread/muffin/sds-muffin-coll-5.html#36,method text is interleaved with the ingredient list; method uses milk not in the list; unmapped: untoasted muesli
 Calico Bell Pepper,bread/muffin,a rec.food.cooking contributor,https://www.cs.cmu.edu/~mjw/recipes/bread/muffin/sds-muffin-coll-2.html#8,unmapped: red
-Cardamom Lemon Peel,bread/muffin,a rec.food.cooking contributor,https://www.cs.cmu.edu/~mjw/recipes/bread/muffin/sds-muffin-coll-4.html#25,unmapped: whole-what flour
 Carrot Raisin,bread/muffin,a rec.food.cooking contributor,https://www.cs.cmu.edu/~mjw/recipes/bread/muffin/sds-muffin-coll-1.html#19,unmapped: creamota; unparsed line: CARROT 'n RAISIN MUFFINS (3); unparsed line: sunflower seeds for topping
 Cheese & Bacon,bread/muffin,a rec.food.cooking contributor,https://www.cs.cmu.edu/~mjw/recipes/bread/muffin/sds-muffin-coll-4.html#4,method cooks bacon but the list has no meat or fish; title names bacon but the list lacks it; unmapped: crisp bacon
 Cheesy Ham,bread/muffin,a rec.food.cooking contributor,https://www.cs.cmu.edu/~mjw/recipes/bread/muffin/sds-muffin-coll-5.html#38,unmapped: b
 Chocolate Raspberry,bread/muffin,a rec.food.cooking contributor,https://www.cs.cmu.edu/~mjw/recipes/bread/muffin/sds-muffin-coll-2.html#31,title names dark-chocolate-chips but the list lacks it; title names raspberries but the list lacks it; unmapped: cherry juice and milk combined; unmapped: maraschino cherry up
-Christmas Day,bread/muffin,a rec.food.cooking contributor,https://www.cs.cmu.edu/~mjw/recipes/bread/muffin/sds-muffin-coll-4.html#18,unmapped: baking bran flakes
 Corn & Bacon,bread/muffin,a rec.food.cooking contributor,https://www.cs.cmu.edu/~mjw/recipes/bread/muffin/sds-muffin-coll-1.html#25,title names corn-kernels but the list lacks it; unmapped: creamed corn; unmapped: grain mustard
 Corn & Cheese,bread/muffin,a rec.food.cooking contributor,https://www.cs.cmu.edu/~mjw/recipes/bread/muffin/sds-muffin-coll-2.html#32,title names cheddar but the list lacks it; title names corn-kernels but the list lacks it; unmapped: choc bit; unmapped: raspberry syrup
 Cornbread,bread/muffin,a rec.food.cooking contributor,https://www.cs.cmu.edu/~mjw/recipes/bread/muffin/sds-muffin-coll-1.html#1,"method text is interleaved with the ingredient list; method uses cumin not in the list; method uses parsley not in the list; unparsed line: lightly beaten  3/4 oz butter, melted"
@@ -65,23 +61,22 @@ Cornmeal,bread/muffin,a rec.food.cooking contributor,https://www.cs.cmu.edu/~mjw
 Cranberry Orange,bread/muffin,a rec.food.cooking contributor,https://www.cs.cmu.edu/~mjw/recipes/bread/muffin/sds-muffin-coll-3.html#10,title names cranberries but the list lacks it; unmapped: cranberry sauce
 Fat-free Blueberry,bread/muffin,a rec.food.cooking contributor,https://www.cs.cmu.edu/~mjw/recipes/bread/muffin/sds-muffin-coll-5.html#3,method text is interleaved with the ingredient list; method uses rolled-oats not in the list; title names blueberries but the list lacks it; unmapped: fresh or frozen blueberries; unmapped: oat flour; unparsed line: 1+1/2 tsp baking powder; unparsed line: 1+1/4 cups cake flour; unparsed line: preheat oven to 375
 Fat-free Pumpkin,bread/muffin,a rec.food.cooking contributor,https://www.cs.cmu.edu/~mjw/recipes/bread/muffin/sds-muffin-coll-5.html#5,method text is interleaved with the ingredient list; unmapped: prune puree; unparsed line: 1+1/2 tsp cinnamon; unparsed line: 1+1/4 cup flour; unparsed line: preheat oven to 400
-Fatfree Fruit Muffins,bread/muffin,a rec.food.cooking contributor,https://www.cs.cmu.edu/~mjw/recipes/bread/muffin/fatfree-fruit.html,method text is interleaved with the ingredient list; unmapped: defrosted apple juice concentrate; unmapped: evap skim milk; unmapped: fruit; unmapped: nut if you like; unparsed line: mix dry ingredients
-Fatfree Fruit Muffins,bread/muffin,a rec.food.cooking contributor,https://www.cs.cmu.edu/~mjw/recipes/bread/muffin/sds-muffin-coll-3.html#38,unmapped: defrosted apple juice concentrate; unmapped: evap skim milk; unmapped: fruit; unmapped: nut if you like
+Fatfree Fruit Muffins,bread/muffin,a rec.food.cooking contributor,https://www.cs.cmu.edu/~mjw/recipes/bread/muffin/fatfree-fruit.html,method text is interleaved with the ingredient list; unmapped: defrosted apple juice concentrate; unmapped: fruit; unmapped: nut if you like; unparsed line: mix dry ingredients
+Fatfree Fruit Muffins,bread/muffin,a rec.food.cooking contributor,https://www.cs.cmu.edu/~mjw/recipes/bread/muffin/sds-muffin-coll-3.html#38,unmapped: defrosted apple juice concentrate; unmapped: fruit; unmapped: nut if you like
 Feijoa & Ginger,bread/muffin,a rec.food.cooking contributor,https://www.cs.cmu.edu/~mjw/recipes/bread/muffin/sds-muffin-coll-3.html#20,title names ginger but the list lacks it; unmapped: feijoa
 Fig & Orange,bread/muffin,a rec.food.cooking contributor,https://www.cs.cmu.edu/~mjw/recipes/bread/muffin/sds-muffin-coll-3.html#21,title names orange but the list lacks it; unmapped: fig
-Four Chip Double Nut,bread/muffin,a rec.food.cooking contributor,https://www.cs.cmu.edu/~mjw/recipes/bread/muffin/sds-muffin-coll-3.html#22,unmapped: and cooled salted butter; unmapped: butterscotch chips; unmapped: chip double-nut muffin
+Four Chip Double Nut,bread/muffin,a rec.food.cooking contributor,https://www.cs.cmu.edu/~mjw/recipes/bread/muffin/sds-muffin-coll-3.html#22,unmapped: butterscotch chips; unmapped: chip double-nut muffin
 Fudge Filled Peanut Butter,bread/muffin,a rec.food.cooking contributor,https://www.cs.cmu.edu/~mjw/recipes/bread/muffin/sds-muffin-coll-3.html#23,unparsed line: without skins (optional)
 Hawaiian,bread/muffin,a rec.food.cooking contributor,https://www.cs.cmu.edu/~mjw/recipes/bread/muffin/sds-muffin-coll-3.html#24,method uses milk not in the list; method uses vanilla-extract not in the list
-Healthy Heart,bread/muffin,a rec.food.cooking contributor,https://www.cs.cmu.edu/~mjw/recipes/bread/muffin/sds-muffin-coll-3.html#25,unmapped: folled oats
 Heavenly Maple Syrup,bread/muffin,a rec.food.cooking contributor,https://www.cs.cmu.edu/~mjw/recipes/bread/muffin/sds-muffin-coll-1.html#39,method text is interleaved with the ingredient list; method uses butter not in the list; method uses powdered-sugar not in the list
-High Fiber,bread/muffin,a rec.food.cooking contributor,https://www.cs.cmu.edu/~mjw/recipes/bread/muffin/sds-muffin-coll-3.html#26,unmapped: baking bran; unmapped: fruit juice
+High Fiber,bread/muffin,a rec.food.cooking contributor,https://www.cs.cmu.edu/~mjw/recipes/bread/muffin/sds-muffin-coll-3.html#26,unmapped: fruit juice
 Honey Lemon,bread/muffin,a rec.food.cooking contributor,https://www.cs.cmu.edu/~mjw/recipes/bread/muffin/sds-muffin-coll-2.html#36,title names honey but the list lacks it; title names lemon but the list lacks it; unmapped: brown rice flour; unmapped: buckwheat flour; unmapped: dairy-free; unmapped: rice wholegrain flakes; unmapped: soy milk
 Hot Cross,bread/muffin,a rec.food.cooking contributor,https://www.cs.cmu.edu/~mjw/recipes/bread/muffin/sds-muffin-coll-3.html#30,method text is interleaved with the ingredient list; method uses powdered-sugar not in the list; unmapped: and cooled butter
 Ice Cream,bread/muffin,a rec.food.cooking contributor,https://www.cs.cmu.edu/~mjw/recipes/bread/muffin/sds-muffin-coll-2.html#20,unmapped: buckwheat flour; unmapped: mixed fruit; unmapped: rice flour
 Irish,bread/muffin,a rec.food.cooking contributor,https://www.cs.cmu.edu/~mjw/recipes/bread/muffin/sds-muffin-coll-2.html#37,unmapped: crystallised lemon peel; unmapped: instant non-fat milk powder
 Italian Pizza,bread/muffin,a rec.food.cooking contributor,https://www.cs.cmu.edu/~mjw/recipes/bread/muffin/sds-muffin-coll-2.html#21,method uses vegetable-oil not in the list
 Jalapeno Corn,bread/muffin,a rec.food.cooking contributor,https://www.cs.cmu.edu/~mjw/recipes/bread/muffin/sds-muffin-coll-4.html#23,method text is interleaved with the ingredient list; method uses jalapeno not in the list; title names corn-kernels but the list lacks it; title names jalapeno but the list lacks it; unmapped: stone ground cornmeal
-Kiwifruit,bread/muffin,a rec.food.cooking contributor,https://www.cs.cmu.edu/~mjw/recipes/bread/muffin/sds-muffin-coll-1.html#14,unmapped: kiwifruit-peeled; unmapped: wholemeal
+Kiwifruit,bread/muffin,a rec.food.cooking contributor,https://www.cs.cmu.edu/~mjw/recipes/bread/muffin/sds-muffin-coll-1.html#14,unmapped: kiwifruit-peeled
 Lemon Coconut,bread/muffin,a rec.food.cooking contributor,https://www.cs.cmu.edu/~mjw/recipes/bread/muffin/sds-muffin-coll-2.html#22,kalamata-olives: no conversion count→volume; title names lemon but the list lacks it; title names shredded-coconut but the list lacks it; unmapped: low fat cheese; unmapped: spicy salami; unparsed line: grated cheese for topping
 Lemon Spiced,bread/muffin,a rec.food.cooking contributor,https://www.cs.cmu.edu/~mjw/recipes/bread/muffin/sds-muffin-coll-1.html#24,method text is interleaved with the ingredient list; method uses cinnamon not in the list
 "Lemon, Lime & Orange",bread/muffin,a rec.food.cooking contributor,https://www.cs.cmu.edu/~mjw/recipes/bread/muffin/sds-muffin-coll-2.html#23,title names lemon but the list lacks it; title names lime but the list lacks it; title names orange but the list lacks it
@@ -90,9 +85,7 @@ Mincemeat Rum,bread/muffin,a rec.food.cooking contributor,https://www.cs.cmu.edu
 Moist Date,bread/muffin,a rec.food.cooking contributor,https://www.cs.cmu.edu/~mjw/recipes/bread/muffin/sds-muffin-coll-3.html#36,method uses dates not in the list; method uses lemon not in the list; title names dates but the list lacks it; unmapped: date filling
 Morning Glory Muffins,bread/muffin,Mostly Harmless,https://www.cs.cmu.edu/~mjw/recipes/bread/muffin/morning-glory-muffin.html,unmapped: each coconut
 Mother Milner's Old-Fashioned Bran,bread/muffin,a rec.food.cooking contributor,https://www.cs.cmu.edu/~mjw/recipes/bread/muffin/sds-muffin-coll-1.html#40,method text is interleaved with the ingredient list; method uses all-purpose-flour not in the list; method uses baking-powder not in the list; unmapped: sour
-Muffins (2 of 5),bread/muffin,a rec.food.cooking contributor,https://www.cs.cmu.edu/~mjw/recipes/bread/muffin/sds-muffin-coll-2.html#43,unmapped: flour sieved with
 Nashi & Apricot Yoghurt,bread/muffin,a rec.food.cooking contributor,https://www.cs.cmu.edu/~mjw/recipes/bread/muffin/sds-muffin-coll-5.html#10,title names greek-yogurt but the list lacks it; unmapped: apricot yogurt; unmapped: nashi
-Nutty Banana Jam Muffins,bread/muffin,Mostly Harmless,https://www.cs.cmu.edu/~mjw/recipes/bread/muffin/nutty-banana-jam.html,unmapped: extra-ripe banana; unmapped: tap ground cinnamon
 Nutty Chocolate & Marshmallow,bread/muffin,a rec.food.cooking contributor,https://www.cs.cmu.edu/~mjw/recipes/bread/muffin/sds-muffin-coll-3.html#7,title names dark-chocolate-chips but the list lacks it; unmapped: cooking chocolate; unmapped: marshmallow
 Oh So Nice,bread/muffin,a rec.food.cooking contributor,https://www.cs.cmu.edu/~mjw/recipes/bread/muffin/sds-muffin-coll-3.html#8,unmapped: malt extract
 Onion Cheese,bread/muffin,a rec.food.cooking contributor,https://www.cs.cmu.edu/~mjw/recipes/bread/muffin/sds-muffin-coll-2.html#13,method text is interleaved with the ingredient list; method uses butter not in the list; method uses cheddar not in the list; method uses milk not in the list; method uses poppy-seeds not in the list; title names cheddar but the list lacks it
@@ -104,13 +97,11 @@ Peach Gingerbread,bread/muffin,a rec.food.cooking contributor,https://www.cs.cmu
 Peanut Butter & Jelly,bread/muffin,a rec.food.cooking contributor,https://www.cs.cmu.edu/~mjw/recipes/bread/muffin/sds-muffin-coll-3.html#13,method text is interleaved with the ingredient list; method uses butter not in the list; method uses peanuts not in the list; title names jam but the list lacks it; unparsed line: strawberry jam for the middle
 Pearadise,bread/muffin,a rec.food.cooking contributor,https://www.cs.cmu.edu/~mjw/recipes/bread/muffin/sds-muffin-coll-5.html#15,method uses milk not in the list
 Pina Colada,bread/muffin,a rec.food.cooking contributor,https://www.cs.cmu.edu/~mjw/recipes/bread/muffin/sds-muffin-coll-3.html#17,unmapped: rum extract
-Plantation Herb,bread/muffin,a rec.food.cooking contributor,https://www.cs.cmu.edu/~mjw/recipes/bread/muffin/sds-muffin-coll-5.html#16,unmapped: cooked brown rice
 Provolone Rye,bread/muffin,a rec.food.cooking contributor,https://www.cs.cmu.edu/~mjw/recipes/bread/muffin/sds-muffin-coll-4.html#19,unmapped: caraway seeds
 Pumpernickel Raisin,bread/muffin,a rec.food.cooking contributor,https://www.cs.cmu.edu/~mjw/recipes/bread/muffin/sds-muffin-coll-4.html#26,title names raisins but the list lacks it
 Pumpkin,bread/muffin,a rec.food.cooking contributor,https://www.cs.cmu.edu/~mjw/recipes/bread/muffin/sds-muffin-coll-1.html#12,unmapped: spice
 Rhubarb,bread/muffin,a rec.food.cooking contributor,https://www.cs.cmu.edu/~mjw/recipes/bread/muffin/sds-muffin-coll-2.html#38,title names rhubarb but the list lacks it; unmapped: carroway seeds; unmapped: white self-raising flour; unmapped: wholemeal self-raising flour
 Rich Delicious Orange Tea,bread/muffin,a rec.food.cooking contributor,https://www.cs.cmu.edu/~mjw/recipes/bread/muffin/sds-muffin-coll-3.html#11,"unparsed line: Topping: sugar cubes, orange juice"
-Sesame,bread/muffin,a rec.food.cooking contributor,https://www.cs.cmu.edu/~mjw/recipes/bread/muffin/sds-muffin-coll-5.html#22,unmapped: tahini sesame seed
 Smoked Salmon & Cheese,bread/muffin,a rec.food.cooking contributor,https://www.cs.cmu.edu/~mjw/recipes/bread/muffin/sds-muffin-coll-4.html#8,method cooks salmon but the list has no meat or fish; method text is interleaved with the ingredient list; method uses corn-kernels not in the list; title names cheddar but the list lacks it; title names salmon but the list lacks it; unmapped: crup tasty cheddar cheese; unmapped: smoked salmon
 Smoked Salmon & Herb,bread/muffin,a rec.food.cooking contributor,https://www.cs.cmu.edu/~mjw/recipes/bread/muffin/sds-muffin-coll-4.html#7,method cooks salmon but the list has no meat or fish; title names salmon but the list lacks it; unmapped: mixed herb ie tarragon; unmapped: smoked salmon slice; unparsed line: etc
 Sonja's Date,bread/muffin,a rec.food.cooking contributor,https://www.cs.cmu.edu/~mjw/recipes/bread/muffin/sds-muffin-coll-1.html#41,method text is interleaved with the ingredient list; method uses dates not in the list; title names dates but the list lacks it
@@ -134,7 +125,6 @@ Corndog Batter Recipe,bread/pancakes,Stephanie da Silva,https://www.cs.cmu.edu/~
 Crepes With Fruit,bread/pancakes,kyoung,https://www.cs.cmu.edu/~mjw/recipes/bread/pancakes/crepes-coll.html#3,"method uses raspberries not in the list; unmapped: seasonal fruit; unparsed line: blueberries, etc.)"
 Lemon Crepes Suzette,bread/pancakes,Jody Rae Prival,https://www.cs.cmu.edu/~mjw/recipes/bread/pancakes/lemon-suzette.html,title names lemon but the list lacks it; unmapped: dessert crepe
 Pancakes,bread/pancakes,Jeff Marsh,https://www.cs.cmu.edu/~mjw/recipes/bread/pancakes/pancakes-1.html,instructions too thin to follow
-Pannekoeken (Dutch Pancakes),bread/pancakes,Bill Goffe,https://www.cs.cmu.edu/~mjw/recipes/bread/pancakes/pancake-coll.html#10,unmapped: loosely flour
 Sopaipillas (Hot Fried Puffs),bread/pancakes,Steve,https://www.cs.cmu.edu/~mjw/recipes/bread/pancakes/pancake-coll.html#15,unparsed line: Maple Syrup to drown
 14 Karat Cake,cake,Darin Wilkins,https://www.cs.cmu.edu/~mjw/recipes/cake/mp-cake-coll-1.html#1,unmapped: karat cake
 14 Karat Cake,cake,Suzanne Morine,https://www.cs.cmu.edu/~mjw/recipes/cake/mp-cake-coll-1.html#2,unmapped: karat cake
@@ -148,7 +138,6 @@ Apple Pie Cake,cake,Stephanie da Silva,https://www.cs.cmu.edu/~mjw/recipes/cake/
 Apple Pie Cake,cake,Stephanie da Silva,https://www.cs.cmu.edu/~mjw/recipes/cake/mp-cake-coll-1.html#8,reposted from another source (not the poster's own recipe)
 Aunt Lue's Walnut Cake,cake,Kathy M. Smith,https://www.cs.cmu.edu/~mjw/recipes/cake/mp-cake-coll-1.html#9,title names walnuts but the list lacks it; unmapped: pineapple it' own juice; unmapped: walnuts reserve; unparsed line: reserved 1/2 cup walnuts
 Baileys Chocolate Chip Cheesecake,cake,Stephanie da Silva,https://www.cs.cmu.edu/~mjw/recipes/cake/mp-cake-coll-1.html#10,reposted from another source (not the poster's own recipe)
-Banana Bread & Banana Cake,cake,Mostly Harmless,https://www.cs.cmu.edu/~mjw/recipes/cake/banana-bread-cake.html,unmapped: fully banana
 Banana-Brownie Cake,cake,Terri Hull,https://www.cs.cmu.edu/~mjw/recipes/cake/mp-cake-coll-1.html#11,method text is interleaved with the ingredient list; method uses greek-yogurt not in the list; method uses milk not in the list; unmapped: nonfat milk powder
 Basic Cheesecake,cake,"Janet ""Mostly Harmless"" Morrissey",https://www.cs.cmu.edu/~mjw/recipes/cake/mp-cake-coll-1.html#12,method text is interleaved with the ingredient list
 Better Than Sex Cake,cake,Gaye Levy,https://www.cs.cmu.edu/~mjw/recipes/cake/mp-cake-coll-1.html#16,method text is interleaved with the ingredient list; unmapped: cool whip; unmapped: pecans and; unmapped: pk; unmapped: pk yellow
@@ -206,12 +195,10 @@ Gateau Basque,cake,a rec.food.cooking contributor,https://www.cs.cmu.edu/~mjw/re
 German Chocolate Cake,cake,Pat Dennis,https://www.cs.cmu.edu/~mjw/recipes/cake/mp-cake-coll-3.html#5,unparsed line: Coconut Pecan Filling and Frosting
 Glorified Carrot Cake,cake,Lou Ann Smith,https://www.cs.cmu.edu/~mjw/recipes/cake/mp-cake-coll-3.html#7,method text is interleaved with the ingredient list
 Grandma's Applesauce Cake with Raisins and Pecans,cake,Mostly Harmless,https://www.cs.cmu.edu/~mjw/recipes/cake/grma-apsauce-cake.html,title names applesauce but the list lacks it
-Grandma's Gingerbread,cake,Susie Keating (713+567-8251,https://www.cs.cmu.edu/~mjw/recipes/cake/grma-gingerbread.html,unmapped: pummpkin pie spice
 Hazelnut Cake,cake,Stephanie da Silva,https://www.cs.cmu.edu/~mjw/recipes/cake/hazelnut-cake.html,reposted from another source (not the poster's own recipe)
 Hazelnut Cake (Torta Di Nociole),cake,Stephanie da Silva,https://www.cs.cmu.edu/~mjw/recipes/cake/mp-cake-coll-3.html#8,reposted from another source (not the poster's own recipe)
 Hazelnut-Chocolate Viennese Torte,cake,Stephanie da Silva,https://www.cs.cmu.edu/~mjw/recipes/cake/mp-cake-coll-3.html#9,reposted from another source (not the poster's own recipe)
 Honey Carrot Cake,cake,Darin Wilkins,https://www.cs.cmu.edu/~mjw/recipes/cake/mp-cake-coll-3.html#10,method text is interleaved with the ingredient list
-Jennifer's Carrot Cake,cake,Darin Wilkins,https://www.cs.cmu.edu/~mjw/recipes/cake/mp-cake-coll-3.html#13,unmapped: mandarin orange
 Jewish Apple Cake,cake,Sheri K. Thomasson,https://www.cs.cmu.edu/~mjw/recipes/cake/jewish-apple-cake.html,title names apple but the list lacks it; unmapped: apple and
 Kahlua Cheesecake Surprise,cake,Lou Ann Smith,https://www.cs.cmu.edu/~mjw/recipes/cake/mp-cake-coll-3.html#14,unmapped: unflavored gelatin; unparsed line: Shaved or curled semi-sweet chocolate
 Kentucky Bourbon Cake,cake,Stephanie da Silva,https://www.cs.cmu.edu/~mjw/recipes/cake/mp-cake-coll-3.html#16,reposted from another source (not the poster's own recipe)
@@ -221,7 +208,7 @@ Lady Baltimore Cake,cake,Stephanie da Silva,https://www.cs.cmu.edu/~mjw/recipes/
 Lamingtons,cake,Stephanie da Silva,https://www.cs.cmu.edu/~mjw/recipes/cake/lamington.html,reposted from another source (not the poster's own recipe)
 Lemon-Glazed Cheesecake,cake,Stephanie da Silva,https://www.cs.cmu.edu/~mjw/recipes/cake/mp-cake-coll-3.html#20,reposted from another source (not the poster's own recipe)
 Lynn's Carrot Cake,cake,80122-stankovich,https://www.cs.cmu.edu/~mjw/recipes/cake/mp-cake-coll-3.html#24,method text is interleaved with the ingredient list; method uses pineapple-chunks not in the list
-Mallo-Nut Fudge Cake,cake,Diane Biernat,https://www.cs.cmu.edu/~mjw/recipes/cake/mp-cake-coll-3.html#25,unmapped: egg unbeten; unmapped: marshmallow
+Mallo-Nut Fudge Cake,cake,Diane Biernat,https://www.cs.cmu.edu/~mjw/recipes/cake/mp-cake-coll-3.html#25,unmapped: marshmallow
 Marble Pumpkin Cheesecake,cake,HODGESMP,https://www.cs.cmu.edu/~mjw/recipes/cake/mp-cake-coll-3.html#26,title names pumpkin-puree but the list lacks it; unmapped: cooked; unparsed line: 1/3 cup  mini-semi-sweet chocolate chips; unparsed line: dash     cloves; unparsed line: dash     nutmeg
 Mississippi Mud Cake (2),cake,Stephanie da Silva,https://www.cs.cmu.edu/~mjw/recipes/cake/mp-cake-coll-3.html#32,reposted from another source (not the poster's own recipe)
 Moist Chocolate Cake,cake,Yvette,https://www.cs.cmu.edu/~mjw/recipes/cake/mp-cake-coll-3.html#33,unmapped: f oven minute; unmapped: soy margarine
@@ -253,7 +240,7 @@ Raspberry Swirl Cheesecake,cake,Stephanie da Silva,https://www.cs.cmu.edu/~mjw/r
 Rum Cake,cake,Deborah A. Griffin,https://www.cs.cmu.edu/~mjw/recipes/cake/mp-cake-coll-4.html#23,names a company or brand
 Sand Cake,cake,Stephanie da Silva,https://www.cs.cmu.edu/~mjw/recipes/cake/mp-cake-coll-4.html#24,reposted from another source (not the poster's own recipe)
 Savannah Cream Cake,cake,Stephanie da Silva,https://www.cs.cmu.edu/~mjw/recipes/cake/savannah-cream-cake.html,reposted from another source (not the poster's own recipe)
-Semolina and Yogourt Cake,cake,Sophie Laplante,https://www.cs.cmu.edu/~mjw/recipes/cake/semolina-yogurt-cake.html,unmapped: semolina flour; unmapped: yogourt
+Semolina and Yogourt Cake,cake,Sophie Laplante,https://www.cs.cmu.edu/~mjw/recipes/cake/semolina-yogurt-cake.html,unmapped: semolina flour
 Seventh Heaven Cake,cake,Hacklaender,https://www.cs.cmu.edu/~mjw/recipes/cake/seventh-heaven-cake.html,method text is interleaved with the ingredient list; unmapped: chocolate caramel; unmapped: creme de cacao; unmapped: recipe chocolate custard; unparsed line: chocolate sprinkles
 Sourdough Chocolate Cake,cake,Stephanie da Silva,https://www.cs.cmu.edu/~mjw/recipes/cake/mp-cake-coll-4.html#28,reposted from another source (not the poster's own recipe)
 Stollen,cake,Al Duester,https://www.cs.cmu.edu/~mjw/recipes/cake/mp-cake-coll-4.html#31,unmapped: citron; unmapped: egg and water; unparsed line: top with 1/2 cup sliced almonds
@@ -261,7 +248,7 @@ Strawberries And Cream Spectacular,cake,Stephanie da Silva,https://www.cs.cmu.ed
 Sugar-Free Cheesecake,cake,Marilyn J Miller,https://www.cs.cmu.edu/~mjw/recipes/cake/mp-cake-coll-4.html#35,title names sugar but the list lacks it; vanilla-extract: no conversion pkg→volume
 Super Double-Cream Cheesecake,cake,Stephanie da Silva,https://www.cs.cmu.edu/~mjw/recipes/cake/mp-cake-coll-4.html#36,reposted from another source (not the poster's own recipe)
 Swiss Carrot Cake,cake,Darin Wilkins,https://www.cs.cmu.edu/~mjw/recipes/cake/mp-cake-coll-4.html#37,method text is interleaved with the ingredient list; title names swiss-cheese but the list lacks it
-Turtle Cake,cake,Tracey Fox,https://www.cs.cmu.edu/~mjw/recipes/cake/mp-cake-coll-5.html#2,unmapped: caramel; unmapped: german chocolate
+Turtle Cake,cake,Tracey Fox,https://www.cs.cmu.edu/~mjw/recipes/cake/mp-cake-coll-5.html#2,unmapped: caramel
 Turtle Cheesecake,cake,Stephanie da Silva,https://www.cs.cmu.edu/~mjw/recipes/cake/mp-cake-coll-5.html#3,reposted from another source (not the poster's own recipe)
 United Airlines Carrot Cake,cake,Dorothy Westphal,https://www.cs.cmu.edu/~mjw/recipes/cake/mp-cake-coll-5.html#4,names a company or brand
 White Cake,cake,Terri Hull,https://www.cs.cmu.edu/~mjw/recipes/cake/mp-cake-coll-5.html#6,method text is interleaved with the ingredient list
@@ -283,8 +270,6 @@ Caramel Corn,candy,Allyson Tripp,https://www.cs.cmu.edu/~mjw/recipes/candy/caram
 Cream Cheese Mints,candy,Marcia,https://www.cs.cmu.edu/~mjw/recipes/candy/crmchs-mint.html,method text is interleaved with the ingredient list; title names mint but the list lacks it; unmapped: flavoring extract as above; unmapped: food coloring
 Quick Candy Apple Slices,candy,a rec.food.cooking contributor,https://www.cs.cmu.edu/~mjw/recipes/candy/quick-candy-apple.html,method text is interleaved with the ingredient list; title names apple but the list lacks it; unmapped: caramel
 Rum Balls,candy,Mostly Harmless,https://www.cs.cmu.edu/~mjw/recipes/candy/rum-balls.html,method text is interleaved with the ingredient list
-Truffles,candy,a rec.food.cooking contributor,https://www.cs.cmu.edu/~mjw/recipes/candy/truff-coll-2.html#1,unmapped: dark coating chocolate
-Truffles,candy,a rec.food.cooking contributor,https://www.cs.cmu.edu/~mjw/recipes/candy/truff-coll-2.html#3,unmapped: german' sweet chocolate; unmapped: tablespon sweet butter
 World's Greatest Fudge,candy,MICHAEL DWINAL,https://www.cs.cmu.edu/~mjw/recipes/candy/worlds-greatest-fudge.html,unparsed line: 1 box (16 oz.) 10-X sugar
 Stephanie da Silva's Turkish Delight Collection,candy/turk-del,Stephanie da Silva,https://www.cs.cmu.edu/~mjw/recipes/candy/turk-del/sds-turk-del.html,reposted from another source (not the poster's own recipe)
 Frogmore Stew,casserole,Matthew Hughes,https://www.cs.cmu.edu/~mjw/recipes/casserole/frogmore-stew.html,method cooks shrimp but the list has no meat or fish; method text is interleaved with the ingredient list; method uses shrimp not in the list; unmapped: keilbasa; unmapped: old bay seasoning
@@ -371,7 +356,7 @@ Two Cheesecakes,dessert/cheesecake,Stephanie da Silva,https://www.cs.cmu.edu/~mj
 Apricot Earl Grey Ice Cream,dessert/icecream,Stephanie da Silva,https://www.cs.cmu.edu/~mjw/recipes/dessert/icecream/apr-earlgrey-icrm.html,reposted from another source (not the poster's own recipe)
 Avocado Sorbet,dessert/icecream,Stephanie da Silva,https://www.cs.cmu.edu/~mjw/recipes/dessert/icecream/sorbet-coll.html#1,reposted from another source (not the poster's own recipe)
 Banana Split Pie,dessert/icecream,Stephanie da Silva,https://www.cs.cmu.edu/~mjw/recipes/dessert/icecream/mp-icrm-coll-1.html#2,reposted from another source (not the poster's own recipe)
-Cantaloupe Sorbet,dessert/icecream,Gregory Larkin,https://www.cs.cmu.edu/~mjw/recipes/dessert/icecream/cant-sorb.html,unmapped: cantaloupe; unmapped: simple syrup
+Cantaloupe Sorbet,dessert/icecream,Gregory Larkin,https://www.cs.cmu.edu/~mjw/recipes/dessert/icecream/cant-sorb.html,cantaloupe: no conversion medium→volume; title names cantaloupe but the list lacks it; unmapped: simple syrup
 Chocolate Sorbet,dessert/icecream,a rec.food.cooking contributor,https://www.cs.cmu.edu/~mjw/recipes/dessert/icecream/sorbet-coll.html#3,method text is interleaved with the ingredient list; title names dark-chocolate-chips but the list lacks it; unmapped: bittersweet; unparsed line: finely chopped
 Espresso Granita,dessert/icecream,a rec.food.cooking contributor,https://www.cs.cmu.edu/~mjw/recipes/dessert/icecream/sorbet-coll.html#6,title names coffee but the list lacks it; unmapped: strong espresso
 Frozen Pineapple Daiquiri,dessert/icecream,Stephanie da Silva,https://www.cs.cmu.edu/~mjw/recipes/dessert/icecream/mp-icrm-coll-1.html#17,reposted from another source (not the poster's own recipe)
@@ -553,8 +538,7 @@ Mexican Lasagne,pasta,Jan,https://www.cs.cmu.edu/~mjw/recipes/pasta/lasagne-coll
 Pasta Chicken,pasta,Laura Aden,https://www.cs.cmu.edu/~mjw/recipes/pasta/pasta-chicken.html,method cooks chicken but the list has no meat or fish; method text is interleaved with the ingredient list; title names whole-chicken but the list lacks it; unmapped: broccoli up; unmapped: chicken breast up
 Spaghetti Carbonara,pasta,Mark Jacoby,https://www.cs.cmu.edu/~mjw/recipes/pasta/spag-carb.html,method cooks bacon but the list has no meat or fish; unmapped: sizzlean i know
 Two Unique Lasagne Recipes (Vegan),pasta,Brenda Romans,https://www.cs.cmu.edu/~mjw/recipes/pasta/lasagne-coll.html#8,method text is interleaved with the ingredient list; method uses green-lentils not in the list; title names lasagna-noodles but the list lacks it; unmapped: soya milk; unmapped: strongly flavoured cheese; unmapped: unique lasagne recipe; unparsed line: Make up a cheese sauce using; unparsed line: lots           of grated nutmeg
-Veggie Lasagna,pasta,Ann Adamcik,https://www.cs.cmu.edu/~mjw/recipes/pasta/lasagne-coll.html#10,unmapped: broccoli flowerette
-Veggie Lasagna,pasta,Ann Adamcik,https://www.cs.cmu.edu/~mjw/recipes/pasta/veggie-lasagne.html,unmapped: broccoli flowerette
+Veggie Lasagna,pasta,Ann Adamcik,https://www.cs.cmu.edu/~mjw/recipes/pasta/veggie-lasagne.html,duplicate of Veggie Lasagna by Ann Adamcik
 Baked Pastry Shell,pie,Stephanie da Silva,https://www.cs.cmu.edu/~mjw/recipes/pie/baked-pastry-shell.html,reposted from another source (not the poster's own recipe)
 California Pizza,pie/pizza,Robert Serocki,https://www.cs.cmu.edu/~mjw/recipes/pie/pizza/calif-pizza.html,method cooks sausage but the list has no meat or fish; unmapped: garlic and fennel sausage; unmapped: goat cheese
 Caramelized Onion Pizza,pie/pizza,Mostly Harmless,https://www.cs.cmu.edu/~mjw/recipes/pie/pizza/caram-onion-pizza.html,unmapped: oil dribbling on top pizza; yeast: no conversion count→volume
@@ -577,7 +561,7 @@ Lemon Meringue Pie,pie/sweet,Mostly Harmless,https://www.cs.cmu.edu/~mjw/recipes
 Meringue Angel Pie,pie/sweet,Annette Gonzales,https://www.cs.cmu.edu/~mjw/recipes/pie/sweet/meringue-angel-pie.html,"method text is interleaved with the ingredient list; unparsed line: Fresh minth for garnish, optional"
 Mississippi Mud Pie,pie/sweet,Rod Motyer,https://www.cs.cmu.edu/~mjw/recipes/pie/sweet/mississippi-mud-pie.html,brown-sugar: no conversion count→volume; method text is interleaved with the ingredient list; unmapped: instant coffee ml water
 Nectarine Pie,pie/sweet,Stephanie da Silva,https://www.cs.cmu.edu/~mjw/recipes/pie/sweet/nectarine-pie.html,reposted from another source (not the poster's own recipe)
-Orange Freeze Pie,pie/sweet,Barbara Cherry,https://www.cs.cmu.edu/~mjw/recipes/pie/sweet/orange-freeze-pie.html,unmapped: deep dish pie shell; unmapped: la creme whipped topping; unmapped: mandarin orange; unmapped: orange flavored gelatin
+Orange Freeze Pie,pie/sweet,Barbara Cherry,https://www.cs.cmu.edu/~mjw/recipes/pie/sweet/orange-freeze-pie.html,unmapped: deep dish pie shell; unmapped: la creme whipped topping; unmapped: orange flavored gelatin
 Pecan Delight Pie,pie/sweet,Doug Tucker,https://www.cs.cmu.edu/~mjw/recipes/pie/sweet/pecan-del-pie.html,unmapped: soda cracker
 Pecan Pie,pie/sweet,Brooke Patterson,https://www.cs.cmu.edu/~mjw/recipes/pie/sweet/pecan-pie.html,"unparsed line: 1 9"" pie crust, baked"
 Shoo-fly pie,pie/sweet,a rec.food.cooking contributor,https://www.cs.cmu.edu/~mjw/recipes/pie/sweet/shoofly-pie.html,unmapped: deep-dish ten-inch
@@ -721,7 +705,7 @@ Cream Corn Soup,soup,Timothy Williams,https://www.cs.cmu.edu/~mjw/recipes/soup/m
 Double Coriander-Ginger Cream Soup,soup,Stephanie da Silva,https://www.cs.cmu.edu/~mjw/recipes/soup/coriander-ginger-cream-soup.html,reposted from another source (not the poster's own recipe)
 Farmer's Cheese Soup,soup,Barbara Hlavin,https://www.cs.cmu.edu/~mjw/recipes/soup/mp-cheese-soup.html#3,method text is interleaved with the ingredient list; title names cheddar but the list lacks it; unmapped: carrot round; unmapped: dakota farm cheddar cheese; unmapped: french bread
 French Onion Soup,soup,Blair Hamilton,https://www.cs.cmu.edu/~mjw/recipes/soup/french-onion-soup-2.html,unmapped: beef flavored bouillon; unmapped: loaf french bread
-Fruit Soup,soup,"Michael ""Mike"" J. Edelman",https://www.cs.cmu.edu/~mjw/recipes/soup/mp-diverse-soups-coll.html#6,unmapped: bannanna; unmapped: cantaloupe; unmapped: fruit juice orange
+Fruit Soup,soup,"Michael ""Mike"" J. Edelman",https://www.cs.cmu.edu/~mjw/recipes/soup/mp-diverse-soups-coll.html#6,unmapped: bannanna; unmapped: fruit juice orange
 Garlic Soup,soup,Karen Chisholm,https://www.cs.cmu.edu/~mjw/recipes/soup/mp-diverse-soups-coll.html#7,unmapped: tomato and; unmapped: white breadcrumbs
 Golden Summer Soup,soup,Sarah E. Henderson,https://www.cs.cmu.edu/~mjw/recipes/soup/mp-diverse-soups-coll.html#8,unmapped: yellow crookneck squash
 Green Soup,soup,Sam Sangster,https://www.cs.cmu.edu/~mjw/recipes/soup/green-soup.html,unmapped: lettuce use only greenest leave; unmapped: watercress
