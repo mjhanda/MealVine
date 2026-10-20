@@ -43,6 +43,7 @@ UNITS = {
     "square": "oz", "squares": "oz", "cube": "cube", "cubes": "cube", "box": "pkg", "boxes": "pkg", "bag": "pkg",
     "container": "pkg", "packet": "pkg", "packets": "pkg", "envelopes": "pkg", "ltr": "l", "litres": "l", "liters": "l",
     "mls": "ml", "kilo": "kg", "kgs": "kg", "lbs": "lb", "pounds": "lb", "cl": "cl",
+    "tablesppon": "tbsp", "tp": "tsp", "pack": "pkg", "packs": "pkg", "loaf": "loaf", "loaves": "loaf",
     "teaspon": "tsp", "teaspoonful": "tsp", "teaspoonfuls": "tsp", "tablesoon": "tbsp", "tablspoon": "tbsp",
     "tablespoonful": "tbsp", "tablespoonfuls": "tbsp", "tbsn": "tbsp", "tblsps": "tbsp", "tbls": "tbsp", "tbls.": "tbsp",
     "tbl.": "tbsp", "tb.": "tbsp", "drop": "pinch", "drops": "pinch", "dashes.": "pinch", "smidgen": "pinch", "tsp..": "tsp", "cupful": "cup", "cupfuls": "cup", "c": "cup", "lb..": "lb",
@@ -76,7 +77,7 @@ def qty_value(q: str) -> float:
 
 def parse_ingredient(line: str):
     s = line.strip().strip("-*•").strip()
-    s = re.sub(r"^(ca\.?|approx\.?|about|abt\.?|appx\.?)\s+", "", s, flags=re.I)
+    s = re.sub(r"^(ca\.?|approx\.?|about|abt\.?|appx\.?)\s+|^~\s*", "", s, flags=re.I)
     for k, v in UNICODE_FRAC.items():
         s = s.replace(k, v)
     s = re.sub(r"^(\d[\d/.\s-]*?)(T|t|c|tbsp|tsp|oz|lb|g)\b\.?", r"\1 \2 ", s)
@@ -92,9 +93,21 @@ def parse_ingredient(line: str):
         return None
     qty = qty_value(m.group("qty"))
     rest = m.group("rest").strip()
+    # "17-ounce can sweet potatoes": the number is the can's size, not a count of cans.
+    sized = re.match(r"^-\s*(ounce|oz|pound|lb)s?\.?\s+((?:can|jar|package|pkg|box|bag|tin|carton)s?\b.*)$", rest, re.I)
+    if sized:
+        size_hint = qty * (16 if sized.group(1).lower() in ("pound", "lb") else 1)
+        qty, rest = 1.0, sized.group(2)
+    else:
+        size_hint = None
+    rest = re.sub(r"^or so\s+", "", rest, flags=re.I)  # "1/4 cup or so chopped onions"
+    # "four or five potatoes" / "2 or 3 carrots": a range written with "or" — take the upper bound.
+    alt = re.match(rf"^or\s+({QTY})\s+(.+)$", rest, re.I)
+    if alt and alt.group(1).lower() not in ("a", "an"):
+        qty, rest = max(qty, qty_value(alt.group(1))), alt.group(2).strip()
     # "(15 oz) can" / "12-oz can" size hints
     size = re.match(r"^\(?\s*(\d+(?:\.\d+)?)\s*-?\s*(oz|ounce|lb|g|ml)\.?\s*\)?\s*(.*)$", rest, re.I)
-    size_oz = None
+    size_oz = size_hint
     if size:
         size_oz = float(size.group(1)) * {"oz": 1, "ounce": 1, "lb": 16, "g": 1 / 28.35, "ml": 1 / 29.57}[size.group(2).lower()]
         rest = size.group(3)
@@ -118,16 +131,32 @@ def parse_ingredient(line: str):
             rest = " ".join(tok[1:])
     if m.group("qty").lower() in ("a", "an") and unit is None:
         return None  # "a soft dough." is prose; "a pinch salt" has a unit
-    rest = re.sub(r"^of\s+", "", rest.strip(), flags=re.I)
-    name, _, prep = rest.partition(",")
-    name = re.sub(r"\(.*?\)", "", name).strip(" -.;:")
+    # "1 lb. can whole tomatoes", "8 oz. can tomato sauce": the weight is the can's size.
+    can = re.match(r"^(cans?|jars?|tins?|packages?|pkgs?\.?|box(?:es)?|bags?|cartons?)\s+(.*)$", rest.strip(), re.I)
+    if unit in ("oz", "lb") and can and size_oz is None:
+        size_oz, qty, unit, rest = qty * (16 if unit == "lb" else 1), 1.0, UNITS.get(can.group(1).lower().rstrip(".")), can.group(2)
+    rest = re.sub(r"^(of|or so)\s+", "", rest.strip(), flags=re.I)  # "1/4 cup or so chopped onions"
+    name, prep = split_name_prep(rest)
+    name = re.sub(r"\(.*?\)|\(.*$", "", name).strip(" -.;:")
     if not name or len(name) > 60 or not re.match(r"^[A-Za-z]", name):
         return None
     if re.match(r"^(mg|milligrams?|calor|kcal|cal\b|g (fat|protein|carb)|grams? (fat|protein|carb)|% ?|percent|exchange)", name, re.I):
         return None  # a nutrition footer, not an ingredient
-    if re.match(r"^(minutes?|mins?|hours?|hrs?|degrees?|inch(es)?|servings?|people|persons?|to \d|times?|x\b|dd\b|or more|seconds?)", name, re.I):
+    # \b so "minced garlic" isn't read as "min(utes)".
+    if re.match(r"^(minutes?|mins?|hours?|hrs?|degrees?|inch(es)?|servings?|people|persons?|to \d|times?|x|dd|or more|seconds?)\b", name, re.I):
         return None
     return {"qty": round(qty, 4), "unit": unit, "name": name, "prep": prep.strip(" .;") or None, "sizeOz": size_oz, "raw": line.strip()}
+
+
+def split_name_prep(rest: str):
+    """"mangoes (or two fresh ones, very ripe), drained" → ("mangoes (or two fresh ones, very ripe)", "drained"):
+    split at the first comma outside parentheses."""
+    depth = 0
+    for i, ch in enumerate(rest):
+        depth += {"(": 1, ")": -1}.get(ch, 0)
+        if ch == "," and depth <= 0:
+            return rest[:i], rest[i + 1:]
+    return rest, ""
 
 
 def clean_author(poster: str) -> str:
@@ -135,7 +164,11 @@ def clean_author(poster: str) -> str:
     name = m.group(1) if m else EMAIL.sub("", poster)
     name = re.sub(r"\s+", " ", name).strip(" <>\"'")
     name = re.split(r"\s*[/,]\s*", name)[0].strip()  # "Linda/BDT Burbank, Ca" → "Linda"
-    return name if name and "@" not in name else "a rec.food.cooking contributor"
+    # A phone number in the signature ("harlon whitley 952-2342", "Susie Keating (713+567-8251").
+    name = re.sub(r"\s*\(?\+?\d[\d+\s().-]{5,}\d\)?", "", name).strip(" (+")
+    # Not a name: an email, or a mail-system label ("login 3 of account 10573").
+    ok = name and "@" not in name and not re.search(r"\b(login|account)\b|\d", name, re.I)
+    return name if ok else "a rec.food.cooking contributor"
 
 
 def iso_date(raw: str):
@@ -317,7 +350,7 @@ def main():
             skipped["no_ingredients"] += 1
             continue
         text = block_text(r["file"], r["anchor"])
-        title = re.sub(r"\s+", " ", r["title"]).strip(" -=")
+        title = re.sub(r"\s+", " ", EMAIL.sub("", r["title"])).strip(" -=")  # never an email, even in a title
         author = clean_author(r["poster"])
         ingredients, steps, leftovers, interrupted = split(text, title, author)
         if len(ingredients) < 2 or not steps:

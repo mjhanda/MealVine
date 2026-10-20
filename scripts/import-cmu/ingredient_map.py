@@ -200,3 +200,22 @@ MAP.update({
     "dark coating chocolate": "dark-chocolate-chips", "shortening and": "shortening",
     "tahini sesame seed": "tahini", "loosely flour": "all-purpose-flour", "flour sieved with": "all-purpose-flour",
 })
+
+# Third pass (2026-10-20, T16 dinners): spelling and plural variants from dinner recipes in the review
+# queue. Same rule: only names that plainly mean an ingredient we stock.
+MAP.update({
+    "porkchop": "pork-chops", "thin-cut pork chop": "pork-chops", "frying chicken up and fat": "whole-chicken",
+    "cornstarch water": "cornstarch", "instant garlic": "garlic-powder", "nuoc nam": "fish-sauce",
+    "cooked chickpeas": "chickpeas", "cooked chickpea": "chickpeas", "white breadcrumbs": "breadcrumbs",
+    "white breadcrumb": "breadcrumbs", "italian bread crumb": "breadcrumbs", "italian bread crumbs": "breadcrumbs",
+    "yellow crookneck squash": "zucchini", "yellow zucchini squash": "zucchini", "beet root": "beet",
+    "green lentils": "green-lentils", "green beans": "green-beans", "whole-kernel corn": "corn-kernels",
+    "mexican-style stewed tomato": "diced-tomatoes", "cooked fettuccine": "pasta", "cooked linguine": "pasta",
+    "cooked spaghetti": "pasta", "dash pepper": "black-pepper", "soy cube": "vegetable-broth",
+    "vegetable bouillon cube": "vegetable-broth", "vegetable stock cube": "vegetable-broth",
+    "beef flavored bouillon": "beef-broth", "sirloin tip": "sirloin", "sirloin tips": "sirloin",
+    "pasta shape": "pasta", "part-skim mozzarella cheese": "mozzarella", "black mushroom": "mushrooms",
+    "dried black mushroom": "mushrooms", "noodles vermicelli": "pasta",
+})
+# Never a grocery item: liquid the recipe itself produces.
+SKIP |= {"accumulated cooking liquid", "cooking liquid", "bacon dripping", "pan dripping"}

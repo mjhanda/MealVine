@@ -18,6 +18,7 @@ DROP_WORDS = {
     "lean", "organic", "imported", "domestic", "mild", "sharp", "aged", "young", "baby", "tiny", "big", "thick",
     "thin", "fine", "coarse", "freshly-ground", "fresh-ground", "pure", "best", "kosher-style", "crumbled",
     "separated", "softened", "plus", "additional", "more", "few", "several", "bunch", "sprig", "sprigs", "handful",
+    "boned", "skinned", "loosely", "halves", "crisp-cooked", "cut-up", "parts",
 }
 TYPOS = {
     "margerine": "margarine", "cardomom": "cardamom", "cardamon": "cardamom", "oinon": "onion", "tomatoe": "tomato",
@@ -33,7 +34,10 @@ TYPOS = {
     "strawberrys": "strawberries", "pinenut": "pine nut", "mushroms": "mushroom", "parsely": "parsley",
     "persley": "parsley", "cilantero": "cilantro", "tomatos": "tomato", "potatos": "potato", "avacado": "avocado",
     "chiles": "chile", "chilies": "chili", "chilis": "chili", "peper": "pepper", "pepers": "pepper",
+    "brest": "breast", "cayanne": "cayenne", "parmesean": "parmesan", "mozzerella": "mozzarella",
+    "fettucini": "fettuccine", "linquini": "linguine",
 }
+SHARED_NOUNS = {"vinegar", "oil", "sauce", "cheese", "flour", "sugar", "juice", "wine", "broth", "stock", "rice"}
 # Keep "ground" for meat ("ground beef"); drop it for spices ("ground cinnamon" = cinnamon).
 GROUND_MEATS = ("beef", "pork", "turkey", "chicken", "lamb", "veal", "meat", "sausage")
 SINGULAR_EXCEPTIONS = {"molasses", "asparagus", "hummus", "couscous", "swiss", "brussels", "grits", "oats", "greens", "peas", "lentils", "beans", "chickpeas", "noodles", "raisins", "walnuts", "pecans", "almonds", "capers", "olives", "berries", "chips", "flakes", "seeds", "crumbs", "breadcrumbs", "sprouts"}
@@ -54,9 +58,23 @@ def singular(word: str) -> str:
 def normalize(name: str) -> str:
     s = name.lower()
     s = re.sub(r"\(.*?\)|\[.*?\]", " ", s)
+    s = re.sub(r"\(.*$", " ", s)  # a note whose ")" is on the next line
     s = s.replace("&", " and ")
-    # "butter or margarine" → "butter"; "salt and pepper" stays (handled by the map)
-    s = re.split(r"\s+or\s+|/", s)[0]
+    # "butter or margarine" → "butter"; "salt and pepper" stays (handled by the map). If the first
+    # alternative is only descriptors ("peeled/quartered potatoes"), use the next one.
+    parts = re.split(r"\s+or\s+|/", s)
+    # "rice or white vinegar" means rice vinegar: a one-word first choice shares the last noun.
+    tail = parts[-1].split()
+    if len(parts) > 1 and len(parts[0].split()) == 1 and len(tail) > 1 and tail[-1] in SHARED_NOUNS:
+        parts[0] = f"{parts[0]} {tail[-1]}"
+    for part in parts:
+        words = _words(part)
+        if words:
+            return " ".join(words).strip()
+    return ""
+
+
+def _words(s: str) -> list:
     s = re.sub(r"[^a-z\s'-]", " ", s)
     words = [TYPOS.get(w.strip("'-"), w.strip("'-")) for w in s.split()]
     words = [x for w in words for x in w.split()]
@@ -64,4 +82,6 @@ def normalize(name: str) -> str:
     if words and words[0] == "ground" and not any(m in words for m in GROUND_MEATS):
         words = words[1:]
     words = [singular(w) for w in words]
-    return " ".join(words).strip()
+    while words and words[-1] == "and":  # "carrot, peeled and halved" → "carrot"
+        words.pop()
+    return words
