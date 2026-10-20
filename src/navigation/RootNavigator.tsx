@@ -9,6 +9,7 @@ import OnboardingScreen from '../screens/OnboardingScreen';
 import RemoveAdsScreen from '../screens/RemoveAdsScreen';
 import RecipeDetailScreen from '../screens/RecipeDetailScreen';
 import RecipeEditorScreen from '../screens/RecipeEditorScreen';
+import RecipeImportScreen from '../screens/RecipeImportScreen';
 import { useCustomRecipesStore } from '../store/customRecipesStore';
 import { useStorageHealth } from '../store/persistence';
 import { usePlanStore } from '../store/planStore';
@@ -58,6 +59,7 @@ export default function RootNavigator() {
             <Stack.Screen name="Main" component={MainTabs} />
             <Stack.Screen name="RecipeDetail" component={RecipeDetailScreen} options={{ presentation: 'modal' }} />
             <Stack.Screen name="RecipeEditor" component={RecipeEditorScreen} options={{ presentation: 'modal' }} />
+            <Stack.Screen name="RecipeImport" component={RecipeImportScreen} options={{ presentation: 'modal' }} />
             <Stack.Screen name="Cook" component={CookScreen} options={{ presentation: 'fullScreenModal' }} />
             <Stack.Screen name="RemoveAds" component={RemoveAdsScreen} options={{ presentation: 'modal' }} />
           </>

@@ -1,0 +1,27 @@
+<!doctype html>
+<!-- Minimal fixture: several JSON-LD blocks (one malformed, one a breadcrumb list), the Recipe
+     inside a top-level array, HowToSteps with only `name`, authors as a list, metric amounts. -->
+<html>
+<head>
+<meta name="og:site_name" content="Metric Meals">
+<script type="application/ld+json">{ "@type": "BreadcrumbList", "itemListElement": [] </script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Soups"}]}
+</script>
+<script type="application/ld+json">
+[
+  {"@context":"https://schema.org","@type":"Organization","name":"Metric Meals Ltd"},
+  {"@context":"https://schema.org","@type":"Recipe","name":"Red Lentil Soup",
+   "author":[{"@type":"Person","name":"Ana Sopa"},{"@type":"Person","name":"Second Author"}],
+   "recipeYield":6,"cookTime":"PT35M",
+   "recipeIngredient":["250 g red lentils","1 l vegetable stock","2 carrots, diced","1 onion, chopped","400 ml light coconut milk","1 tbsp curry powder","2 garlic cloves"],
+   "recipeInstructions":[
+     {"@type":"HowToStep","name":"Soften the onion, carrots, and garlic."},
+     {"@type":"HowToStep","name":"Add the lentils, stock, and curry powder; simmer 25 minutes."},
+     {"@type":"HowToStep","text":"Stir in the coconut milk and blend."}
+   ]}
+]
+</script>
+</head>
+<body></body>
+</html>

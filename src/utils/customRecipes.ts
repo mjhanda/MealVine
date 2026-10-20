@@ -14,13 +14,24 @@ export const ALL_UNITS: (Unit | null)[] = [null, 'pinch', 'tsp', 'tbsp', 'cup', 
 // Each catalog ingredient is measured in one unit family across the catalog (enforced by the
 // catalog test). Your own recipes keep to it, so the grocery list can add amounts together and
 // nutrition can convert them.
-let familyCache: Map<string, UnitFamily> | null = null;
-export function catalogUnitFamily(ingredientId: string): UnitFamily | undefined {
-  if (!familyCache) {
-    familyCache = new Map();
-    RECIPES.forEach((r) => r.ingredients.forEach((ing) => familyCache!.set(ing.id, unitFamily(ing.unit))));
+let unitCounts: Map<string, Map<Unit | null, number>> | null = null;
+function catalogUnits(ingredientId: string): Map<Unit | null, number> | undefined {
+  if (!unitCounts) {
+    unitCounts = new Map();
+    RECIPES.forEach((r) =>
+      r.ingredients.forEach((ing) => {
+        const counts = unitCounts!.get(ing.id) ?? new Map<Unit | null, number>();
+        counts.set(ing.unit, (counts.get(ing.unit) ?? 0) + 1);
+        unitCounts!.set(ing.id, counts);
+      })
+    );
   }
-  return familyCache.get(ingredientId);
+  return unitCounts.get(ingredientId);
+}
+
+export function catalogUnitFamily(ingredientId: string): UnitFamily | undefined {
+  const counts = catalogUnits(ingredientId);
+  return counts ? unitFamily([...counts.keys()][0]) : undefined;
 }
 
 // Units the editor offers for an ingredient: its family for catalog ingredients, anything for free text.
@@ -29,13 +40,13 @@ export function allowedUnits(ingredientId: string): (Unit | null)[] {
   return family ? ALL_UNITS.filter((u) => unitFamily(u) === family) : ALL_UNITS;
 }
 
-// The unit a newly picked ingredient starts with: the current one if it still fits, else the
-// family's most common size (tbsp for volume, oz for weight).
+// The unit a newly picked ingredient starts with: the current one if it still fits, else the one
+// our recipes use most for it (cups of lentils, tbsp of oil), else the first allowed.
 export function defaultUnit(ingredientId: string, current: Unit | null = null): Unit | null {
   const allowed = allowedUnits(ingredientId);
   if (allowed.includes(current)) return current;
-  if (allowed.includes('tbsp')) return 'tbsp';
-  if (allowed.includes('oz')) return 'oz';
+  const counts = catalogUnits(ingredientId);
+  if (counts) return [...counts.entries()].sort((a, b) => b[1] - a[1])[0][0];
   return allowed[0];
 }
 

@@ -24,6 +24,7 @@ import {
   withIngredient,
 } from '../utils/customRecipes';
 import { recipeById } from '../utils/recipeCatalog';
+import { matchedCount } from '../utils/recipeImport';
 import { sourceCredit } from '../utils/recipeSource';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'RecipeEditor'>;
@@ -52,6 +53,8 @@ export default function RecipeEditorScreen({ route, navigation }: Props) {
   const [draft, setDraft] = useState<RecipeDraft>(initial);
   const [picker, setPicker] = useState<PickerTarget>(null);
   const editing = !!draft.id;
+  const imported = !!route.params?.draft;
+  const isNew = !editing && !imported;
 
   const update = (changes: Partial<RecipeDraft>) => setDraft((d) => ({ ...d, ...changes }));
   const updateLine = (line: IngredientDraft) =>
@@ -108,6 +111,20 @@ export default function RecipeEditorScreen({ route, navigation }: Props) {
 
       <KeyboardAvoidingView style={styles.flex} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
         <ScrollView contentContainerStyle={styles.scroll} keyboardShouldPersistTaps="handled">
+          {isNew && (
+            <Pressable onPress={() => navigation.replace('RecipeImport')} style={styles.importLink} accessibilityRole="button">
+              <Feather name="download" size={14} color={colors.forest} />
+              <Text style={styles.importLabel}>Import from a website or pasted text instead</Text>
+            </Pressable>
+          )}
+          {imported && (
+            <View style={styles.notice} accessibilityRole="summary">
+              <Text style={styles.noticeText}>
+                Imported. {matchedCount(initial)} of {initial.ingredients.length} ingredients matched our list. Check the amounts,
+                and tap anything marked “Not checked for allergies” to find it in the list, before you save.
+              </Text>
+            </View>
+          )}
           <View style={styles.titleRow}>
             <TextInput
               value={draft.emoji}
@@ -258,6 +275,10 @@ const styles = StyleSheet.create({
   save: { fontSize: 15, color: colors.forest, fontWeight: '800', textAlign: 'right' },
   scroll: { padding: spacing.xl, paddingBottom: 60 },
   titleRow: { flexDirection: 'row', gap: spacing.sm },
+  importLink: { flexDirection: 'row', alignItems: 'center', gap: 6, minHeight: 44, marginBottom: spacing.sm },
+  importLabel: { fontSize: 13.5, fontWeight: '700', color: colors.forest },
+  notice: { padding: spacing.md, borderRadius: radius.md, backgroundColor: colors.goldLight, marginBottom: spacing.md },
+  noticeText: { fontSize: 13, color: colors.ink, lineHeight: 18 },
   emojiInput: { width: 56, textAlign: 'center', fontSize: 22 },
   input: {
     borderWidth: 1, borderColor: colors.line, borderRadius: radius.sm, paddingHorizontal: spacing.md, paddingVertical: 10,

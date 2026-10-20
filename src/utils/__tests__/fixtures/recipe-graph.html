@@ -1,0 +1,43 @@
+<!doctype html>
+<!-- Minimal fixture: a WordPress/Yoast-style page with one @graph holding the page, the author,
+     and the Recipe. Instructions are grouped in HowToSections; text carries HTML entities. -->
+<html>
+<head>
+<meta charset="utf-8">
+<title>Weeknight Chicken &amp; Rice | Test Kitchen Blog</title>
+<meta property="og:site_name" content="Test Kitchen Blog" />
+<script type="application/ld+json" class="yoast-schema-graph">
+{"@context":"https://schema.org","@graph":[
+  {"@type":"WebSite","@id":"https://testkitchen.example/#website","name":"Test Kitchen Website"},
+  {"@type":"WebPage","@id":"https://testkitchen.example/chicken-rice/","name":"Weeknight Chicken &amp; Rice"},
+  {"@type":"Person","@id":"https://testkitchen.example/#/person/1","name":"Sam Cook"},
+  {"@type":"Recipe","name":"Weeknight Chicken &amp; Rice","author":{"@id":"https://testkitchen.example/#/person/1","name":"Sam Cook"},
+   "recipeYield":["4","4 servings"],"prepTime":"PT15M","cookTime":"PT1H5M","totalTime":"PT1H20M",
+   "recipeCategory":["Main Course"],"keywords":"chicken, rice, easy",
+   "recipeIngredient":[
+     "1 1/2 lb boneless skinless chicken breasts",
+     "2 tablespoons extra-virgin olive oil",
+     "3 cloves garlic, minced",
+     "1 (14.5 oz) can diced tomatoes",
+     "1 cup long-grain white rice",
+     "2 cups chicken stock",
+     "1 tsp smoked paprika",
+     "Salt and pepper, to taste",
+     "&frac12; cup crumbled feta cheese",
+     "2 tbsp za&#8217;atar spice blend"
+   ],
+   "recipeInstructions":[
+     {"@type":"HowToSection","name":"Chicken","itemListElement":[
+       {"@type":"HowToStep","text":"Season the chicken with the paprika, salt, and pepper."},
+       {"@type":"HowToStep","text":"Brown the chicken in the olive oil, 4&ndash;5 minutes per side."}
+     ]},
+     {"@type":"HowToSection","name":"Rice","itemListElement":[
+       {"@type":"HowToStep","text":"<p>Add the garlic, rice, tomatoes, and stock.</p>"},
+       {"@type":"HowToStep","text":"Cover and simmer 20 minutes. Top with feta."}
+     ]}
+   ]}
+]}
+</script>
+</head>
+<body><h1>Weeknight Chicken &amp; Rice</h1><p>Lots of story here.</p></body>
+</html>

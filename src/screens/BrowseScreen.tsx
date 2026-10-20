@@ -177,6 +177,18 @@ export default function BrowseScreen() {
           </View>
           {!swapRecipe && (
             <Pressable
+              onPress={() => navigation.navigate('RecipeImport')}
+              style={styles.newBtn}
+              hitSlop={{ top: 6, bottom: 6 }}
+              accessibilityRole="button"
+              accessibilityLabel="Import a recipe from a website or text"
+            >
+              <Feather name="download" size={14} color={colors.forest} />
+              <Text style={styles.newBtnLabel}>Import</Text>
+            </Pressable>
+          )}
+          {!swapRecipe && (
+            <Pressable
               onPress={() => navigation.navigate('RecipeEditor')}
               style={styles.newBtn}
               hitSlop={{ top: 6, bottom: 6 }}
@@ -290,9 +302,14 @@ export default function BrowseScreen() {
               {mealType === 'mine' && userRecipes.length === 0 ? "You haven't added any recipes yet." : 'No recipes match.'}
             </Text>
             {mealType === 'mine' && (
-              <Pressable onPress={() => navigation.navigate('RecipeEditor')} style={styles.relaxBtn} accessibilityRole="button">
-                <Text style={styles.relaxLabel}>Add your own recipe</Text>
-              </Pressable>
+              <>
+                <Pressable onPress={() => navigation.navigate('RecipeEditor')} style={styles.relaxBtn} accessibilityRole="button">
+                  <Text style={styles.relaxLabel}>Add your own recipe</Text>
+                </Pressable>
+                <Pressable onPress={() => navigation.navigate('RecipeImport')} style={styles.relaxBtn} accessibilityRole="button">
+                  <Text style={styles.relaxLabel}>Import from a website</Text>
+                </Pressable>
+              </>
             )}
             {suggestions.map(({ filter: f, count }) => (
               <Pressable key={f} onPress={() => relax(f)} style={styles.relaxBtn} accessibilityRole="button">
@@ -348,7 +365,7 @@ export default function BrowseScreen() {
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: colors.cream },
   header: { paddingHorizontal: 20, paddingTop: 12 },
-  titleRow: { flexDirection: 'row', alignItems: 'flex-end', gap: 10 },
+  titleRow: { flexDirection: 'row', alignItems: 'flex-end', gap: 8 },
   titleWrap: { flex: 1 },
   newBtn: {
     flexDirection: 'row', alignItems: 'center', gap: 4, paddingHorizontal: 12, paddingVertical: 8,

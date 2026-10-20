@@ -10,6 +10,8 @@ export type RootStackParamList = {
   Cook: { recipeId: string; planItemId?: string; storeBought?: string[] };
   // Your own recipes: recipeId = edit that one; draft = start from a pre-filled draft; neither = new.
   RecipeEditor: { recipeId?: string; draft?: RecipeDraft } | undefined;
+  // Import from a link or pasted text, then on to the editor.
+  RecipeImport: undefined;
 };
 
 export type MainTabParamList = {

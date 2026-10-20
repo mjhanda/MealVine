@@ -76,9 +76,10 @@ export interface RecipeIngredient {
 export interface RecipeSource {
   // adapted = ingredients/method reworked and instructions rewritten by us;
   // as-posted = the poster's own instructions (lightly cleaned), amounts converted to our units.
-  kind: 'adapted' | 'as-posted';
+  // web = one of your own recipes, imported from a web page for personal use (T48).
+  kind: 'adapted' | 'as-posted' | 'web';
   title: string; // original recipe title
-  author: string; // poster's name as given (never their email address)
+  author: string; // poster's name as given (never their email address); may be '' for web imports
   posted?: string; // original posting date, e.g. "1993-08-17"
   collection: string; // e.g. "CMU Recipe Archive (rec.food.cooking)"
   url: string;

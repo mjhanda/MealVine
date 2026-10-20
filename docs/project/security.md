@@ -1,7 +1,7 @@
 Security Rules
 ==============
 
-> Baseline security and code-quality rules for Dishcart. Filled in against the current architecture: a fully offline, single-user, local-only Expo/React Native app with no backend, no accounts, and no network calls. Most standard web/API security domains below are genuinely Not Applicable at this stage — that's a fact about the current architecture, not an unresolved placeholder. Revisit this file (see Notes) before any Phase 2/3 work that adds a backend, auth, or remote content updates.
+> Baseline security and code-quality rules for Dishcart. Filled in against the current architecture: a single-user, local-only Expo/React Native app with no backend and no accounts. Its only app-initiated network use is one user-initiated GET of a recipe page the user pastes (recipe import, T48; see "Network: recipe import" below) plus the RevenueCat SDK for the ad-free subscription (see `.claude/rules/security.md`). Most standard web/API security domains below are genuinely Not Applicable at this stage — that's a fact about the current architecture, not an unresolved placeholder. Revisit this file (see Notes) before any Phase 2/3 work that adds a backend, auth, or remote content updates.
 
 * * * * *
 
@@ -33,11 +33,11 @@ Client-Side Security (web and/or mobile)
 ----------------------------------------
 
 -   **Applicable platform(s):** Both — one Expo/React Native codebase targets Web, iOS, and Android.
--   **Sensitive data storage on device:** One health-adjacent field: the user's allergy list (`Preferences.allergies`). It is stored only in on-device AsyncStorage alongside the other preferences (diet, disliked ingredients, plan, history, favorites, grocery check-state, the user's own recipes), never transmitted (the app makes no network calls) and never logged. Treat it as sensitive: no logging, and any export must be user-initiated with consent.
--   **Certificate/TLS validation:** Not applicable — the app makes no network requests.
+-   **Sensitive data storage on device:** One health-adjacent field: the user's allergy list (`Preferences.allergies`). It is stored only in on-device AsyncStorage alongside the other preferences (diet, disliked ingredients, plan, history, favorites, grocery check-state, the user's own recipes), never transmitted (recipe import sends only the pasted URL; see below) and never logged. Treat it as sensitive: no logging, and any export must be user-initiated with consent.
+-   **Certificate/TLS validation:** Platform default (iOS ATS / Android network security config) for the recipe-import fetch; no custom trust, no pinning, no cleartext exceptions. Plain `http://` links are therefore refused by the OS on native builds.
 -   **If web frontend exists:** (yes, via Expo web export)
     -   DOM injection handling (e.g., sanitize before `dangerouslySetInnerHTML` or equivalent): Not applicable — no raw HTML injection anywhere in the app; all content renders through React Native Web components.
-    -   User-supplied URL handling in links: Not applicable — the app renders no user-supplied URLs or links.
+    -   User-supplied URL handling in links: An imported recipe keeps the URL the user pasted as its credit and offers "View original" (`Linking.openURL`). Only `http(s)` URLs are accepted (`normalizeRecipeUrl` rejects `javascript:`, `file:`, and anything else); page content never supplies a link we open.
     -   CSRF protection: Not applicable — no server, no cookies, no state-changing requests.
     -   Cookie flags (`HttpOnly`, `Secure`, `SameSite`): Not applicable — the app sets no cookies.
     -   CORS allowed origins: Not applicable — no API for CORS to apply to.
@@ -47,7 +47,7 @@ Client-Side Security (web and/or mobile)
 API Security
 ------------
 
--   **Input validation:** Applies only to the free-text "add grocery item" field. Current behavior: trims and rejects empty strings before adding (see `GroceryScreen.tsx` / `groceryStore.ts`). No further validation needed since it's stored and displayed locally only, never executed or sent anywhere.
+-   **Input validation:** Free text the user types (grocery items, their own recipes in the editor — validated by `validateDraft` in `src/utils/customRecipes.ts`) is stored and displayed locally only, never executed or sent anywhere. Imported web pages are untrusted input: `src/utils/recipeImport.ts` only `JSON.parse`s the page's JSON-LD blocks and keeps plain text (tags stripped, entities decoded); nothing from the page is executed, rendered as HTML, or used as a URL, and the result lands in the editor for the user to review before saving. Free-text ingredients are never assumed allergen-free (shown as "Not checked for allergies").
 -   **Database access:** Not applicable — no database; state reads/writes go through Zustand's `persist` middleware to AsyncStorage as JSON.
 -   **Error responses:** Not applicable — no server responses. Client-side errors from AsyncStorage failures should fail soft (the app should not crash if local storage is briefly unavailable) rather than surface raw errors to the user.
 -   **Security headers:** Not applicable for the packaged app. If the static web export is ever hosted, standard headers (CSP, X-Content-Type-Options, etc.) should be added at the hosting layer — not yet done since no hosting is configured.
@@ -87,8 +87,19 @@ Data Classification & Handling
 -   **Data collected:** None beyond the user's own on-device app preferences (household size, diet choice, meal plan, favorites, grocery list, recipes they write themselves). Nothing is transmitted anywhere.
 -   **PII in scope:** Limited. No identity or account data. Allergy preferences are health-adjacent personal data held on-device only. No third-party SDKs (analytics, payment/subscription providers) are integrated — if any are added later, re-check this line, since they commonly collect device identifiers implicitly and must never receive preferences.
 -   **Encryption at rest:** Relies on OS sandboxing and device encryption (iOS Data Protection / Android file-based encryption). App-level encryption of AsyncStorage not added: the only sensitive field is an allergy list with no identity attached. Revisit if accounts, sync, or any identifying data are introduced.
--   **Encryption in transit:** Not applicable — no network transit occurs.
+-   **Encryption in transit:** Recipe import fetches over HTTPS (platform TLS; cleartext blocked by OS defaults on native). No app data is in transit: see below.
 -   **Audit logging:** Not applicable — no server-side actions to audit.
+
+* * * * *
+
+Network: recipe import (T48)
+----------------------------
+
+-   **What:** One `GET` of the recipe page URL the user pastes on the Import screen, started only by tapping "Read recipe from link" (`src/services/recipeFetch.ts`, the only caller). Native iOS/Android only; on web the browser's CORS rules block it, so web offers paste-text instead.
+-   **What is sent:** The URL itself and the platform's default request headers. `credentials: 'omit'` (no cookies), no custom headers beyond `Accept`, no identifiers, no preferences, allergies, plan, or recipes. Never add query parameters or headers carrying app data.
+-   **Limits:** 15 s timeout, 5 MB cap, `http(s)` only. Errors are shown in plain words; nothing is retried in the background.
+-   **What is kept:** The parsed recipe, after the user reviews and saves it, in the on-device `customRecipesStore` with the source URL and site name as credit. Imported recipes are third-party content saved for personal use: never redistributed or shared by the app.
+-   **Third parties:** The site the user chose sees a request from the device's IP address, as if the user opened the page in a browser. No other party is involved.
 
 * * * * *
 

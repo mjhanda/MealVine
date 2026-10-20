@@ -14,6 +14,7 @@ export function sourceCredit(recipe: Recipe): string {
   const s = recipe.source;
   if (!s) return isUserRecipeId(recipe.id) ? 'Your recipe.' : 'Dishcart original recipe.';
   const when = s.posted ? `, ${s.posted.slice(0, 4)}` : '';
+  if (s.kind === 'web') return `Imported from “${s.title}”${s.author ? ` by ${s.author}` : ''} (${s.collection}). Saved for your personal use.`;
   if (s.kind === 'as-posted') return `“${s.title}” by ${s.author}, as posted (${s.collection}${when}).`;
   return `Adapted from “${s.title}” by ${s.author} (${s.collection}${when}).`;
 }
