@@ -6,21 +6,25 @@ decisions; T40–T42 added 2026-10-18; T44–T46 added 2026-10-20 (#43 is a Depe
 **mjhanda/MealVine** (issue #N = TN). This file is the planning snapshot; the
 issues are the source of truth.
 
-### Status (2026-10-20)
+### Status (2026-10-20, evening)
 
-- **Done:** T01–T14, T17–T19, T22–T24 (code in `main`, issues closed).
-- **Done 2026-10-18:** T40 (detailed steps for the recipes we wrote),
-  T41 (second archive pass: more recipes pulled from the review queue).
+- **Done:** T01–T14, T17–T19, T22–T24, T37, T38, T40, T41, T44–T48 (code in `main`, issues closed).
 - **Partly done:**
-  - T16 — 291 recipes, 76 dinners (54 original, 11 adapted, 11 archive); the
-    ≥ 20 dinners-per-diet target and the owner taste check are still open.
+  - T16 — 342 recipes, 110 dinners (54 original, 11 adapted, 45 archive). Per diet: classic 110,
+    flexitarian 88, pescetarian 51, vegetarian 31, vegan 19, low-carb 19, keto 18, paleo 14 — the
+    ≥ 20 target is still short for vegan, low-carb, keto, and paleo; owner taste check open.
   - T20 — tests and lint run locally; `.github/workflows/ci.yml` was never
     pushed (needs the `workflow` token scope), so there is no CI yet.
   - T21 — config/docs done; needs assets and store accounts.
-  - T25 — name, publisher, and price decided; launch date open.
+  - T25 — name, publisher, and price decided; launch date open. Owner (2026-10-20): personal use
+    first; will still submit to both stores.
   - T32 — Maestro E2E passes on the iOS simulator and Android emulator;
     physical-device pass and purchase steps still open.
-- **Open:** T15, T26–T31, T33–T39, T42, T47, T48.
+  - T42 — route decided 2026-10-20: Android, a release APK built on the owner's Mac and installed
+    directly (steps in `docs/release/personal-android.md`). Open: install on the owner's phone.
+- **Open:** T15, T26–T31, T33–T36, T39.
+- **Security (2026-10-20):** critical `shell-quote` alert fixed (lockfile); 4 remaining Dependabot
+  alerts are dev/build-only with no patched release (node-forge, braces, uuid, sprintf-js).
 - **Not needed for personal use:** T26–T31, T33, T34 (store, ads, legal).
 
 > T25's original context (paid app, "Mealime alternative" positioning) is
