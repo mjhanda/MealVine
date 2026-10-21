@@ -1,5 +1,6 @@
 import { Feather } from '@expo/vector-icons';
-import { useIsFocused } from '@react-navigation/native';
+import { useIsFocused, useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { AccessibilityInfo, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -7,12 +8,15 @@ import { confirmAction, shareText } from '../components/dialogs';
 import Confetti from '../components/grocery/Confetti';
 import GroceryRow from '../components/grocery/GroceryRow';
 import ManualItemEditor from '../components/grocery/ManualItemEditor';
+import { RootStackParamList } from '../navigation/types';
 import { manualKey, useGroceryStore } from '../store/groceryStore';
 import { usePlanStore } from '../store/planStore';
 import { useUndoStore } from '../store/undoStore';
 import { colors } from '../theme';
 import { groceryLinesFromPlan } from '../utils/grocery';
-import { buildShoppingList, formatShareText, isAllPickedUp } from '../utils/shoppingList';
+import { buildShoppingList, formatShareText, isAllPickedUp, MealUse } from '../utils/shoppingList';
+
+type Nav = NativeStackNavigationProp<RootStackParamList>;
 
 export default function GroceryScreen() {
   const plan = usePlanStore((s) => s.plan);
@@ -26,6 +30,9 @@ export default function GroceryScreen() {
   const clearChecked = useGroceryStore((s) => s.clearChecked);
   const setPantry = useGroceryStore((s) => s.setPantry);
   const showUndo = useUndoStore((s) => s.show);
+  const navigation = useNavigation<Nav>();
+  const openMeal = (meal: MealUse) =>
+    navigation.navigate('RecipeDetail', { recipeId: meal.recipeId, planItemId: meal.planItemId });
 
   const [newItem, setNewItem] = useState('');
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -126,6 +133,7 @@ export default function GroceryScreen() {
                   key={row.key}
                   row={row}
                   onToggle={() => toggleCheck(row.key)}
+                  onOpenMeal={openMeal}
                   action={
                     row.manualId
                       ? { icon: 'edit-2', label: `Edit ${row.name}`, onPress: () => setEditingId(row.manualId!) }
@@ -157,6 +165,7 @@ export default function GroceryScreen() {
                     row={row}
                     muted
                     onToggle={() => toggleCheck(row.key)}
+                    onOpenMeal={openMeal}
                     action={{
                       icon: 'shopping-cart',
                       label: `I need to buy ${row.name}`,

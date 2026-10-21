@@ -12,6 +12,9 @@ name: Grocery list builds from the plan; manual item lands in the right aisle
 - assertVisible: "Grocery list"
 - assertVisible: "(?i)meat & seafood"
 - assertVisible: '.*Chicken breast.*'
+# T37: each item names the meals it's for (subtitle under the item, and in its label).
+- assertVisible: '.*Chicken breast, 4 oz, for Chicken Jambalaya.*'
+- assertVisible: 'Chicken Jambalaya'
 - tapOn: '.*Chicken breast, 4 oz.*'
 - assertVisible: "Uncheck all"
 - tapOn: "Add an item"

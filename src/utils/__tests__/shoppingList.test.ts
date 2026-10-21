@@ -1,5 +1,17 @@
-import { GroceryLine } from '../../types';
-import { buildShoppingList, formatShareText, guessAisle, isAllPickedUp, isInPantry } from '../shoppingList';
+import { GroceryLine, GroceryUse, Unit } from '../../types';
+import { recipeById } from '../recipeCatalog';
+import {
+  buildShoppingList,
+  formatShareText,
+  guessAisle,
+  isAllPickedUp,
+  isInPantry,
+  mealName,
+  mealsSpoken,
+  mealSummary,
+  mealUses,
+  rowAccessibilityLabel,
+} from '../shoppingList';
 
 const manualKey = (id: string) => `manual__${id}`;
 const line = (ingredientId: string, aisle: GroceryLine['aisle'], staple = false, amount = 1): GroceryLine => ({
@@ -10,6 +22,7 @@ const line = (ingredientId: string, aisle: GroceryLine['aisle'], staple = false,
   amount,
   aisle,
   staple,
+  uses: [],
 });
 
 const lines = [line('carrot', 'Produce'), line('olive-oil', 'Oils & Condiments', true), line('salt', 'Spices & Baking', true), line('eggs', 'Dairy & Eggs', false, 6)];
@@ -94,5 +107,50 @@ describe('isAllPickedUp', () => {
 
   it('is false for an empty list', () => {
     expect(isAllPickedUp({ total: 0, checkedCount: 0 })).toBe(false);
+  });
+});
+
+describe('meals each item is for', () => {
+  const r1 = recipeById('r1')!;
+  const r2 = recipeById('r2')!;
+  const r8 = recipeById('r8')!;
+  const use = (planItemId: string, recipeId: string, amount: number, unit: Unit | null = 'tbsp'): GroceryUse => ({ planItemId, recipeId, amount, unit });
+
+  it('combines entries of the same recipe ("×2") with the summed amount, keeping plan order', () => {
+    const meals = mealUses([use('a', 'r1', 2), use('b', 'r2', 1), use('c', 'r1', 2)]);
+    expect(meals).toEqual([
+      { recipeId: 'r1', planItemId: 'a', title: r1.title, count: 2, quantity: '¼ cup' },
+      { recipeId: 'r2', planItemId: 'b', title: r2.title, count: 1, quantity: '1 tbsp' },
+    ]);
+    expect(mealName(meals[0])).toBe(`${r1.title} ×2`);
+  });
+
+  it('formats counts and unknown recipes', () => {
+    expect(mealUses([use('a', 'gone', 3, null)])).toEqual([{ recipeId: 'gone', planItemId: 'a', title: 'Removed recipe', count: 1, quantity: '3' }]);
+  });
+
+  it('summarizes up to two meal names, then "+ N more"', () => {
+    const meals = mealUses([use('a', 'r1', 1), use('b', 'r2', 1), use('c', 'r8', 1)]);
+    expect(mealSummary(meals.slice(0, 1))).toBe(r1.title);
+    expect(mealSummary(meals.slice(0, 2))).toBe(`${r1.title}, ${r2.title}`);
+    expect(mealSummary(meals)).toBe(`${r1.title}, ${r2.title} + 1 more`);
+  });
+
+  it('reads the meals out in the accessibility label', () => {
+    const meals = mealUses([use('a', 'r1', 1), use('b', 'r2', 1), use('c', 'r8', 1)]);
+    expect(rowAccessibilityLabel({ name: 'Garlic', quantity: '5 cloves', meals: meals.slice(0, 2) })).toBe(
+      `Garlic, 5 cloves, for ${r1.title} and ${r2.title}`
+    );
+    expect(mealsSpoken(meals)).toBe(`${r1.title}, ${r2.title}, and ${r8.title}`);
+    expect(rowAccessibilityLabel({ name: 'Foil', quantity: null, meals: [] })).toBe('Foil');
+  });
+
+  it('puts meals on recipe rows (pantry included) and none on manual rows', () => {
+    const withUses = [{ ...line('carrot', 'Produce'), uses: [use('a', 'r2', 1, null)] }, { ...line('salt', 'Spices & Baking', true), uses: [use('a', 'r2', 1, 'tsp')] }];
+    const list = buildShoppingList({ lines: withUses, manualItems: [{ id: 'm1', name: 'Foil', aisle: 'Household' }], checked: { carrot: true }, pantry: {}, manualKey });
+    const rows = list.sections.flatMap((s) => s.rows);
+    expect(rows.find((r) => r.ingredientId === 'carrot')!.meals.map((m) => m.recipeId)).toEqual(['r2']);
+    expect(rows.find((r) => r.manualId === 'm1')!.meals).toEqual([]);
+    expect(list.pantry[0].meals.map((m) => m.quantity)).toEqual(['1 tsp']);
   });
 });

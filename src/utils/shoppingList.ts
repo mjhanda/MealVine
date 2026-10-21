@@ -1,8 +1,18 @@
 import { INGREDIENTS } from '../data/ingredients';
 import { aisleOrder } from '../theme';
-import { Aisle, GroceryLine, ManualGroceryItem, PantryOverride } from '../types';
+import { Aisle, GroceryLine, GroceryUse, ManualGroceryItem, PantryOverride } from '../types';
 import { sortForShopping } from './grocery';
-import { formatQuantity } from './units';
+import { recipeById } from './recipeCatalog';
+import { formatQuantity, fromBase, toBase, unitFamily } from './units';
+
+// One planned meal that needs a grocery item. Entries of the same recipe are combined ("×2").
+export interface MealUse {
+  recipeId: string;
+  planItemId: string; // the first entry, for opening the recipe at that entry's servings
+  title: string;
+  count: number;
+  quantity: string;
+}
 
 export interface ShoppingRow {
   key: string;
@@ -11,6 +21,56 @@ export interface ShoppingRow {
   checked: boolean;
   ingredientId?: string;
   manualId?: string;
+  meals: MealUse[]; // empty for manual items
+}
+
+// Groups a line's per-entry uses by recipe (plan order kept), summing amounts within the unit family.
+export function mealUses(uses: GroceryUse[]): MealUse[] {
+  const byRecipe = new Map<string, { first: GroceryUse; count: number; base: number }>();
+  uses.forEach((use) => {
+    const group = byRecipe.get(use.recipeId);
+    if (group) {
+      group.count += 1;
+      group.base += toBase(use.amount, use.unit);
+    } else {
+      byRecipe.set(use.recipeId, { first: use, count: 1, base: toBase(use.amount, use.unit) });
+    }
+  });
+  return Array.from(byRecipe.values()).map(({ first, count, base }) => {
+    const total = fromBase(base, unitFamily(first.unit), first.unit);
+    return {
+      recipeId: first.recipeId,
+      planItemId: first.planItemId,
+      title: recipeById(first.recipeId)?.title ?? 'Removed recipe',
+      count,
+      quantity: formatQuantity(total.amount, total.unit),
+    };
+  });
+}
+
+export const mealName = (meal: Pick<MealUse, 'title' | 'count'>): string =>
+  meal.count > 1 ? `${meal.title} ×${meal.count}` : meal.title;
+
+// One-line subtitle: up to two meal names, then "+ N more".
+export function mealSummary(meals: MealUse[]): string {
+  const names = meals.slice(0, 2).map(mealName).join(', ');
+  const rest = meals.length - 2;
+  return rest > 0 ? `${names} + ${rest} more` : names;
+}
+
+// For screen readers: "Shrimp Scampi and Lemon Salmon", "A, B, and C".
+export function mealsSpoken(meals: MealUse[]): string {
+  const names = meals.map(mealName);
+  if (names.length <= 2) return names.join(' and ');
+  return `${names.slice(0, -1).join(', ')}, and ${names[names.length - 1]}`;
+}
+
+// "Garlic, 5 cloves, for Shrimp Scampi and Lemon Salmon"
+export function rowAccessibilityLabel(row: Pick<ShoppingRow, 'name' | 'quantity' | 'meals'>): string {
+  const parts = [row.name];
+  if (row.quantity) parts.push(row.quantity);
+  if (row.meals.length > 0) parts.push(`for ${mealsSpoken(row.meals)}`);
+  return parts.join(', ');
 }
 
 export interface ShoppingSection {
@@ -46,10 +106,11 @@ export function buildShoppingList({ lines, manualItems, checked, pantry, manualK
     quantity: formatQuantity(l.amount, l.unit),
     checked: !!checked[l.key],
     ingredientId: l.ingredientId,
+    meals: mealUses(l.uses),
   });
   const manualRow = (m: ManualGroceryItem): ShoppingRow => {
     const key = manualKey(m.id);
-    return { key, name: m.name, quantity: null, checked: !!checked[key], manualId: m.id };
+    return { key, name: m.name, quantity: null, checked: !!checked[key], manualId: m.id, meals: [] };
   };
 
   const toBuy = lines.filter((l) => !isInPantry(l, pantry));

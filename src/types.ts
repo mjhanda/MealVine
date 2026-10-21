@@ -152,4 +152,14 @@ export interface GroceryLine {
   amount: number;
   aisle: Aisle;
   staple: boolean;
+  // Which plan entries need this ingredient, in plan order, each in its own readable unit
+  // (scaled to that entry's servings). Computed from the plan; never persisted.
+  uses: GroceryUse[];
+}
+
+export interface GroceryUse {
+  planItemId: string;
+  recipeId: string;
+  amount: number;
+  unit: Unit | null;
 }
