@@ -62,6 +62,18 @@ export const customRecipesV1 = {
         ],
         steps: ['Simmer everything 40 minutes.'],
       },
+      {
+        id: 'u-def-2',
+        title: 'Beefless burger',
+        mealType: 'dinner',
+        protein: 'beef', // chosen by hand: the ingredients alone say vegetarian
+        prep: 5,
+        cook: 10,
+        servings: 2,
+        emoji: '🍔',
+        ingredients: [{ id: 'garlic', amount: 1, unit: 'clove' }],
+        steps: ['Grill 10 minutes.'],
+      },
       { id: 'u-broken-1', title: 'No ingredients', mealType: 'dinner', protein: 'vegetarian', prep: 0, cook: 0, servings: 2, emoji: '🍽️', steps: [] },
       { id: 'r1', title: 'Not mine', mealType: 'dinner', protein: 'vegetarian', prep: 0, cook: 0, servings: 2, emoji: '🍽️', ingredients: [], steps: [] },
     ],

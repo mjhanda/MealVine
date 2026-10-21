@@ -1,4 +1,4 @@
-import { ingredientById, INGREDIENTS } from '../data/ingredients';
+import { EDITOR_ONLY_UNITS, ingredientById, INGREDIENTS } from '../data/ingredients';
 import { RECIPES } from '../data/recipes';
 import { USER_RECIPE_PREFIX } from '../data/userRecipes';
 import { IngredientDef, MealType, Protein, Recipe, RecipeIngredient, RecipeSource, Unit } from '../types';
@@ -25,6 +25,7 @@ function catalogUnits(ingredientId: string): Map<Unit | null, number> | undefine
         unitCounts!.set(ing.id, counts);
       })
     );
+    Object.entries(EDITOR_ONLY_UNITS).forEach(([id, unit]) => unitCounts!.set(id, new Map([[unit, 1]])));
   }
   return unitCounts.get(ingredientId);
 }
@@ -87,8 +88,27 @@ export function parseAmount(text: string): number | null {
   return max > 0 ? max : null;
 }
 
-// An amount for an editable text field: "1.5", "0.333" (never "1.4999999").
-export const amountText = (n: number): string => String(Math.round(n * 1000) / 1000);
+// Fractions cooks write, for the editor's amount field. parseAmount reads them back.
+const TEXT_FRACTIONS: [number, string][] = [
+  [1 / 8, '1/8'], [1 / 4, '1/4'], [1 / 3, '1/3'], [3 / 8, '3/8'], [1 / 2, '1/2'],
+  [5 / 8, '5/8'], [2 / 3, '2/3'], [3 / 4, '3/4'], [7 / 8, '7/8'],
+];
+const FRACTION_TOLERANCE = 0.002; // 0.333 and 0.3333 are both a third
+
+// An amount for an editable text field: "2", "1/3", "1 1/4"; anything else as a short decimal
+// ("0.4", never "1.4999999").
+export function amountText(n: number): string {
+  let whole = Math.floor(n);
+  let rest = n - whole;
+  if (1 - rest < FRACTION_TOLERANCE) {
+    whole += 1;
+    rest = 0;
+  }
+  if (rest < FRACTION_TOLERANCE) return String(whole);
+  const fraction = TEXT_FRACTIONS.find(([v]) => Math.abs(v - rest) < FRACTION_TOLERANCE)?.[1];
+  if (!fraction) return String(Math.round(n * 1000) / 1000);
+  return whole ? `${whole} ${fraction}` : fraction;
+}
 
 // --- Drafts -------------------------------------------------------------------
 
@@ -138,7 +158,7 @@ export function draftFromRecipe(recipe: Recipe): RecipeDraft {
     servings: recipe.servings,
     prep: String(recipe.prep),
     cook: String(recipe.cook),
-    protein: recipe.protein,
+    protein: recipe.proteinAuto ? null : recipe.protein,
     ingredients: recipe.ingredients.map(ingredientDraft),
     steps: recipe.steps.length ? [...recipe.steps] : [''],
     source: recipe.source,
@@ -220,6 +240,7 @@ export function recipeFromDraft(d: RecipeDraft, id: string = d.id ?? newUserReci
     ingredients,
     steps: d.steps.map((s) => s.trim()).filter(Boolean),
   };
+  if (d.protein === null) recipe.proteinAuto = true;
   return d.source ? { ...recipe, source: d.source } : recipe;
 }
 

@@ -3,6 +3,7 @@ import React, { ReactNode } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { colors } from '../theme';
 import { Recipe } from '../types';
+import { totalMinutes } from '../utils/recipeCatalog';
 import ProteinTag from './ProteinTag';
 
 interface Props {
@@ -36,10 +37,12 @@ export default function RecipeCard({ recipe, onPress, right, servings, warning, 
           </Text>
           <View style={styles.metaRow}>
             <ProteinTag protein={recipe.protein} />
-            <View style={styles.timeRow}>
-              <Feather name="clock" size={12} color={colors.inkSoft} />
-              <Text style={styles.timeText}>{recipe.prep + recipe.cook}m</Text>
-            </View>
+            {totalMinutes(recipe) > 0 && (
+              <View style={styles.timeRow}>
+                <Feather name="clock" size={12} color={colors.inkSoft} />
+                <Text style={styles.timeText}>{totalMinutes(recipe)}m</Text>
+              </View>
+            )}
             {!!timesCooked && (
               <View style={styles.timeRow} accessibilityLabel={`Cooked ${timesCooked} times`}>
                 <Feather name="check-circle" size={12} color={colors.sage} />
