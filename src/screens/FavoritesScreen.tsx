@@ -4,8 +4,8 @@ import React, { useMemo, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import RecipeCard from '../components/RecipeCard';
-import { RECIPES } from '../data/recipes';
 import { RootStackParamList } from '../navigation/types';
+import { useUserRecipes } from '../store/customRecipesStore';
 import { useFavoritesStore } from '../store/favoritesStore';
 import { useHistoryStore } from '../store/historyStore';
 import { useEatingPrefs } from '../store/preferencesStore';
@@ -13,6 +13,7 @@ import { useRecipeNotesStore } from '../store/recipeNotesStore';
 import { colors } from '../theme';
 import { isExcluded, recipeConflicts } from '../utils/diets';
 import { cookStats } from '../utils/history';
+import { allRecipes } from '../utils/recipeCatalog';
 
 type Nav = NativeStackNavigationProp<RootStackParamList>;
 type SortMode = 'recent' | 'az';
@@ -24,9 +25,10 @@ export default function FavoritesScreen() {
   const ratings = useRecipeNotesStore((s) => s.ratings);
   const prefs = useEatingPrefs();
   const [sort, setSort] = useState<SortMode>('recent');
+  useUserRecipes(); // re-render when your own recipes change
 
   const stats = useMemo(() => cookStats(history), [history]);
-  const saved = RECIPES.filter((r) => favorites.includes(r.id));
+  const saved = allRecipes().filter((r) => favorites.includes(r.id));
   // Allergens/dislikes hide favorites too; say how many so nothing silently disappears.
   const visible = saved.filter((r) => !isExcluded(recipeConflicts(r, prefs)));
   const hiddenCount = saved.length - visible.length;

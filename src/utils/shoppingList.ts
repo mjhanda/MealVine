@@ -1,6 +1,7 @@
 import { INGREDIENTS } from '../data/ingredients';
 import { aisleOrder } from '../theme';
 import { Aisle, GroceryLine, GroceryUse, ManualGroceryItem, PantryOverride } from '../types';
+import { NOT_CHECKED_NOTE } from './customIngredients';
 import { sortForShopping } from './grocery';
 import { recipeById } from './recipeCatalog';
 import { formatQuantity, fromBase, toBase, unitFamily } from './units';
@@ -22,6 +23,7 @@ export interface ShoppingRow {
   ingredientId?: string;
   manualId?: string;
   meals: MealUse[]; // empty for manual items
+  note?: string; // e.g. "Not checked for allergies" for a free-text ingredient
 }
 
 // Groups a line's per-entry uses by recipe (plan order kept), summing amounts within the unit family.
@@ -66,9 +68,10 @@ export function mealsSpoken(meals: MealUse[]): string {
 }
 
 // "Garlic, 5 cloves, for Shrimp Scampi and Lemon Salmon"
-export function rowAccessibilityLabel(row: Pick<ShoppingRow, 'name' | 'quantity' | 'meals'>): string {
+export function rowAccessibilityLabel(row: Pick<ShoppingRow, 'name' | 'quantity' | 'meals' | 'note'>): string {
   const parts = [row.name];
   if (row.quantity) parts.push(row.quantity);
+  if (row.note) parts.push(row.note);
   if (row.meals.length > 0) parts.push(`for ${mealsSpoken(row.meals)}`);
   return parts.join(', ');
 }
@@ -107,6 +110,7 @@ export function buildShoppingList({ lines, manualItems, checked, pantry, manualK
     checked: !!checked[l.key],
     ingredientId: l.ingredientId,
     meals: mealUses(l.uses),
+    ...(l.unverified ? { note: NOT_CHECKED_NOTE } : {}),
   });
   const manualRow = (m: ManualGroceryItem): ShoppingRow => {
     const key = manualKey(m.id);

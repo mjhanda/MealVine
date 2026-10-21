@@ -11,6 +11,7 @@ import RecipeCard from '../components/RecipeCard';
 import { MainTabParamList, RootStackParamList } from '../navigation/types';
 import { useHistoryStore } from '../store/historyStore';
 import { cookAgain, markCooked, undoCooked } from '../store/mealActions';
+import { useUserRecipes } from '../store/customRecipesStore';
 import { usePlanStore } from '../store/planStore';
 import { useEatingPrefs, usePreferencesStore } from '../store/preferencesStore';
 import { useUndoStore } from '../store/undoStore';
@@ -39,6 +40,7 @@ function buildGroups(mealTypes: MealType[], items: PlanItem[]): PlanGroup[] {
 export default function PlanScreen() {
   const navigation = useNavigation<Nav>();
   const plan = usePlanStore((s) => s.plan);
+  const userRecipes = useUserRecipes(); // entries for your own recipes follow their edits (e.g. meal type)
   const removeItem = usePlanStore((s) => s.removeItem);
   const restoreItem = usePlanStore((s) => s.restoreItem);
   const clear = usePlanStore((s) => s.clear);
@@ -47,7 +49,7 @@ export default function PlanScreen() {
   const cooked = useHistoryStore((s) => s.cooked);
   const showUndo = useUndoStore((s) => s.show);
 
-  const groups = useMemo(() => buildGroups(mealTypes, plan.items), [mealTypes, plan.items]);
+  const groups = useMemo(() => buildGroups(mealTypes, plan.items), [mealTypes, plan.items, userRecipes]); // eslint-disable-line react-hooks/exhaustive-deps
   const total = plan.items.length;
 
   const handleClear = () => {

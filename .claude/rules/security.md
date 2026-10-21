@@ -21,7 +21,8 @@ These are the facts this file depends on. If any of these change, re-run the
 bootstrap against the updated `architecture.md`:
 
 - No backend of our own. **One third-party SDK with network access: RevenueCat** (`react-native-purchases`), used only for the ad-free subscription; it receives an anonymous app user ID and store purchase data, never meal data or preferences. All RevenueCat calls go through `src/services/purchases.ts`.
-- No account, no identity, no network. The one health-adjacent field stored is the user's **allergy list** (`Preferences.allergies`, since prefs v2) — on-device only, never logged, never transmitted. See `docs/project/security.md`.
+- **One user-initiated network request: recipe import (T48).** `src/services/recipeFetch.ts` (the only caller) GETs the recipe page URL the user pasted, native only, `credentials: 'omit'`, http(s) only, 15 s / 5 MB limits. It sends nothing about the user.
+- No account, no identity, no other network use. The one health-adjacent field stored is the user's **allergy list** (`Preferences.allergies`, since prefs v2) — on-device only, never logged, never transmitted. See `docs/project/security.md`.
 - Persistence is AsyncStorage via Zustand `persist`: preferences (household size, diet, allergies, disliked ingredients, meal types), plan, cooking history, favorites, grocery state — see `src/store/`.
 - ESLint (`eslint-config-expo`) and jest are configured; the GitHub Actions workflow runs typecheck, lint, and tests on every push/PR.
 
@@ -36,8 +37,9 @@ Apply these now, while the app is local-only:
 5. **No ad SDK without a privacy update.** Ad networks plug in only through `src/ads/` (`AdProvider`). Adding one requires updating the privacy policy, both stores' privacy answers, and consent (ATT/UMP) in the same change — and never passing preferences/allergies to ad targeting.
 6. **Never send app data to RevenueCat.** No `setAttributes`, `logIn` with identifying IDs, or custom attributes carrying preferences/allergies. Public SDK keys only (`appl_`/`goog_`) via `EXPO_PUBLIC_RC_*` env vars; the RevenueCat secret key never enters this repo or the app.
 7. **Treat allergy data as sensitive.** Never `console.log` preferences, never include them in crash reports or analytics if those SDKs are ever added, and any export/share of them (T24) must ask the user first.
-8. **Allergen tagging is a safety surface.** `src/data/ingredients.ts` tags are deliberately conservative; never remove an allergen tag to make a recipe show up — fix the recipe or the ingredient choice instead. The in-app disclaimer (`ALLERGY_DISCLAIMER`) must stay visible wherever allergies are set.
-9. **Run `npm audit` before releases** as the current (manual) supply-chain check, since no automated scanner is configured — see `docs/project/security.md`'s Dependency & Supply Chain section.
+8. **Allergen tagging is a safety surface.** `src/data/ingredients.ts` tags are deliberately conservative; never remove an allergen tag to make a recipe show up — fix the recipe or the ingredient choice instead. The in-app disclaimer (`ALLERGY_DISCLAIMER`) must stay visible wherever allergies are set. Free-text ingredients in the user's own or imported recipes have no tags and must stay flagged "Not checked for allergies" (`Conflicts.unverified`), never treated as safe; import matching (`matchIngredient`) stays conservative so a product is never matched to a shorter, differently tagged ingredient ("peanut butter" ≠ "butter").
+9. **Recipe import sends nothing but the URL.** Never add app data (preferences, allergies, plan, recipes, identifiers) to the import request as query parameters, headers, or body; never fetch anything the page itself links to (images, scripts, redirects beyond the platform default); treat page content as untrusted text (parse JSON-LD only, strip HTML, never render it or open URLs from it). Any new network call needs the same review and an update to `docs/project/security.md`.
+10. **Run `npm audit` before releases** as the current (manual) supply-chain check, since no automated scanner is configured — see `docs/project/security.md`'s Dependency & Supply Chain section.
 
 ## Prompt placeholders to resolve
 

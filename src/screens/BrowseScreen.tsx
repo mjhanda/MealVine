@@ -8,6 +8,7 @@ import AdSlot from '../ads/AdSlot';
 import { feedAdAfter } from '../ads/placement';
 import RecipeCard from '../components/RecipeCard';
 import { MainTabParamList, RootStackParamList } from '../navigation/types';
+import { useUserRecipes } from '../store/customRecipesStore';
 import { useFavoritesStore } from '../store/favoritesStore';
 import { useHistoryStore } from '../store/historyStore';
 import { useRecipeNotesStore } from '../store/recipeNotesStore';
@@ -88,12 +89,14 @@ export default function BrowseScreen() {
   const history = useHistoryStore((s) => s.cooked);
   const stats = useMemo(() => cookStats(history), [history]);
   const ratings = useRecipeNotesStore((s) => s.ratings);
+  const userRecipes = useUserRecipes();
 
   const chips: { id: MealFilter; label: string }[] = useMemo(() => {
     const selected = mealTypes.length > 0 ? mealTypes : mealTypeOrder;
     return [
       { id: 'all' as const, label: 'All' },
       { id: 'quick' as const, label: 'Quick meals' },
+      { id: 'mine' as const, label: 'My recipes' },
       ...selected.map((id) => ({ id, label: mealLabels[id] })),
     ];
   }, [mealTypes]);
@@ -115,7 +118,8 @@ export default function BrowseScreen() {
     }),
     [mealType, search, prefs, showAllDiets, maxMinutes, maxKcal, favoritesOnly, favorites, hidePlanned, plan.items, swapRecipe]
   );
-  const recipes = useMemo(() => filterRecipes(criteria), [criteria]);
+  // userRecipes: filterRecipes reads your recipes directly; recompute when they change.
+  const recipes = useMemo(() => filterRecipes(criteria), [criteria, userRecipes]); // eslint-disable-line react-hooks/exhaustive-deps
   const suggestions = useMemo(() => (recipes.length === 0 ? relaxSuggestions(criteria) : []), [recipes, criteria]);
 
   const relax = (f: RelaxableFilter) => {
@@ -164,10 +168,38 @@ export default function BrowseScreen() {
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
       <View style={styles.header}>
-        <Text style={styles.eyebrow}>{swapRecipe ? 'Swap a meal' : 'Browse'}</Text>
-        <Text style={styles.title} numberOfLines={2}>
-          {swapRecipe ? `Replace ${swapRecipe.title}` : 'All recipes'}
-        </Text>
+        <View style={styles.titleRow}>
+          <View style={styles.titleWrap}>
+            <Text style={styles.eyebrow}>{swapRecipe ? 'Swap a meal' : 'Browse'}</Text>
+            <Text style={styles.title} numberOfLines={2}>
+              {swapRecipe ? `Replace ${swapRecipe.title}` : 'All recipes'}
+            </Text>
+          </View>
+          {!swapRecipe && (
+            <Pressable
+              onPress={() => navigation.navigate('RecipeImport')}
+              style={styles.newBtn}
+              hitSlop={{ top: 6, bottom: 6 }}
+              accessibilityRole="button"
+              accessibilityLabel="Import a recipe from a website or text"
+            >
+              <Feather name="download" size={14} color={colors.forest} />
+              <Text style={styles.newBtnLabel}>Import</Text>
+            </Pressable>
+          )}
+          {!swapRecipe && (
+            <Pressable
+              onPress={() => navigation.navigate('RecipeEditor')}
+              style={styles.newBtn}
+              hitSlop={{ top: 6, bottom: 6 }}
+              accessibilityRole="button"
+              accessibilityLabel="Add your own recipe"
+            >
+              <Feather name="plus" size={14} color={colors.forest} />
+              <Text style={styles.newBtnLabel}>Your recipe</Text>
+            </Pressable>
+          )}
+        </View>
         {swapRecipe && (
           <Pressable onPress={endSwap} hitSlop={8} accessibilityRole="button">
             <Text style={styles.dietNoteLink}>Cancel swap</Text>
@@ -266,7 +298,19 @@ export default function BrowseScreen() {
         )}
         {recipes.length === 0 && (
           <View style={styles.empty}>
-            <Text style={styles.emptyText}>No recipes match.</Text>
+            <Text style={styles.emptyText}>
+              {mealType === 'mine' && userRecipes.length === 0 ? "You haven't added any recipes yet." : 'No recipes match.'}
+            </Text>
+            {mealType === 'mine' && (
+              <>
+                <Pressable onPress={() => navigation.navigate('RecipeEditor')} style={styles.relaxBtn} accessibilityRole="button">
+                  <Text style={styles.relaxLabel}>Add your own recipe</Text>
+                </Pressable>
+                <Pressable onPress={() => navigation.navigate('RecipeImport')} style={styles.relaxBtn} accessibilityRole="button">
+                  <Text style={styles.relaxLabel}>Import from a website</Text>
+                </Pressable>
+              </>
+            )}
             {suggestions.map(({ filter: f, count }) => (
               <Pressable key={f} onPress={() => relax(f)} style={styles.relaxBtn} accessibilityRole="button">
                 <Text style={styles.relaxLabel}>
@@ -321,6 +365,13 @@ export default function BrowseScreen() {
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: colors.cream },
   header: { paddingHorizontal: 20, paddingTop: 12 },
+  titleRow: { flexDirection: 'row', alignItems: 'flex-end', gap: 8 },
+  titleWrap: { flex: 1 },
+  newBtn: {
+    flexDirection: 'row', alignItems: 'center', gap: 4, paddingHorizontal: 12, paddingVertical: 8,
+    borderRadius: 20, borderWidth: 1, borderColor: colors.forest, marginBottom: 2,
+  },
+  newBtnLabel: { fontSize: 12.5, fontWeight: '700', color: colors.forest },
   eyebrow: { fontSize: 13, color: colors.goldText, fontWeight: '600' },
   title: { fontSize: 24, fontWeight: '600', color: colors.forest },
   searchRow: {

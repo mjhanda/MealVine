@@ -1,19 +1,41 @@
 import { applyBackup, currentVersions, exportBackupJson, readBackup } from '../backupActions';
+import { useCustomRecipesStore } from '../customRecipesStore';
 import { useFavoritesStore } from '../favoritesStore';
 import { useGroceryStore } from '../groceryStore';
 import { useHistoryStore } from '../historyStore';
-import { markCooked, resetAllData } from '../mealActions';
+import { deleteUserRecipe, markCooked, resetAllData } from '../mealActions';
+import { recipeById } from '../../utils/recipeCatalog';
+import { groceryLinesFromPlan } from '../../utils/grocery';
+import { Recipe } from '../../types';
 import { usePlanStore } from '../planStore';
 import { usePreferencesStore } from '../preferencesStore';
 import { useRecipeNotesStore } from '../recipeNotesStore';
 import { BACKUP_FORMAT } from '../../utils/backup';
 import { groceryV1, weeklyPlanV0 } from './fixtures';
 
+const MY_SOUP: Recipe = {
+  id: 'u-soup-1',
+  title: 'My soup',
+  mealType: 'dinner',
+  protein: 'vegetarian',
+  prep: 5,
+  cook: 20,
+  servings: 2,
+  emoji: '🍲',
+  ingredients: [
+    { id: 'garlic', amount: 2, unit: 'clove' },
+    { id: 'custom:smoked-salt', custom: 'Smoked salt', amount: 1, unit: 'tsp' },
+  ],
+  steps: ['Simmer 20 minutes.'],
+};
+
 function seedEverything() {
+  useCustomRecipesStore.setState({ recipes: [MY_SOUP] });
   useHistoryStore.setState({ cooked: [] });
   usePreferencesStore.setState({ householdSize: 3, diet: 'pescetarian', allergies: ['peanut'], dislikes: ['firm-tofu'], mealTypes: ['dinner'], onboardingComplete: true });
   usePlanStore.setState({ plan: { items: [] }, hasHydrated: true });
   usePlanStore.getState().addItem('r1', 2);
+  usePlanStore.getState().addItem(MY_SOUP.id, 2);
   markCooked(usePlanStore.getState().addItem('r2', 4), 1_000);
   useFavoritesStore.setState({ favorites: ['r1', 'r83'] });
   useGroceryStore.setState({ checked: { eggs: true }, manualItems: [{ id: 'm1', name: 'Foil', aisle: 'Household' }], pantry: { salt: 'need' } });
@@ -27,6 +49,7 @@ const pick = () => ({
   favorites: useFavoritesStore.getState().favorites,
   grocery: (({ checked, manualItems, pantry }) => ({ checked, manualItems, pantry }))(useGroceryStore.getState()),
   notes: (({ notes, ratings }) => ({ notes, ratings }))(useRecipeNotesStore.getState()),
+  recipes: useCustomRecipesStore.getState().recipes,
 });
 
 describe('backup export / import', () => {
@@ -37,12 +60,14 @@ describe('backup export / import', () => {
     expect(json).not.toContain('hasHydrated');
     resetAllData();
     expect(pick().favorites).toEqual([]);
+    expect(recipeById(MY_SOUP.id)).toBeUndefined();
     const result = readBackup(json);
     expect(result.ok).toBe(true);
     if (!result.ok) return;
     expect(result.exportedAt).toBe('2026-10-05T12:00:00.000Z');
     applyBackup(result.data, 'replace');
     expect(pick()).toEqual(before);
+    expect(recipeById(MY_SOUP.id)?.title).toBe('My soup');
   });
 
   it('merge keeps current data and adds the backup on top', () => {
@@ -69,7 +94,8 @@ describe('backup export / import', () => {
     if (!result.ok) throw new Error(result.error);
     applyBackup(result.data, 'merge');
     applyBackup(result.data, 'merge');
-    expect(usePlanStore.getState().plan.items).toHaveLength(1);
+    expect(usePlanStore.getState().plan.items).toHaveLength(2);
+    expect(useCustomRecipesStore.getState().recipes).toHaveLength(1);
     expect(useHistoryStore.getState().cooked).toHaveLength(1);
     expect(useGroceryStore.getState().manualItems).toHaveLength(1);
   });
@@ -104,6 +130,45 @@ describe('backup export / import', () => {
   });
 
   it('knows every store version', () => {
-    expect(Object.keys(currentVersions()).sort()).toEqual(['favorites', 'grocery', 'history', 'notes', 'plan', 'preferences']);
+    expect(Object.keys(currentVersions()).sort()).toEqual(['favorites', 'grocery', 'history', 'notes', 'plan', 'preferences', 'recipes']);
+  });
+});
+
+describe('your own recipes', () => {
+  it('merge keeps your edited copy of a recipe over the backup\'s', () => {
+    seedEverything();
+    const json = exportBackupJson();
+    useCustomRecipesStore.getState().saveRecipe({ ...MY_SOUP, title: 'My better soup' });
+    const result = readBackup(json);
+    if (!result.ok) throw new Error(result.error);
+    applyBackup(result.data, 'merge');
+    expect(useCustomRecipesStore.getState().recipes.map((r) => r.title)).toEqual(['My better soup']);
+  });
+
+  it('shows on the grocery list, free-text ingredients under Other and flagged', () => {
+    seedEverything();
+    const lines = groceryLinesFromPlan(usePlanStore.getState().plan);
+    expect(lines.find((l) => l.name === 'Smoked salt')).toMatchObject({ aisle: 'Other', unverified: true, amount: 1, unit: 'tsp' });
+  });
+
+  it('delete removes the recipe and its plan entries; undo puts both back', () => {
+    seedEverything();
+    const undo = deleteUserRecipe(MY_SOUP.id);
+    expect(recipeById(MY_SOUP.id)).toBeUndefined();
+    expect(usePlanStore.getState().plan.items.map((i) => i.recipeId)).toEqual(['r1']);
+    undo!();
+    expect(recipeById(MY_SOUP.id)?.title).toBe('My soup');
+    expect(usePlanStore.getState().plan.items.map((i) => i.recipeId)).toEqual(['r1', MY_SOUP.id]);
+    expect(deleteUserRecipe('u-missing')).toBeUndefined();
+  });
+
+  it('edits replace in place; restore is a no-op when the recipe is already there', () => {
+    seedEverything();
+    const store = useCustomRecipesStore.getState();
+    store.saveRecipe({ ...MY_SOUP, id: 'u-two', title: 'Two' });
+    store.saveRecipe({ ...MY_SOUP, servings: 4 });
+    expect(useCustomRecipesStore.getState().recipes.map((r) => [r.id, r.servings])).toEqual([[MY_SOUP.id, 4], ['u-two', 2]]);
+    useCustomRecipesStore.getState().restoreRecipe(MY_SOUP, 0);
+    expect(useCustomRecipesStore.getState().recipes).toHaveLength(2);
   });
 });

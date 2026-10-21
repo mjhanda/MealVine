@@ -42,6 +42,33 @@ export const groceryV0 = {
 
 export const favoritesV0 = { state: { favorites: ['r1', 'r7'] }, version: 0 };
 
+// Your own recipes, v1 (the first version): one with a catalog and a free-text ingredient, plus
+// two entries a buggy write could leave behind (no ingredients list; a catalog-style id).
+export const customRecipesV1 = {
+  state: {
+    recipes: [
+      {
+        id: 'u-abc-0',
+        title: "Gran's lentil soup",
+        mealType: 'dinner',
+        protein: 'vegetarian',
+        prep: 10,
+        cook: 40,
+        servings: 4,
+        emoji: '🍲',
+        ingredients: [
+          { id: 'garlic', amount: 2, unit: 'clove', prep: 'minced' },
+          { id: 'custom:smoked-salt', custom: 'Smoked salt', amount: 1, unit: 'tsp' },
+        ],
+        steps: ['Simmer everything 40 minutes.'],
+      },
+      { id: 'u-broken-1', title: 'No ingredients', mealType: 'dinner', protein: 'vegetarian', prep: 0, cook: 0, servings: 2, emoji: '🍽️', steps: [] },
+      { id: 'r1', title: 'Not mine', mealType: 'dinner', protein: 'vegetarian', prep: 0, cook: 0, servings: 2, emoji: '🍽️', ingredients: [], steps: [] },
+    ],
+  },
+  version: 1,
+};
+
 // Grocery v1 (versioned, still free-text keys and `category`).
 export const groceryV1 = {
   state: {

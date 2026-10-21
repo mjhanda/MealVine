@@ -62,7 +62,11 @@ export type DiscreteUnit = 'can' | 'clove' | 'stalk' | 'head' | 'bunch' | 'slice
 export type Unit = VolumeUnit | WeightUnit | DiscreteUnit;
 
 export interface RecipeIngredient {
+  // A catalog ingredient id, or `custom:<slug>` for a free-text ingredient in a user's own recipe.
   id: string;
+  // Free-text ingredients only: the name as the user wrote it. Not in the catalog, so it has no
+  // aisle, allergen tags, or nutrition; it's shown as "not checked for allergies".
+  custom?: string;
   amount: number;
   unit: Unit | null; // null = count ("2 carrots")
   prep?: string; // "diced", "hard-boiled" — shown in the recipe, ignored by the grocery list
@@ -72,9 +76,10 @@ export interface RecipeIngredient {
 export interface RecipeSource {
   // adapted = ingredients/method reworked and instructions rewritten by us;
   // as-posted = the poster's own instructions (lightly cleaned), amounts converted to our units.
-  kind: 'adapted' | 'as-posted';
+  // web = one of your own recipes, imported from a web page for personal use (T48).
+  kind: 'adapted' | 'as-posted' | 'web';
   title: string; // original recipe title
-  author: string; // poster's name as given (never their email address)
+  author: string; // poster's name as given (never their email address); may be '' for web imports
   posted?: string; // original posting date, e.g. "1993-08-17"
   collection: string; // e.g. "CMU Recipe Archive (rec.food.cooking)"
   url: string;
@@ -152,6 +157,8 @@ export interface GroceryLine {
   amount: number;
   aisle: Aisle;
   staple: boolean;
+  // A free-text ingredient from a user's own recipe: not checked for allergies.
+  unverified?: boolean;
   // Which plan entries need this ingredient, in plan order, each in its own readable unit
   // (scaled to that entry's servings). Computed from the plan; never persisted.
   uses: GroceryUse[];

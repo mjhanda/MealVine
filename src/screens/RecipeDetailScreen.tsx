@@ -8,13 +8,18 @@ import ProteinTag from '../components/ProteinTag';
 import NutritionPanel from '../components/NutritionPanel';
 import RatingButtons from '../components/RatingButtons';
 import SauceChoice from '../components/SauceChoice';
+import { isUserRecipeId } from '../data/userRecipes';
 import { RootStackParamList } from '../navigation/types';
+import { useUserRecipes } from '../store/customRecipesStore';
 import { useFavoritesStore } from '../store/favoritesStore';
 import { useHistoryStore } from '../store/historyStore';
+import { deleteUserRecipe } from '../store/mealActions';
+import { useUndoStore } from '../store/undoStore';
 import { useRecipeNotesStore } from '../store/recipeNotesStore';
 import { MAX_SERVINGS, MIN_SERVINGS, usePlanStore } from '../store/planStore';
 import { useEatingPrefs, usePreferencesStore } from '../store/preferencesStore';
 import { colors } from '../theme';
+import { isCustomIngredient, NOT_CHECKED_NOTE } from '../utils/customIngredients';
 import { describeConflicts, DIETS, dietsFor, isExcluded, recipeConflicts } from '../utils/diets';
 import { defaultServings, ingredientDisplayName, recipeById } from '../utils/recipeCatalog';
 import { recipeAsCooked, sauceOptions, saucesToMake } from '../utils/homemade';
@@ -26,7 +31,9 @@ import { formatQuantity, scaleAmount } from '../utils/units';
 type Props = NativeStackScreenProps<RootStackParamList, 'RecipeDetail'>;
 
 export default function RecipeDetailScreen({ route, navigation }: Props) {
+  useUserRecipes(); // re-render after editing your own recipe
   const recipe = recipeById(route.params.recipeId);
+  const showUndo = useUndoStore((s) => s.show);
   const householdSize = usePreferencesStore((s) => s.householdSize);
   const prefs = useEatingPrefs();
   const note = useRecipeNotesStore((s) => s.notes[route.params.recipeId] ?? '');
@@ -70,6 +77,14 @@ export default function RecipeDetailScreen({ route, navigation }: Props) {
   }
 
   const isFav = favorites.includes(recipe.id);
+  const isMine = isUserRecipeId(recipe.id);
+  // No confirmation: the undo bar brings the recipe (and its plan entries) back.
+  const handleDelete = () => {
+    const { title, id } = recipe;
+    navigation.goBack();
+    const undo = deleteUserRecipe(id);
+    if (undo) showUndo(`Deleted ${title}`, undo);
+  };
   const conflicts = recipeConflicts(recipe, prefs);
   const conflictText = describeConflicts(conflicts, prefs);
   const fits = dietsFor(recipe).map((d) => DIETS[d].label);
@@ -112,6 +127,30 @@ export default function RecipeDetailScreen({ route, navigation }: Props) {
             <Text style={styles.timeText}>{recipe.prep + recipe.cook} min</Text>
           </View>
         </View>
+
+        {isMine && (
+          <View style={styles.mineRow}>
+            <Text style={styles.mineLabel}>Your recipe</Text>
+            <Pressable
+              onPress={() => navigation.navigate('RecipeEditor', { recipeId: recipe.id })}
+              style={styles.mineBtn}
+              accessibilityRole="button"
+              accessibilityLabel={`Edit ${recipe.title}`}
+            >
+              <Feather name="edit-2" size={14} color={colors.forest} />
+              <Text style={styles.mineBtnLabel}>Edit</Text>
+            </Pressable>
+            <Pressable
+              onPress={handleDelete}
+              style={styles.mineBtn}
+              accessibilityRole="button"
+              accessibilityLabel={`Delete ${recipe.title}`}
+            >
+              <Feather name="trash-2" size={14} color={colors.rustText} />
+              <Text style={[styles.mineBtnLabel, { color: colors.rustText }]}>Delete</Text>
+            </Pressable>
+          </View>
+        )}
 
         <Text style={styles.fitsText}>Fits: {fits.join(' · ')}</Text>
 
@@ -208,7 +247,10 @@ export default function RecipeDetailScreen({ route, navigation }: Props) {
                 return (
                   <View key={i}>
                     <View style={[styles.ingredientRow, sauce && styles.ingredientRowSauce]}>
-                      <Text style={styles.ingredientName}>{ingredientDisplayName(ing, amount)}</Text>
+                      <View style={styles.ingredientNameWrap}>
+                        <Text style={styles.ingredientName}>{ingredientDisplayName(ing, amount)}</Text>
+                        {isCustomIngredient(ing) && <Text style={styles.uncheckedNote}>{NOT_CHECKED_NOTE}</Text>}
+                      </View>
                       <Text style={styles.ingredientAmount}>{formatQuantity(amount, ing.unit)}</Text>
                     </View>
                     {sauce && (
@@ -343,7 +385,13 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1, borderBottomColor: colors.line,
   },
   ingredientRowSauce: { borderBottomWidth: 0 },
-  ingredientName: { flex: 1, color: colors.ink, fontSize: 14, marginRight: 12 },
+  ingredientNameWrap: { flex: 1, marginRight: 12 },
+  ingredientName: { color: colors.ink, fontSize: 14 },
+  uncheckedNote: { fontSize: 11.5, color: colors.rustText, marginTop: 2 },
+  mineRow: { flexDirection: 'row', justifyContent: 'center', alignItems: 'center', gap: 6, marginTop: 12 },
+  mineLabel: { fontSize: 12.5, fontWeight: '700', color: colors.goldText, marginRight: 4 },
+  mineBtn: { flexDirection: 'row', alignItems: 'center', gap: 4, minHeight: 44, paddingHorizontal: 10 },
+  mineBtnLabel: { fontSize: 13, fontWeight: '700', color: colors.forest },
   ingredientAmount: { color: colors.inkSoft, fontWeight: '600', fontSize: 14 },
   stepRow: { flexDirection: 'row', gap: 12 },
   stepBadge: {

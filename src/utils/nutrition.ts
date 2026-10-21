@@ -66,13 +66,14 @@ export function recipeNutrition(recipe: Recipe): RecipeNutrition {
   return { perServing, rows, approximate };
 }
 
-// Cached per recipe id: the catalog is static, and Browse filters on calories for every recipe.
-const cache = new Map<string, NutrientValues>();
+// Cached per recipe object: Browse filters on calories for every recipe. Keyed by the object, not
+// the id, so editing one of your own recipes (a new object) is never served a stale total.
+const cache = new WeakMap<Recipe, NutrientValues>();
 export function caloriesPerServing(recipe: Recipe): number {
-  let v = cache.get(recipe.id);
+  let v = cache.get(recipe);
   if (!v) {
     v = recipeNutrition(recipe).perServing;
-    cache.set(recipe.id, v);
+    cache.set(recipe, v);
   }
   return v.kcal;
 }

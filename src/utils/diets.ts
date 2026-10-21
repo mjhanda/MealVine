@@ -1,5 +1,6 @@
 import { ingredientById, INGREDIENTS } from '../data/ingredients';
 import { AllergenTag, DietId, IngredientTag, Recipe } from '../types';
+import { customIngredientNames } from './customIngredients';
 import { homemadeSauceIngredientIds, homemadeSauceTags } from './homemade';
 
 // Any animal flesh. A recipe with none of these is vegetarian.
@@ -85,6 +86,8 @@ export interface Conflicts {
   diet: boolean;
   allergens: AllergenTag[];
   dislikes: string[]; // ingredient ids present in the recipe
+  // Free-text ingredients (your own recipes) we can't check: never silently counted as safe.
+  unverified: string[];
 }
 
 export function recipeConflicts(recipe: Recipe, prefs: EatingPrefs): Conflicts {
@@ -95,8 +98,13 @@ export function recipeConflicts(recipe: Recipe, prefs: EatingPrefs): Conflicts {
     diet: !fitsDiet(recipe, prefs.diet),
     allergens: prefs.allergies.filter((a) => tags.has(a)),
     dislikes: prefs.dislikes.filter((d) => ids.has(d)),
+    unverified: customIngredientNames(recipe),
   };
 }
+
+// Whether unchecked free-text ingredients matter to this user (any allergy, avoid list, or diet).
+const hasRestrictions = (prefs: EatingPrefs): boolean =>
+  prefs.allergies.length > 0 || prefs.dislikes.length > 0 || prefs.diet !== 'classic';
 
 // Allergens and dislikes always exclude; the diet can be relaxed with "show all diets".
 export function isExcluded(c: Conflicts): boolean {
@@ -112,5 +120,6 @@ export function describeConflicts(c: Conflicts, prefs: EatingPrefs): string[] {
   if (c.allergens.length) out.push(`Contains ${c.allergens.map(allergenLabel).join(', ').toLowerCase()}`);
   if (c.dislikes.length) out.push(`Has ${c.dislikes.map((id) => INGREDIENTS[id]?.name.toLowerCase() ?? id).join(', ')}`);
   if (c.diet) out.push(`Not ${DIETS[prefs.diet].label.toLowerCase()}`);
+  if (c.unverified.length && hasRestrictions(prefs)) out.push(`Not checked for allergies or diet: ${c.unverified.join(', ')}`);
   return out;
 }

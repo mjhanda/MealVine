@@ -1,11 +1,14 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { migrateFavorites, useFavoritesStore } from '../favoritesStore';
 import { migrateGrocery, useGroceryStore } from '../groceryStore';
+import { migrateCustomRecipes, useCustomRecipesStore } from '../customRecipesStore';
 import { MigrationError, useStorageHealth } from '../persistence';
+import { getUserRecipes } from '../../data/userRecipes';
+import { recipeById } from '../../utils/recipeCatalog';
 import { migrateHistory } from '../historyStore';
 import { migratePlan, usePlanStore } from '../planStore';
 import { migratePreferences, usePreferencesStore } from '../preferencesStore';
-import { favoritesV0, groceryV0, groceryV1, listPlanV0, planV1, preferencesV0, weeklyPlanV0 } from './fixtures';
+import { customRecipesV1, favoritesV0, groceryV0, groceryV1, listPlanV0, planV1, preferencesV0, weeklyPlanV0 } from './fixtures';
 
 afterEach(() => jest.restoreAllMocks());
 
@@ -149,6 +152,33 @@ describe('rehydration from real storage', () => {
     await new Promise((r) => setTimeout(r, 0));
     expect(usePlanStore.getState().hasHydrated).toBe(true);
     expect(useStorageHealth.getState().failedStores).toContain('mealplan:plan');
+  });
+});
+
+describe('your recipes store', () => {
+  it('keeps well-formed recipes and drops malformed or non-user ones', () => {
+    const { recipes } = migrateCustomRecipes(customRecipesV1.state, 1);
+    expect(recipes.map((r) => r.id)).toEqual(['u-abc-0']);
+    expect(recipes[0].ingredients[1]).toEqual({ id: 'custom:smoked-salt', custom: 'Smoked salt', amount: 1, unit: 'tsp' });
+  });
+
+  it('treats a missing list as empty and rejects unusable blobs', () => {
+    expect(migrateCustomRecipes({}, 0)).toEqual({ recipes: [] });
+    expect(() => migrateCustomRecipes('nope', 1)).toThrow(MigrationError);
+    expect(() => migrateCustomRecipes({ recipes: 'nope' }, 1)).toThrow(MigrationError);
+  });
+
+  it('rehydrates an older blob, rewrites it at v1, and makes the recipes visible to the catalog', async () => {
+    useCustomRecipesStore.setState({ recipes: [], hasHydrated: false });
+    // Saved at an older version, so the migration runs (and drops the malformed entries).
+    await seed('mealplan:customRecipes', { ...customRecipesV1, version: 0 });
+    await useCustomRecipesStore.persist.rehydrate();
+    expect(useCustomRecipesStore.getState().hasHydrated).toBe(true);
+    expect(getUserRecipes().map((r) => r.id)).toEqual(['u-abc-0']);
+    expect(recipeById('u-abc-0')?.title).toBe("Gran's lentil soup");
+    const saved = JSON.parse((await AsyncStorage.getItem('mealplan:customRecipes'))!);
+    expect(saved.version).toBe(1);
+    expect(saved.state.hasHydrated).toBeUndefined();
   });
 });
 
