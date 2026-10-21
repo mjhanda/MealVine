@@ -18,7 +18,16 @@ import { useUndoStore } from '../store/undoStore';
 import { colors, mealLabels, mealTypeOrder } from '../theme';
 import { DIETS } from '../utils/diets';
 import { cookStats } from '../utils/history';
-import { defaultServings, filterRecipes, MealFilter, recipeById, RecipeFilter, RelaxableFilter, relaxSuggestions } from '../utils/recipeCatalog';
+import {
+  defaultServings,
+  filterRecipes,
+  MealFilter,
+  ownRecipeWarning,
+  recipeById,
+  RecipeFilter,
+  RelaxableFilter,
+  relaxSuggestions,
+} from '../utils/recipeCatalog';
 
 type Nav = NativeStackNavigationProp<RootStackParamList & MainTabParamList>;
 
@@ -276,7 +285,7 @@ export default function BrowseScreen() {
         )}
       </ScrollView>
 
-      {!isClassic && (
+      {!isClassic && mealType !== 'mine' && (
         <View style={styles.dietNoteRow}>
           <Text style={styles.dietNote}>
             {showAllDiets ? 'Showing all diets' : `Showing ${DIETS[prefs.diet].label.toLowerCase()} recipes`}
@@ -287,7 +296,11 @@ export default function BrowseScreen() {
         </View>
       )}
       {(prefs.allergies.length > 0 || prefs.dislikes.length > 0) && (
-        <Text style={styles.exclusionNote}>Recipes with your allergies or avoided ingredients are hidden.</Text>
+        <Text style={styles.exclusionNote}>
+          {mealType === 'mine'
+            ? 'Your own recipes always show here; any with your allergies or avoided ingredients are flagged.'
+            : 'Recipes with your allergies or avoided ingredients are hidden.'}
+        </Text>
       )}
 
       <ScrollView contentContainerStyle={{ padding: 20, paddingTop: 12, paddingBottom: 96, gap: 10 }}>
@@ -326,6 +339,7 @@ export default function BrowseScreen() {
             <React.Fragment key={recipe.id}>
               <RecipeCard
                 recipe={recipe}
+                warning={mealType === 'mine' ? ownRecipeWarning(recipe, prefs) : undefined}
                 timesCooked={stats.get(recipe.id)?.times}
                 liked={ratings[recipe.id] === 'up'}
                 onPress={() => navigation.navigate('RecipeDetail', { recipeId: recipe.id })}

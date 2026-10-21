@@ -3,7 +3,7 @@ import { RECIPES } from '../data/recipes';
 import { getUserRecipes, isUserRecipeId } from '../data/userRecipes';
 import { MealType, Recipe, RecipeIngredient } from '../types';
 import { ingredientLabel } from './customIngredients';
-import { EatingPrefs, isExcluded, recipeConflicts } from './diets';
+import { describeConflicts, EatingPrefs, isExcluded, recipeConflicts } from './diets';
 import { caloriesPerServing } from './nutrition';
 
 // "2 Carrots, diced" — plural for counts above one, prep note appended.
@@ -74,11 +74,23 @@ export function filterRecipes(f: RecipeFilter): Recipe[] {
     if (f.maxKcal && caloriesPerServing(r) > f.maxKcal) return false;
     if (f.onlyIds && !f.onlyIds.has(r.id)) return false;
     if (f.excludeIds?.has(r.id)) return false;
-    const conflicts = recipeConflicts(r, f.prefs);
-    if (isExcluded(conflicts)) return false;
-    if (!f.showAllDiets && conflicts.diet) return false;
+    // Under "My recipes" your own recipes always show; conflicts are flagged, not hidden.
+    if (f.mealType !== 'mine') {
+      const conflicts = recipeConflicts(r, f.prefs);
+      if (isExcluded(conflicts)) return false;
+      if (!f.showAllDiets && conflicts.diet) return false;
+    }
     return matchesQuery(r, q);
   });
+}
+
+// For a card in the browse list: what about your own recipe conflicts with your allergies or
+// avoided ingredients ("Contains peanut"). Only your recipes can show despite these.
+export function ownRecipeWarning(r: Recipe, prefs: EatingPrefs): string | undefined {
+  if (!isUserRecipeId(r.id)) return undefined;
+  const c = recipeConflicts(r, prefs);
+  if (!isExcluded(c)) return undefined;
+  return describeConflicts({ ...c, diet: false, unverified: [] }, prefs).join(' · ');
 }
 
 export type RelaxableFilter = 'query' | 'mealType' | 'diet' | 'maxMinutes' | 'maxKcal' | 'favorites' | 'hidePlanned';
@@ -89,7 +101,7 @@ export function relaxSuggestions(f: RecipeFilter): { filter: RelaxableFilter; co
   const candidates: [RelaxableFilter, boolean, RecipeFilter][] = [
     ['query', !!f.query.trim(), { ...f, query: '' }],
     ['mealType', f.mealType !== 'all', { ...f, mealType: 'all' }],
-    ['diet', !f.showAllDiets && f.prefs.diet !== 'classic', { ...f, showAllDiets: true }],
+    ['diet', !f.showAllDiets && f.prefs.diet !== 'classic' && f.mealType !== 'mine', { ...f, showAllDiets: true }],
     ['maxMinutes', !!f.maxMinutes, { ...f, maxMinutes: null }],
     ['maxKcal', !!f.maxKcal, { ...f, maxKcal: null }],
     ['favorites', !!f.onlyIds, { ...f, onlyIds: null }],

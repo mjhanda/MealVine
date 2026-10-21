@@ -22,7 +22,7 @@ import {
 import { describeConflicts, recipeConflicts } from '../diets';
 import { groceryLinesFromPlan } from '../grocery';
 import { caloriesPerServing, recipeNutrition } from '../nutrition';
-import { allRecipes, filterRecipes, ingredientDisplayName, recipeById } from '../recipeCatalog';
+import { allRecipes, filterRecipes, ingredientDisplayName, ownRecipeWarning, recipeById, relaxSuggestions } from '../recipeCatalog';
 import { sourceCredit } from '../recipeSource';
 import { buildShoppingList } from '../shoppingList';
 
@@ -100,6 +100,21 @@ describe('your recipes in the catalog', () => {
     expect(sourceCredit(SOUP)).toBe('Your recipe.');
   });
 
+  it('always show under "My recipes", whatever the diet; allergy conflicts are flagged, not hidden', () => {
+    const burger: Recipe = { ...SOUP, id: 'u-burger', protein: 'beef', ingredients: [{ id: 'ground-beef', amount: 1, unit: 'lb' }] };
+    const satay: Recipe = { ...SOUP, id: 'u-satay', ingredients: [{ id: 'peanut-butter', amount: 2, unit: 'tbsp' }] };
+    setUserRecipes([burger, satay]);
+    const prefs = { diet: 'vegetarian' as const, allergies: ['peanut' as const], dislikes: [] };
+    const mine = filterRecipes({ mealType: 'mine', query: '', prefs });
+    expect(mine.map((r) => r.id)).toEqual(['u-burger', 'u-satay']);
+    expect(relaxSuggestions({ mealType: 'mine', query: 'zzz', prefs }).map((s) => s.filter)).toEqual(['query']);
+    // Elsewhere the usual filters apply.
+    expect(filterRecipes({ mealType: 'all', query: '', prefs }).some((r) => r.id.startsWith('u-'))).toBe(false);
+    expect(ownRecipeWarning(satay, prefs)).toBe('Contains peanut');
+    expect(ownRecipeWarning(burger, prefs)).toBeUndefined();
+    expect(ownRecipeWarning(recipeById('r1')!, prefs)).toBeUndefined();
+  });
+
   it('go on the grocery list: catalog lines as usual, free text under Other, flagged', () => {
     setUserRecipes([SOUP]);
     const lines = groceryLinesFromPlan({ items: [{ id: 'a', recipeId: 'u-soup', servings: 8 }] });
@@ -163,8 +178,20 @@ describe('parseAmount', () => {
   it.each(['', 'a pinch', '0', '1/0', 'two'])('%p is not an amount', (text) => expect(parseAmount(text)).toBeNull());
 
   it('formats amounts for editing', () => {
-    expect(amountText(1.5)).toBe('1.5');
-    expect(amountText(1 / 3)).toBe('0.333');
+    expect(amountText(1.5)).toBe('1 1/2');
+    expect(amountText(1 / 3)).toBe('1/3');
+    expect(amountText(0.333)).toBe('1/3');
+    expect(amountText(0.5)).toBe('1/2');
+    expect(amountText(2 / 3)).toBe('2/3');
+    expect(amountText(1.25)).toBe('1 1/4');
+    expect(amountText(2)).toBe('2');
+    expect(amountText(1.9995)).toBe('2');
+    expect(amountText(0.4)).toBe('0.4');
+    expect(amountText(0.33)).toBe('0.33');
+  });
+
+  it('reads its own fractions back', () => {
+    [1 / 3, 0.5, 2 / 3, 1.25, 1 / 8, 2.75, 0.4].forEach((n) => expect(parseAmount(amountText(n))).toBeCloseTo(n, 2));
   });
 });
 
@@ -195,7 +222,18 @@ describe('drafts', () => {
         { id: 'custom:nice-bread', custom: 'Nice bread', amount: 2, unit: 'slice', prep: 'thick' },
       ],
       steps: ['Toast the bread.'],
+      proteinAuto: true,
     });
+  });
+
+  it('remembers an Automatic protein, and a chosen one, when editing again', () => {
+    const auto = recipeFromDraft(valid(), 'u-1');
+    expect(draftFromRecipe(auto).protein).toBeNull();
+    const chosen = recipeFromDraft({ ...valid(), protein: 'beef' }, 'u-2');
+    expect(chosen.proteinAuto).toBeUndefined();
+    expect(draftFromRecipe(chosen).protein).toBe('beef');
+    // Catalog recipes (no flag) keep their protein.
+    expect(draftFromRecipe({ ...auto, proteinAuto: undefined }).protein).toBe('vegetarian');
   });
 
   it('round-trips through draftFromRecipe', () => {

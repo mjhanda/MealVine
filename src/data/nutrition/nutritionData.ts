@@ -1712,6 +1712,16 @@ export const NUTRIENTS_PER_100G: Record<string, NutrientValues> = {
     satFat: 0.05,
     sugar: 1.98,
   },
+  mustard: {
+    protein: 3.74,
+    fat: 3.34,
+    carbs: 5.83,
+    kcal: 60,
+    fiber: 4,
+    sodium: 1104,
+    satFat: 0.21,
+    sugar: 0.92,
+  },
   "mustard-seed": {
     protein: 26.08,
     fat: 36.24,
@@ -4678,6 +4688,17 @@ export const INGREDIENT_SOURCES: Record<string, IngredientSource> = {
       {
         fdcId: 169251,
         description: "Mushrooms, white, raw",
+        weight: 1,
+      },
+    ],
+  },
+  mustard: {
+    basis: "usda",
+    note: "Mustard, prepared, yellow",
+    foods: [
+      {
+        fdcId: 172234,
+        description: "Mustard, prepared, yellow",
         weight: 1,
       },
     ],

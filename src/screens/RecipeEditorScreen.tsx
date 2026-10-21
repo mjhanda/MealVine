@@ -1,6 +1,6 @@
 import { Feather } from '@expo/vector-icons';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { confirmAction, notify } from '../components/dialogs';
@@ -38,6 +38,9 @@ const PROTEIN_OPTIONS: { value: Protein | null; label: string }[] = [
 // Where the ingredient picker is open: on an existing line (to change it) or for a new line.
 type PickerTarget = { key: string } | 'new' | null;
 
+// Space left above the ingredient search when it's scrolled into view.
+const SCROLL_MARGIN = 72;
+
 function useInitialDraft(params: Props['route']['params'], householdSize: number): RecipeDraft {
   return useMemo(() => {
     if (params?.draft) return params.draft;
@@ -52,9 +55,39 @@ export default function RecipeEditorScreen({ route, navigation }: Props) {
   const initial = useInitialDraft(route.params, householdSize);
   const [draft, setDraft] = useState<RecipeDraft>(initial);
   const [picker, setPicker] = useState<PickerTarget>(null);
+  const [focusStep, setFocusStep] = useState<number | null>(null);
   const editing = !!draft.id;
   const imported = !!route.params?.draft;
   const isNew = !editing && !imported;
+  // An import is unsaved work from the start; otherwise anything changed since opening.
+  const dirty = imported || JSON.stringify(draft) !== JSON.stringify(initial);
+  const saved = useRef(false);
+
+  // Cancel, the header/hardware back button, and gestures all ask before throwing work away.
+  useEffect(
+    () =>
+      navigation.addListener('beforeRemove', (e) => {
+        if (saved.current || !dirty) return;
+        e.preventDefault();
+        confirmAction('Discard this recipe?', "What you've entered here won't be saved.", 'Discard', () =>
+          navigation.dispatch(e.data.action)
+        );
+      }),
+    [navigation, dirty]
+  );
+
+  // Where things sit in the scroll content, so an opened ingredient search can be scrolled into view.
+  const scrollRef = useRef<ScrollView>(null);
+  const listY = useRef(0);
+  const lineY = useRef(new Map<string, number>());
+  const scrollTo = (y: number) => scrollRef.current?.scrollTo({ y: Math.max(0, y - SCROLL_MARGIN), animated: true });
+  // An open search scrolls itself into view once laid out (and again as its results grow).
+  const scrollToLinePicker = (key: string, y: number) => scrollTo(listY.current + (lineY.current.get(key) ?? 0) + y);
+  const addStep = () => {
+    setFocusStep(draft.steps.length);
+    update({ steps: [...draft.steps, ''] });
+    setTimeout(() => scrollRef.current?.scrollToEnd({ animated: true }), 50);
+  };
 
   const update = (changes: Partial<RecipeDraft>) => setDraft((d) => ({ ...d, ...changes }));
   const updateLine = (line: IngredientDraft) =>
@@ -83,17 +116,12 @@ export default function RecipeEditorScreen({ route, navigation }: Props) {
     }
     const recipe = recipeFromDraft(draft);
     saveRecipe(recipe);
+    saved.current = true;
     if (editing) navigation.goBack();
     else navigation.replace('RecipeDetail', { recipeId: recipe.id });
   };
 
-  const handleCancel = () => {
-    if (JSON.stringify(draft) === JSON.stringify(initial)) {
-      navigation.goBack();
-      return;
-    }
-    confirmAction('Discard changes?', "What you've entered here won't be saved.", 'Discard', () => navigation.goBack());
-  };
+  const handleCancel = () => navigation.goBack(); // beforeRemove asks first if there's unsaved work
 
   const pickerLine = picker && picker !== 'new' ? draft.ingredients.find((l) => l.key === picker.key) : undefined;
 
@@ -109,8 +137,9 @@ export default function RecipeEditorScreen({ route, navigation }: Props) {
         </Pressable>
       </View>
 
-      <KeyboardAvoidingView style={styles.flex} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
-        <ScrollView contentContainerStyle={styles.scroll} keyboardShouldPersistTaps="handled">
+      {/* Android is edge-to-edge, so the window no longer resizes for the keyboard: pad on both. */}
+      <KeyboardAvoidingView style={styles.flex} behavior={Platform.OS === 'web' ? undefined : 'padding'}>
+        <ScrollView ref={scrollRef} contentContainerStyle={styles.scroll} keyboardShouldPersistTaps="handled">
           {isNew && (
             <Pressable onPress={() => navigation.replace('RecipeImport')} style={styles.importLink} accessibilityRole="button">
               <Feather name="download" size={14} color={colors.forest} />
@@ -203,9 +232,9 @@ export default function RecipeEditorScreen({ route, navigation }: Props) {
             Amounts are for {draft.servings} serving{draft.servings === 1 ? '' : 's'}. Pick ingredients from the list so your
             grocery list, nutrition, and allergy checks work.
           </Text>
-          <View style={styles.list}>
+          <View style={styles.list} onLayout={(e) => (listY.current = e.nativeEvent.layout.y)}>
             {draft.ingredients.map((line) => (
-              <View key={line.key}>
+              <View key={line.key} onLayout={(e) => lineY.current.set(line.key, e.nativeEvent.layout.y)}>
                 <IngredientLine
                   line={line}
                   onChange={updateLine}
@@ -213,13 +242,17 @@ export default function RecipeEditorScreen({ route, navigation }: Props) {
                   onRemove={() => removeLine(line.key)}
                 />
                 {pickerLine?.key === line.key && (
-                  <IngredientPicker initialQuery={line.custom ?? ''} onPick={pick} onCancel={() => setPicker(null)} />
+                  <View onLayout={(e) => scrollToLinePicker(line.key, e.nativeEvent.layout.y)}>
+                    <IngredientPicker initialQuery={line.custom ?? ''} onPick={pick} onCancel={() => setPicker(null)} />
+                  </View>
                 )}
               </View>
             ))}
           </View>
           {picker === 'new' ? (
-            <IngredientPicker onPick={pick} onCancel={() => setPicker(null)} />
+            <View onLayout={(e) => scrollTo(e.nativeEvent.layout.y)}>
+              <IngredientPicker onPick={pick} onCancel={() => setPicker(null)} />
+            </View>
           ) : (
             <Pressable onPress={() => setPicker('new')} style={styles.addBtn} accessibilityRole="button">
               <Feather name="plus" size={16} color={colors.forest} />
@@ -240,6 +273,7 @@ export default function RecipeEditorScreen({ route, navigation }: Props) {
                   placeholder={i === 0 ? 'e.g. Simmer the sauce 10 minutes' : 'Next step'}
                   placeholderTextColor={colors.inkSoft}
                   multiline
+                  autoFocus={i === focusStep}
                   style={[styles.input, styles.stepInput]}
                   accessibilityLabel={`Step ${i + 1}`}
                 />
@@ -249,7 +283,7 @@ export default function RecipeEditorScreen({ route, navigation }: Props) {
               </View>
             ))}
           </View>
-          <Pressable onPress={() => update({ steps: [...draft.steps, ''] })} style={styles.addBtn} accessibilityRole="button">
+          <Pressable onPress={addStep} style={styles.addBtn} accessibilityRole="button">
             <Feather name="plus" size={16} color={colors.forest} />
             <Text style={styles.addLabel}>Add step</Text>
           </Pressable>

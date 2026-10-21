@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { isUserRecipeId, setUserRecipes } from '../data/userRecipes';
 import { Recipe, RecipeIngredient } from '../types';
+import { deriveProtein } from '../utils/customRecipes';
 import { isRecord, MigrationError, persistOptions } from './persistence';
 
 // The user's own recipes (T47). Every change is pushed to src/data/userRecipes.ts, where the pure
@@ -11,7 +12,8 @@ interface PersistedCustomRecipes {
   recipes: Recipe[];
 }
 
-export const CUSTOM_RECIPES_VERSION = 1;
+// v2: `proteinAuto` marks a recipe whose protein the editor works out ("Automatic").
+export const CUSTOM_RECIPES_VERSION = 2;
 
 const isIngredient = (v: unknown): v is RecipeIngredient =>
   isRecord(v) && typeof v.id === 'string' && typeof v.amount === 'number' && (v.unit === null || typeof v.unit === 'string');
@@ -30,6 +32,7 @@ function isRecipe(v: unknown): v is Recipe {
     typeof v.prep === 'number' &&
     typeof v.cook === 'number' &&
     typeof v.emoji === 'string' &&
+    (v.proteinAuto === undefined || typeof v.proteinAuto === 'boolean') &&
     Array.isArray(v.ingredients) &&
     v.ingredients.every(isIngredient) &&
     Array.isArray(v.steps) &&
@@ -37,11 +40,17 @@ function isRecipe(v: unknown): v is Recipe {
   );
 }
 
-// v1 is the first version. Malformed recipes are dropped rather than failing the whole store.
-export function migrateCustomRecipes(persisted: unknown, _fromVersion: number): PersistedCustomRecipes {
+// v1 didn't record "Automatic": a protein that matches what the ingredients say is taken as
+// Automatic (re-deriving it gives the same answer, so nothing visible changes).
+const markAutomatic = (r: Recipe): Recipe =>
+  r.proteinAuto === undefined && r.protein === deriveProtein(r.ingredients) ? { ...r, proteinAuto: true } : r;
+
+// Malformed recipes are dropped rather than failing the whole store.
+export function migrateCustomRecipes(persisted: unknown, fromVersion: number): PersistedCustomRecipes {
   if (!isRecord(persisted)) throw new MigrationError('customRecipes: not an object');
   if (persisted.recipes !== undefined && !Array.isArray(persisted.recipes)) throw new MigrationError('customRecipes: recipes not a list');
-  return { recipes: ((persisted.recipes as unknown[] | undefined) ?? []).filter(isRecipe) };
+  const recipes = ((persisted.recipes as unknown[] | undefined) ?? []).filter(isRecipe);
+  return { recipes: fromVersion < 2 ? recipes.map(markAutomatic) : recipes };
 }
 
 interface CustomRecipesState extends PersistedCustomRecipes {

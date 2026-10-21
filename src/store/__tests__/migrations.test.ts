@@ -158,8 +158,19 @@ describe('rehydration from real storage', () => {
 describe('your recipes store', () => {
   it('keeps well-formed recipes and drops malformed or non-user ones', () => {
     const { recipes } = migrateCustomRecipes(customRecipesV1.state, 1);
-    expect(recipes.map((r) => r.id)).toEqual(['u-abc-0']);
+    expect(recipes.map((r) => r.id)).toEqual(['u-abc-0', 'u-def-2']);
     expect(recipes[0].ingredients[1]).toEqual({ id: 'custom:smoked-salt', custom: 'Smoked salt', amount: 1, unit: 'tsp' });
+  });
+
+  it('v1 → v2: a protein matching the ingredients becomes Automatic; a hand-picked one stays', () => {
+    const { recipes } = migrateCustomRecipes(customRecipesV1.state, 1);
+    expect(recipes.map((r) => [r.id, r.protein, r.proteinAuto])).toEqual([
+      ['u-abc-0', 'vegetarian', true],
+      ['u-def-2', 'beef', undefined],
+    ]);
+    // Already v2: left as saved.
+    const v2 = migrateCustomRecipes({ recipes: [{ ...customRecipesV1.state.recipes[0] }] }, 2);
+    expect(v2.recipes[0].proteinAuto).toBeUndefined();
   });
 
   it('treats a missing list as empty and rejects unusable blobs', () => {
@@ -168,16 +179,17 @@ describe('your recipes store', () => {
     expect(() => migrateCustomRecipes({ recipes: 'nope' }, 1)).toThrow(MigrationError);
   });
 
-  it('rehydrates an older blob, rewrites it at v1, and makes the recipes visible to the catalog', async () => {
+  it('rehydrates an older blob, rewrites it at v2, and makes the recipes visible to the catalog', async () => {
     useCustomRecipesStore.setState({ recipes: [], hasHydrated: false });
     // Saved at an older version, so the migration runs (and drops the malformed entries).
     await seed('mealplan:customRecipes', { ...customRecipesV1, version: 0 });
     await useCustomRecipesStore.persist.rehydrate();
     expect(useCustomRecipesStore.getState().hasHydrated).toBe(true);
-    expect(getUserRecipes().map((r) => r.id)).toEqual(['u-abc-0']);
+    expect(getUserRecipes().map((r) => r.id)).toEqual(['u-abc-0', 'u-def-2']);
+    expect(recipeById('u-abc-0')?.proteinAuto).toBe(true);
     expect(recipeById('u-abc-0')?.title).toBe("Gran's lentil soup");
     const saved = JSON.parse((await AsyncStorage.getItem('mealplan:customRecipes'))!);
-    expect(saved.version).toBe(1);
+    expect(saved.version).toBe(2);
     expect(saved.state.hasHydrated).toBeUndefined();
   });
 });

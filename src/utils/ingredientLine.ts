@@ -104,6 +104,8 @@ const DESCRIPTORS = new Set([
   'chopped', 'minced', 'peeled', 'cooked', 'uncooked', 'prepared', 'frozen', 'canned', 'can', 'jar', 'sharp',
   'pure', 'unsweetened', 'fillet', 'deli', 'thinly', 'finely', 'roughly', 'coarsely', 'room', 'temperature',
   'crumbled', 'melted', 'softened', 'beaten', 'mashed', 'sifted', 'cubed', 'halved', 'quartered', 'drained', 'rinsed',
+  // Kinds of the same product, and counts written into the name ("slices bread", "store-bought").
+  'store', 'bought', 'storebought', 'homemade', 'stale', 'day', 'old', 'slice', 'piece',
 ]);
 
 // Common names that don't line up word-for-word with a catalog name (keys are normalized cores).
@@ -143,6 +145,17 @@ const ALIASES: Record<string, string> = {
   'icing sugar': 'powdered-sugar',
   'baking cocoa': 'cocoa-powder',
   'cocoa': 'cocoa-powder',
+  'bread crumb': 'breadcrumbs',
+  breadcrumb: 'breadcrumbs',
+  panko: 'breadcrumbs',
+  'panko breadcrumb': 'breadcrumbs',
+  'panko bread crumb': 'breadcrumbs',
+  bread: 'white-bread',
+  'sandwich bread': 'white-bread',
+  'yellow mustard': 'mustard',
+  'brown mustard': 'mustard',
+  'spicy brown mustard': 'mustard',
+  'deli mustard': 'mustard',
 };
 
 const stem = (w: string): string => {
@@ -239,4 +252,4 @@ export function importIngredientLine(raw: string): IngredientDraft[] {
 
 // For tests and the editor: "2 cups flour" style description of a draft line.
 export const describeDraftLine = (d: IngredientDraft): string =>
-  `${d.amount ? formatQuantity(Number(d.amount), d.unit) : '?'} ${ingredientById(d.id)?.name ?? d.custom ?? d.id}`;
+  `${d.amount ? formatQuantity(parseAmount(d.amount) ?? 0, d.unit) : '?'} ${ingredientById(d.id)?.name ?? d.custom ?? d.id}`;

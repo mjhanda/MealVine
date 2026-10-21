@@ -56,6 +56,18 @@ describe('matchIngredient', () => {
     ['soy sauce', 'soy-sauce'],
     ['spaghetti', 'pasta'],
     ['confectioners’ sugar', 'powdered-sugar'],
+    ['dried bread crumbs', 'breadcrumbs'],
+    ['plain breadcrumbs', 'breadcrumbs'],
+    ['panko', 'breadcrumbs'],
+    ['bread', 'white-bread'],
+    ['slices bread', 'white-bread'],
+    ['day-old bread', 'white-bread'],
+    ['whole grain bread', 'whole-grain-bread'],
+    ['prepared mustard', 'mustard'],
+    ['yellow mustard', 'mustard'],
+    ['mustard', 'mustard'],
+    ['Dijon mustard', 'dijon-mustard'],
+    ['dry mustard', 'dry-mustard'],
   ])('%s → %s', (name, id) => expect(matchIngredient(name)).toBe(id));
 
   it.each(['garlic powder chunks', 'peanut butter cups', 'red pepper', 'salt and pepper', 'lemon juice', 'dragon fruit', ''])(
@@ -67,6 +79,20 @@ describe('matchIngredient', () => {
     expect(matchIngredient('peanut butter')).toBe('peanut-butter');
     expect(matchIngredient('garlic powder')).toBe('garlic-powder');
     expect(matchIngredient('almond flour')).toBeNull();
+    expect(matchIngredient('fresh peanut butter')).toBe('peanut-butter');
+    expect(matchIngredient('mustard greens')).toBeNull();
+    expect(matchIngredient('bread flour')).toBeNull();
+    expect(matchIngredient('sourdough bread')).toBeNull();
+  });
+
+  it('measures editor-only ingredients in their own unit family', () => {
+    const [d] = importIngredientLine('1 tbsp yellow mustard');
+    expect(d).toMatchObject({ id: 'mustard', amount: '1', unit: 'tbsp' });
+  });
+
+  it('reads the unit from "slices bread"', () => {
+    const [d] = importIngredientLine('4 slices bread, toasted');
+    expect(d).toMatchObject({ id: 'white-bread', amount: '4', unit: 'slice', prep: 'toasted' });
   });
 });
 

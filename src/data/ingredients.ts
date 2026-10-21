@@ -1,4 +1,4 @@
-import { Aisle, IngredientDef, IngredientTag } from '../types';
+import { Aisle, IngredientDef, IngredientTag, Unit } from '../types';
 
 // Canonical ingredient catalog. Recipes reference these by `id`; never rename an id
 // (persisted grocery check-offs are keyed by it).
@@ -168,6 +168,7 @@ const DEFS: Def[] = [
   ['honey', 'Honey', O, ['honey', 'added-sugar'], staple],
   ['maple-syrup', 'Maple syrup', O, ['added-sugar'], staple],
   ['miso', 'Miso paste', O, ['soy', 'legume']],
+  ['mustard', 'Prepared mustard', O, ['mustard', 'sulfite'], staple],
   ['olive-oil', 'Olive oil', O, [], staple],
   ['peanut-butter', 'Peanut butter', O, ['peanut', 'legume']],
   ['peanut-sauce', 'Peanut sauce', O, ['peanut', 'legume', 'soy', 'gluten', 'added-sugar']],
@@ -339,6 +340,13 @@ const DEFS: Def[] = [
 export const INGREDIENTS: Record<string, IngredientDef> = Object.fromEntries(
   DEFS.map(([id, name, aisle, tags = [], extra = {}]) => [id, { id, name, aisle, tags, ...extra }])
 );
+
+// Ingredients no catalog recipe uses yet, kept for your own and imported recipes (so "yellow
+// mustard" gets allergy checks), with the unit each is measured in (catalog ingredients take
+// theirs from the recipes that use them).
+export const EDITOR_ONLY_UNITS: Record<string, Unit> = {
+  mustard: 'tsp',
+};
 
 export function ingredientById(id: string): IngredientDef | undefined {
   return INGREDIENTS[id];

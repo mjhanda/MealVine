@@ -1,7 +1,7 @@
 import { aisleOrder, mealTypeOrder } from '../../theme';
 import { MEAT_TAGS } from '../../utils/diets';
 import { unitFamily } from '../../utils/units';
-import { INGREDIENTS } from '../ingredients';
+import { EDITOR_ONLY_UNITS, INGREDIENTS } from '../ingredients';
 import { LEGACY_INGREDIENT_NAMES } from '../legacyIngredientNames';
 import { RECIPES } from '../recipes';
 
@@ -19,7 +19,15 @@ describe('canonical ingredient catalog', () => {
 
   it('has no unused entries', () => {
     const used = new Set(allUses.map(({ ing }) => ing.id));
-    expect(Object.keys(INGREDIENTS).filter((id) => !used.has(id))).toEqual([]);
+    expect(Object.keys(INGREDIENTS).filter((id) => !used.has(id) && !(id in EDITOR_ONLY_UNITS))).toEqual([]);
+  });
+
+  it('editor-only ingredients are real and still unused (else drop them from the list)', () => {
+    const used = new Set(allUses.map(({ ing }) => ing.id));
+    Object.keys(EDITOR_ONLY_UNITS).forEach((id) => {
+      expect(INGREDIENTS[id]).toBeDefined();
+      expect(used.has(id)).toBe(false);
+    });
   });
 
   it('legacy name map only points at real ingredients', () => {

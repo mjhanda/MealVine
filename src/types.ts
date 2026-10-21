@@ -102,6 +102,9 @@ export interface Recipe {
   // Baked goods, sauces, preserves: you make the whole batch, so a plan entry defaults to the
   // recipe's own yield instead of the household size.
   batch?: boolean;
+  // Your own recipes: `protein` was worked out from the ingredients ("Automatic" in the editor),
+  // so editing the recipe offers Automatic again rather than the protein it worked out.
+  proteinAuto?: boolean;
 }
 
 export interface Preferences {

@@ -242,6 +242,7 @@ export const USDA_MAP: Record<string, UsdaMapping> = {
     note: 'Thyme, toasted sesame, salt (sumac has no USDA entry)',
   },
   breadcrumbs: one(174928),
+  mustard: one(172234, 'usda', 'Mustard, prepared, yellow'),
 
   // Snacks & Nuts
   'chia-seeds': one(170554),
@@ -514,6 +515,7 @@ export const GRAMS: Record<string, Partial<Record<string, number>>> = {
   rosemary: { tbsp: 1.7 },
   salsa: { cup: 259 },
   horseradish: { tsp: 5 },
+  mustard: { tsp: 5, tbsp: 15, cup: 249 },
   salt: { pinch: 0.36 },
   'sesame-oil': { tsp: 4.5 },
   'sesame-seeds': { tsp: 3 },

@@ -21,7 +21,7 @@ import { useEatingPrefs, usePreferencesStore } from '../store/preferencesStore';
 import { colors } from '../theme';
 import { isCustomIngredient, NOT_CHECKED_NOTE } from '../utils/customIngredients';
 import { describeConflicts, DIETS, dietsFor, isExcluded, recipeConflicts } from '../utils/diets';
-import { defaultServings, ingredientDisplayName, recipeById } from '../utils/recipeCatalog';
+import { defaultServings, ingredientDisplayName, recipeById, totalMinutes } from '../utils/recipeCatalog';
 import { recipeAsCooked, sauceOptions, saucesToMake } from '../utils/homemade';
 import { caloriesPerServing } from '../utils/nutrition';
 import { sourceCredit } from '../utils/recipeSource';
@@ -122,10 +122,12 @@ export default function RecipeDetailScreen({ route, navigation }: Props) {
         <Text style={styles.title}>{recipe.title}</Text>
         <View style={styles.metaRow}>
           <ProteinTag protein={recipe.protein} />
-          <View style={styles.timeRow}>
-            <Feather name="clock" size={13} color={colors.inkSoft} />
-            <Text style={styles.timeText}>{recipe.prep + recipe.cook} min</Text>
-          </View>
+          {totalMinutes(recipe) > 0 && (
+            <View style={styles.timeRow}>
+              <Feather name="clock" size={13} color={colors.inkSoft} />
+              <Text style={styles.timeText}>{totalMinutes(recipe)} min</Text>
+            </View>
+          )}
         </View>
 
         {isMine && (
