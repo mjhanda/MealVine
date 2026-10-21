@@ -99,6 +99,7 @@ export const SUBSTITUTES: Record<string, Substitute[]> = {
     per('cider-vinegar', 2, 'tbsp', 1, null, { context: 'Juice only — not zest' }),
   ],
   lime: [same('lemon'), per('white-wine-vinegar', 2, 'tbsp', 1, null, { context: 'Juice only — not zest' })],
+  mint: [same('basil', 1, { context: 'Different flavor' }), same('parsley', 1, { note: 'Add a squeeze of lemon', context: 'Salads and garnish' })],
   'mixed-berries': [same('strawberries'), same('blueberries'), same('raspberries')],
   'mixed-greens': [same('baby-spinach'), per('romaine', 1, 'head', 6, 'cup'), per('butter-lettuce', 1, 'head', 6, 'cup')],
   mushrooms: [
@@ -141,6 +142,11 @@ export const SUBSTITUTES: Record<string, Substitute[]> = {
   ],
 
   // --- Meat, seafood, and protein --------------------------------------------
+  bacon: [
+    per('ham', 1, 'oz', 1, 'slice', { note: 'Dice and crisp in a little oil' }),
+    per('pork-sausage', 1, 'oz', 1, 'slice', { note: 'Crumble and brown' }),
+    per('smoked-paprika', 0.25, 'tsp', 1, 'slice', { context: 'Smoky flavor only — cooked dishes' }),
+  ],
   'chicken-breast': [
     same('chicken-thighs'),
     same('turkey-breast'),
@@ -158,6 +164,11 @@ export const SUBSTITUTES: Record<string, Substitute[]> = {
   'ground-beef': [same('ground-turkey'), same('ground-chicken'), same('firm-tofu', 1, { note: 'Press and crumble' })],
   'ground-turkey': [same('ground-chicken'), same('ground-beef'), same('firm-tofu', 1, { note: 'Press and crumble' })],
   'pork-chops': [same('pork-tenderloin'), same('chicken-breast'), same('chicken-thighs')],
+  'pork-sausage': [
+    same('turkey-sausage'),
+    same('ground-turkey', 1, { with: [per('italian-seasoning', 0.25, 'tsp', 4, 'oz')], note: 'Season well with salt and pepper' }),
+    same('ground-beef', 1, { with: [per('italian-seasoning', 0.25, 'tsp', 4, 'oz')], context: 'Crumbled in sauces and stuffings' }),
+  ],
   salmon: [same('cod', 1, { note: 'Leaner; cooks a few minutes faster' }), same('chicken-breast')],
   shrimp: [
     same('chicken-breast', 1, { note: 'Cut into bite-size pieces and cook through' }),
@@ -174,6 +185,11 @@ export const SUBSTITUTES: Record<string, Substitute[]> = {
     same('ground-turkey', 1, { with: [per('italian-seasoning', 0.25, 'tsp', 4, 'oz')], note: 'Season the turkey well with salt and pepper' }),
     same('ground-chicken', 1, { with: [per('italian-seasoning', 0.25, 'tsp', 4, 'oz')] }),
   ],
+  'whole-chicken': [
+    same('cornish-hen', 2, { note: 'Roast about 1 hour' }),
+    per('chicken-thighs', 3, 'lb', 1, null, { note: 'Cooks faster than a whole bird', context: 'Soups, stews, and braises' }),
+    per('chicken-breast', 3, 'lb', 1, null, { note: 'Cooks faster; don’t overcook', context: 'Soups, stews, and braises' }),
+  ],
 
   // --- Dairy and eggs ----------------------------------------------------------
   butter: [
@@ -188,6 +204,11 @@ export const SUBSTITUTES: Record<string, Substitute[]> = {
     same('greek-yogurt', 0.75, { with: [same('milk', 0.25)], note: 'Whisk until smooth' }),
   ],
   cheddar: [same('mozzarella'), same('gruyere')],
+  'cottage-cheese': [
+    same('ricotta'),
+    same('greek-yogurt', 1, { context: 'Tangier; dips and spreads' }),
+    per('cream-cheese', 8, 'oz', 1, 'cup', { context: 'Richer' }),
+  ],
   'condensed-milk': [
     same('milk', 2, { with: [same('sugar', 2 / 3)], note: 'Simmer, stirring often, until reduced by half (30–40 minutes); cool' }),
   ],
@@ -238,6 +259,11 @@ export const SUBSTITUTES: Record<string, Substitute[]> = {
   ],
   mozzarella: [per('fresh-mozzarella', 4, 'oz', 1, 'cup'), same('cheddar'), same('gruyere')],
   parmesan: [same('gruyere'), same('cheddar', 1, { context: 'Milder' })],
+  ricotta: [
+    same('cottage-cheese', 1, { note: 'Drain and blend until smooth' }),
+    per('cream-cheese', 8, 'oz', 1, 'cup', { context: 'Richer and denser' }),
+    same('greek-yogurt', 1, { context: 'Dips and fillings — not for baking' }),
+  ],
   'sour-cream': [same('greek-yogurt'), same('cottage-cheese', 1, { note: 'Blend until smooth' })],
 
   // --- Grains, bread, and pasta ------------------------------------------------
@@ -268,6 +294,11 @@ export const SUBSTITUTES: Record<string, Substitute[]> = {
     same('rolled-oats', 1, { with: [per('maple-syrup', 1, 'tbsp', 1, 'cup')], note: 'Toss together and toast at 350°F for 10 minutes' }),
     same('bran-cereal'),
   ],
+  'lasagna-noodles': [
+    same('pasta', 1, { note: 'Cook short pasta and layer it in place of the sheets', context: 'Baked lasagna' }),
+    per('zucchini', 1, null, 3, 'oz', { note: 'Slice lengthwise into thin planks', context: 'Gluten-free; softer' }),
+    per('eggplant', 1, null, 6, 'oz', { note: 'Slice thin and roast first', context: 'Gluten-free; softer' }),
+  ],
   pasta: [same('whole-wheat-penne'), same('whole-wheat-spaghetti'), same('egg-noodles')],
   quinoa: [same('bulgur', 1, { note: 'Simmer about 12 minutes' }), same('brown-rice', 1, { note: 'Simmer about 45 minutes' })],
   'rolled-oats': [same('oat-bran', 1, { context: 'Baking and porridge — smoother' }), same('breadcrumbs', 1, { context: 'Binder in meatballs and loaves only' })],
@@ -280,6 +311,11 @@ export const SUBSTITUTES: Record<string, Substitute[]> = {
   'whole-wheat-tortilla': [same('flour-tortilla'), same('flatbread'), same('corn-tortilla', 2, { context: 'Smaller' })],
 
   // --- Canned and jarred ---------------------------------------------------------
+  'beef-broth': [
+    same('chicken-broth', 1, { context: 'Lighter flavor' }),
+    same('vegetable-broth', 1, { with: [per('soy-sauce', 1, 'tsp', 1, 'cup')], note: 'Soy sauce adds depth' }),
+    per('miso', 1, 'tsp', 1, 'cup', { note: 'Dissolve in the same amount of hot water' }),
+  ],
   'black-beans': [same('kidney-beans'), same('white-beans'), same('chickpeas')],
   'chicken-broth': [
     same('vegetable-broth'),
@@ -307,6 +343,10 @@ export const SUBSTITUTES: Record<string, Substitute[]> = {
   'pumpkin-puree': [
     per('sweet-potato', 1, null, 1, 'cup', { note: 'Bake or steam, then mash' }),
     per('winter-squash', 1 / 3, null, 1, 'cup', { note: 'Roast, then mash' }),
+  ],
+  'red-lentils': [
+    same('green-lentils', 1, { note: 'Simmer about 30 minutes; they hold their shape' }),
+    per('chickpeas', 1.5, 'can', 1, 'cup', { note: 'Already cooked; mash some to thicken', context: 'Soups and curries' }),
   ],
   salsa: [
     per('diced-tomatoes', 1, 'can', 1.75, 'cup', { note: 'Drain; add chopped onion, lime, and a pinch of chili' }),
@@ -346,14 +386,28 @@ export const SUBSTITUTES: Record<string, Substitute[]> = {
     same('chili-powder', 0.5, { with: [same('cumin', 0.25), same('garlic-powder', 1 / 8), same('paprika', 1 / 8)] }),
     same('cumin', 0.5, { with: [same('garlic-powder', 0.25), same('onion-powder', 0.25)], context: 'No heat' }),
   ],
+  'fish-sauce': [
+    same('soy-sauce', 1, { note: 'Add a squeeze of lime' }),
+    same('worcestershire-sauce', 1, { context: COOKED }),
+    same('oyster-sauce', 1, { context: 'Thicker and sweeter' }),
+  ],
   'instant-coffee': [per('coffee', 0.25, 'cup', 1, 'tsp', { note: 'Brew it strong; use it in place of that much of the recipe’s liquid' })],
   miso: [same('soy-sauce', 0.5, { context: 'Saltier and thinner' }), same('tahini', 1, { with: [per('salt', 0.25, 'tsp', 1, 'tbsp')] })],
   molasses: [same('maple-syrup', 1, { context: 'Lighter flavor' }), same('honey', 1, { context: 'Lighter flavor' })],
+  'orange-juice': [
+    per('orange', 3, null, 1, 'cup', { note: 'Squeeze about 3 oranges per cup' }),
+    same('apple-juice', 1, { context: 'Sweeter, less tart' }),
+  ],
   'peanut-butter': [same('almond-butter'), same('tahini', 1, { context: 'Thinner and less sweet' })],
   'powdered-sugar': [same('sugar', 1, { with: [per('cornstarch', 1, 'tsp', 1, 'cup')], note: 'Blend in a blender until powdery' })],
   'pumpkin-pie-spice': [same('cinnamon', 0.5, { with: [same('ground-ginger', 0.25), same('nutmeg', 1 / 8), same('ground-cloves', 1 / 8)] })],
   'self-rising-flour': [
     same('all-purpose-flour', 1, { with: [per('baking-powder', 1.5, 'tsp', 1, 'cup'), per('salt', 0.25, 'tsp', 1, 'cup')] }),
+  ],
+  sherry: [
+    same('white-wine'),
+    same('chicken-broth', 1, { with: [per('cider-vinegar', 1, 'tbsp', 1, 'cup')], context: COOKED }),
+    same('apple-juice', 1, { context: 'No alcohol; sweeter' }),
   ],
   shortening: [
     same('butter', 1, { context: 'Slightly less tender' }),
@@ -368,10 +422,21 @@ export const SUBSTITUTES: Record<string, Substitute[]> = {
   ],
   'whole-wheat-flour': [same('all-purpose-flour', 1, { context: 'Lighter, less fiber' })],
   'wheat-bran': [same('oat-bran'), same('bran-cereal', 1, { note: 'Crush finely', context: 'Sweeter' })],
+  'white-wine': [
+    same('chicken-broth', 1, { with: [per('white-wine-vinegar', 1, 'tbsp', 1, 'cup')], context: COOKED }),
+    same('vegetable-broth', 1, { with: [per('white-wine-vinegar', 1, 'tbsp', 1, 'cup')], context: COOKED }),
+    same('sherry', 1, { context: 'Richer and nuttier' }),
+    same('apple-juice', 1, { context: 'No alcohol; sweeter' }),
+  ],
 
   // --- Nuts, seeds, and dried fruit -------------------------------------------
   almonds: [same('walnuts'), same('pecans'), same('pistachios')],
   pecans: [same('walnuts'), same('almonds')],
+  'pine-nuts': [
+    same('walnuts', 1, { note: 'Chop' }),
+    same('almonds', 1, { note: 'Use slivered or chop' }),
+    same('sunflower-seeds', 1, { context: 'Nut-free option' }),
+  ],
   raisins: [same('dried-cranberries'), same('dates', 1, { note: 'Chop' }), same('dried-apricots', 1, { note: 'Chop' })],
   'sesame-seeds': [same('poppy-seeds', 1, { context: 'Garnish' }), same('peanuts', 1, { note: 'Chop finely', context: 'For crunch' })],
   'shredded-coconut': [same('rolled-oats', 1, { context: 'Baking and granola — no coconut flavor' }), same('pecans', 1, { note: 'Chop finely' })],
