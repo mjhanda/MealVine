@@ -58,6 +58,8 @@ EXTRA = {
     "cauliflower-florets": {"head": 600, "null": 600, "bunch": 600}, "baby-spinach": {"bunch": 340, "oz": 28.35},
     "mint": {"bunch": 50}, "dill": {"bunch": 50}, "white-rice": {"lb": 453.6}, "rolled-oats": {"lb": 453.6},
     "cheddar": {"lb": 453.6}, "parmesan": {"lb": 453.6}, "mozzarella": {"lb": 453.6},
+    # A soup can (10¾ oz) of milk; a drained can of mango or corn.
+    "milk": {"can": 318}, "mango": {"can": 250}, "corn-kernels": {"can": 250},
 }
 # Grams in one package/item when the archive doesn't say (typical US sizes).
 DEFAULT_PKG_G = {
@@ -67,7 +69,7 @@ DEFAULT_PKG_G = {
     "cheddar": 227, "mozzarella": 227, "parmesan": 85, "firm-tofu": 397, "egg-noodles": 340, "corn-kernels": 283,
     "broccoli-florets": 283, "green-beans": 283, "lasagna-noodles": 454, "whole-wheat-spaghetti": 454,
     "whole-wheat-penne": 454, "heavy-cream": 238, "half-and-half": 242, "chicken-broth": 411, "beef-broth": 411,
-    "vegetable-broth": 411, "pecans": 170, "walnuts": 170, "almonds": 170, "raisins": 425, "dates": 227,
+    "vegetable-broth": 411, "pecans": 170, "walnuts": 170, "almonds": 170, "raisins": 425, "dates": 227, "tortellini": 255,
 }
 # Items counted in the archive but measured here ("10 peppercorns", "2 whole cloves", "1 stock cube").
 EACH_G = {
@@ -76,6 +78,7 @@ EACH_G = {
     "vegetable-broth": 240, "pineapple-chunks": 450, "mango": 200, "garlic": 3, "dark-chocolate-chips": 28.35,
     "unsweetened-chocolate": 28.35, "butter": 113, "cinnamon": 2.6, "milk": 244, "heavy-cream": 238,
     "graham-cracker-crumbs": 15, "cocoa-powder": 5.4, "baking-powder": 4.6, "ginger": 28, "cream-cheese": 227,
+    "lasagna-noodles": 19, "basil": 0.5,
 }
 # Citrus counted by juice/zest yield (tbsp per fruit) — "2 tbsp lemon juice" → ⅔ lemon.
 CITRUS = {"lemon": {"juice": 3, "zest": 1}, "lime": {"juice": 2, "zest": 0.67}, "orange": {"juice": 5, "zest": 1}}
@@ -209,15 +212,27 @@ def resolve(name, unit, raw, prep=None):
         return ("ground-cloves" if unit in VOLUME_TSP and "garlic" not in text else "garlic"), None
     if nm == "chicken" and unit in COUNT_UNITS:
         return "whole-chicken", None
+    # "3-4 lb chicken" is a whole bird; "1 lb chicken, cubed" is meat.
+    if nm == "chicken" and unit in ("lb", "kg") and not re.search(r"breast|thigh|leg|wing|piece|part|cube|dice|bone|cooked|meat|strip|tender", text):
+        return "whole-chicken", None
     ing_id = NAME_MAP.get(nm)
+    if ing_id is None and re.search(r"\bor\b", name, re.I):
+        # "spicy or regular pork sausage", "pearl or pot barley": the noun is in the last alternative.
+        for alt in reversed(re.split(r"\s+or\s+", re.sub(r"\(.*?\)", " ", name), flags=re.I)[1:]):
+            ing_id = NAME_MAP.get(normalize(alt))
+            if ing_id:
+                break
     if ing_id == "bell-pepper" and unit in ("tsp", "pinch") and "flake" not in text:
         return "cayenne", None  # "1/4 tsp red pepper" is ground red pepper
     if ing_id == "jalapeno" and unit in ("tsp", "pinch") and not re.search(r"fresh|green|minced|chopped|seeded", text):
         return "chili-powder", None  # "1 tsp chili" is the ground spice
-    if ing_id == "tomato" and (unit in ("can", "pkg") or (unit is None and re.search(r"\bcans?\b|\boz\b", text))):
+    # "1 (16 oz) can tomatoes" is canned; "2 tomatoes (1 can … can be used)" is fresh.
+    if ing_id == "tomato" and (unit in ("can", "pkg") or (unit is None and re.search(r"\bcans?\b|\boz\b", re.sub(r"\((?![^)]*\boz\b)[^)]*\)", " ", text)))):
         return "diced-tomatoes", None
     if ing_id is None:
         return None, f"unmapped: {nm or name}"
+    if ing_id in ("white-rice", "brown-rice") and re.search(r",\s*cooked\s*$", raw.strip(" .")):
+        return "cooked-" + ing_id, None  # "1 1/2 cups rice, cooked" is measured cooked
     return ing_id, None
 
 
@@ -285,6 +300,11 @@ def convert(ing, qty, unit, size_oz, raw):
     if fam == "count":
         if unit in COUNT_UNITS and not size_oz:
             return nice(qty), None
+        if ing["id"] in WHOLE_BIRDS:  # "3-4 lb chicken" → 1 chicken, never "1⅛ chickens"
+            g = to_grams(ing, qty, unit, size_oz)
+            each = grams_per(ing, None)
+            if g and each:
+                return float(max(1, round(g / each))), None
         if ing["id"] in CITRUS and unit in VOLUME_TSP:
             part = CITRUS_PART.search(raw or "")
             per = CITRUS[ing["id"]]["zest" if part and part.group(2) else "juice"]
@@ -302,6 +322,9 @@ def convert(ing, qty, unit, size_oz, raw):
     if g is None or not per:
         return None, f"no conversion {unit or 'count'}→{fam}"
     return max(nice(g / per), 0.25), fam
+
+
+WHOLE_BIRDS = {"whole-chicken", "cornish-hen"}
 
 
 def pick_volume(tsp, keep):
@@ -329,6 +352,27 @@ MEASURED = re.compile(r"\b(\d+(?:\s+\d/\d)?|\d/\d)\s*(?:cups?|c\.|tablespoons?|t
 TITLE_BRAND = re.compile(r"airlines?|restaurant|hotel|\binn\b|\bcaf[eé]\b|bistro|\bdiner\b|neiman|marcus|mrs\.? fields|famous|copy ?cat|knock-?off|\bclone\b|\bkfc\b|mcdonald|wendy'?s|olive garden|red lobster|disney|hershey|nestl[eé]|toll house|pepperidge|kraft|betty crocker|pillsbury|duncan hines|sara lee|starbucks|denny|ikea|cheesecake factory|cracker barrel|outback|hard rock|tgi|applebee|chili'?s\b|boston market|white castle|cinnabon|mrs\.? smith|bisquick|jell-?o|oreo|nabisco|kellogg|quaker|ghirardelli|baker'?s\b|hellmann|campbell", re.I)
 # Posters whose archive entries are reposts of other people's (often published) recipes.
 REPOSTERS = {"Stephanie da Silva"}
+# The poster field names a book or publication instead of a person ("The Original Thai Cookbook by …").
+CITED_AUTHOR = re.compile(r"cook ?book|magazine|newspaper|\bpress\b|publishing|\bbook\b", re.I)
+# Recipes whose list is incomplete in a way the automatic checks can't see. URL path → reason.
+EXCLUDE = {
+    "meat/chicken/chick-coll-2.html#27": "stuffing ingredients are written into the method, not the list",
+    "meat/chicken/chick-coll-1.html#4": "pesto, parsley, and parmesan are written into the method, not the list",
+    "meat/beef/lebanese-sirloin-tips.html": "the rice dish uses vermicelli that isn't in the list",
+    "casserole/tuna-cass.html": "the bread amount (8 slices) is only in the method",
+    "ethnic/thai/thai-coll-1.html#17": "the rice noodles and peanut oil aren't in the list",
+    "pie/pizza/caram-onion-pizza.html": "lists two alternative doughs, so the grocery list would double them",
+    "sauces/mp-pasta-sauce-coll.html#16": "the meatball list and the sauce method run together; the oil isn't listed",
+    "drink/strawberry-lemonade.html": "the lemon juice isn't in the list",
+    "cake/jewish-apple-cake.html": "the method is garbled and the cinnamon topping isn't listed",
+    "bread/muffin/sds-muffin-coll-3.html#28": "the whole-wheat flour is run into the cheese line",
+    "cookies/mp-cookie-coll-2.html#2": "the method starts mid-sentence (part of the list is missing)",
+    "sauces/potsticker-dipping/potsticker-dipping-sauce-3.html": "the hot oil and dark soy sauce are only described in notes",
+}
+# Meal type checked by hand where the category guesses wrong. URL path → meal type.
+MEAL_OVERRIDE = {
+    "ethnic/mexican/spin-empanada.html": "snack",  # bite-size pastries, a teaspoon of filling each
+}
 SIGNOFF = {"mara", "amyl", "enjoy", "enjoy!", "cheers", "bon appetit"}
 COOK_VERB = re.compile(r"\b(mix|stir|bake|cook|boil|simmer|combine|add|heat|fry|saute|sauté|beat|whisk|blend|pour|serve|place|chop|cut|knead|roast|grill|broil|toss|fold|spread|chill|refrigerate|freeze|marinate|steam|melt|preheat|puree|process|season|drain|cover|bring)\b", re.I)
 
@@ -338,6 +382,8 @@ def leftover_to_ingredients(line, author):
     low = line.lower().strip(" .")
     if low in SIGNOFF or (author and low in author.lower().split()):
         return [], None
+    if re.match(r"^oven temp", low) or re.match(r"^-?[^()]*\)$", low):
+        return [], None  # an oven note, or the tail of the line above ("well-drained)")
     citrus = re.search(r"\b(juice|zest|rind|peel)\s+(?:of\s+)?(\d+(?:/\d+)?|one|two|three|half|a|an|1/2)\s+(lemon|lime|orange)s?\b", low)
     if citrus:
         n = {"one": 1, "a": 1, "an": 1, "two": 2, "three": 3, "half": 0.5}.get(citrus.group(2))
@@ -347,7 +393,7 @@ def leftover_to_ingredients(line, author):
     parsed = parse_ingredient(line)
     if parsed:
         return [("PARSED", parsed)], None
-    core = LEFTOVER_STRIP.sub(" ", low.split("(")[0])
+    core = LEFTOVER_STRIP.sub(" ", re.sub(r"\bfor\b.*$", "", low.split("(")[0]))  # "oil for rubbing burgers"
     parts = [p.strip() for p in re.split(r",|&|\band\b|/|\bor\b", core) if p.strip()]
     if not parts:
         return [], None
@@ -390,7 +436,8 @@ def merge(items, table):
             by_id[it["id"]].append(it)
     out = []
     for ing_id in order:
-        group = by_id[ing_id]
+        # A stand-in line ("bouillon cubes only if you use water") doesn't add to the line it replaces.
+        group = [g for g in by_id[ing_id] if not g.get("alt")] or by_id[ing_id]
         if len(group) == 1:
             out.append(group[0])
             continue
@@ -432,7 +479,7 @@ def servings_of(rec, text_servings, meal):
 
 def meal_type_of(rec):
     cat, title = rec["category"], rec["title"].lower()
-    if re.search(r"muffin|pancake|waffle|scone|granola|french toast|crepe|breakfast|oatmeal|porridge|coffee ?cake|biscuit", title) or cat in ("bread/muffin", "bread/pancakes"):
+    if re.search(r"muffin|pancake|waffle|scone|granola|french toast|crepe|breakfast|brunch|oatmeal|porridge|coffee ?cake|biscuit", title) or cat in ("bread/muffin", "bread/pancakes"):
         return "breakfast"
     if cat.startswith(("cake", "cookies", "candy", "dessert")) or cat in ("pie/sweet", "souffle/sweet") or \
             re.search(r"\b(cake|cookies?|brownies?|fudge|pudding|ice cream|sorbet|mousse|truffles?|cheesecake|tiramisu|cobbler|crisp|tart|pie|bars|frosting|icing)\b", title) and not cat.startswith(("meat", "pie/pizza", "seafood", "soup")):
@@ -463,13 +510,15 @@ def protein_of(ingredients, table):
             if tag in tags:
                 g = to_grams(table[i["id"]], i["amount"], i["unit"], None) or 1
                 # Broth/stock and lard flavor a dish; they only decide the label if nothing else does.
-                weight = 0.01 if i["id"] in ("chicken-broth", "beef-broth", "lard", "worcestershire-sauce", "fish-sauce", "oyster-sauce", "bacon") else 1
+                weight = 0.01 if i["id"] in ("chicken-broth", "beef-broth", "lard", "worcestershire-sauce", "fish-sauce", "oyster-sauce", "bacon", "cream-of-chicken-soup", "steak-sauce") else 1
                 grams[label] += g * weight
     if not grams:
         return "vegetarian"
     label = grams.most_common(1)[0][0]
     if label == "chicken" and any(i["id"] in ("turkey-breast", "ground-turkey", "turkey-sausage", "deli-turkey") for i in ingredients):
         return "turkey"
+    if label == "beef" and any(i["id"] == "lamb" for i in ingredients):
+        return "lamb"
     return label
 
 
@@ -607,7 +656,8 @@ def same_family(ing_id, have, table):
               {"all-purpose-flour", "whole-wheat-flour", "cake-flour", "self-rising-flour", "rye-flour"},
               {"dark-chocolate-chips", "unsweetened-chocolate", "cocoa-powder"}, {"lemon", "lime", "orange"},
               {"apple", "applesauce", "apple-juice"}, {"pineapple-chunks", "pineapple-juice"}, {"orange", "orange-juice"},
-              {"peanuts", "peanut-butter"}, {"corn-kernels", "cornmeal"}, {"pumpkin-puree", "winter-squash"}, {"coffee", "instant-coffee"}]
+              {"peanuts", "peanut-butter"}, {"corn-kernels", "cornmeal"},
+              {"mushrooms", "portobello", "straw-mushrooms", "cream-of-mushroom-soup"}, {"pumpkin-puree", "winter-squash"}, {"coffee", "instant-coffee"}]
     return any(ing_id in g and g & have for g in groups)
 
 
@@ -639,14 +689,23 @@ def build():
         if TITLE_BRAND.search(rec["title"]) or TITLE_BRAND.search(" ".join(i["raw"] for i in rec["ingredients"])):
             review.append((rec, ["names a company or brand"]))
             continue
+        if CITED_AUTHOR.search(rec["author"]):
+            review.append((rec, ["credited to a cookbook or publication"]))
+            continue
+        excluded = EXCLUDE.get(rec["url"].split("/recipes/", 1)[-1])
+        if excluded:
+            review.append((rec, [f"checked by hand: {excluded}"]))
+            continue
         if rec["author"] in REPOSTERS:
             review.append((rec, ["reposted from another source (not the poster's own recipe)"]))
             continue
         problems, items = [], []
         for p in rec["ingredients"]:
-            each = re.match(r"^each\s+(.+)$", p["name"], re.I)
+            each = re.match(r"^each:?\s+(.+)$", p["name"], re.I)
             if each:
-                for part in re.split(r",|\band\b|&", each.group(1)):
+                # "1/2 tsp each: rosemary, sage, oregano" — the comma split put the rest in prep.
+                names = each.group(1) + ("," + p["prep"] if p.get("prep") and ":" in p["name"] else "")
+                for part in re.split(r",|\band\b|&", names):
                     if part.strip():
                         items.append(("PARSED", {**p, "name": part.strip(), "prep": None}))
                 continue
@@ -682,6 +741,8 @@ def build():
             elif ing_id in CITRUS and p["unit"] in VOLUME_TSP:
                 part = CITRUS_PART.search(raw_low)
                 item["prep"] = "zested" if part and part.group(2) else "juiced"
+            if re.search(r"\bonly if\b|\binstead\b", raw_low):
+                item["alt"] = True  # "5 bouillon cubes (ONLY if you use water)": a stand-in for another line
             if "optional" in raw_low:
                 item["prep"] = ((item.get("prep") or "") + ", optional").strip(", ")
             elif p.get("prep") and ing_id not in ("eggs",) and len(p["prep"]) <= 40 and "@" not in p["prep"]:
@@ -700,10 +761,12 @@ def build():
         # The dish's main ingredient must be in the list: anything the title names, and any meat or
         # fish the method cooks. A missing protein would also mislabel the recipe as vegetarian.
         tw = re.findall(r"[a-z]+", clean_title(rec["title"], rec["category"]).lower())
+        # A word inside a two-word name the list has ("Sweet Potato" → sweet-potato) isn't checked alone.
+        covered = {j for k in range(len(tw) - 1) if resolve(" ".join(tw[k:k + 2]), None, "")[0] in have for j in (k, k + 1)}
         for n in (2, 1):
             for k in range(len(tw) - n + 1):
                 phrase = " ".join(tw[k:k + n])
-                if any(w in TITLE_IGNORE for w in phrase.split()):
+                if any(w in TITLE_IGNORE for w in phrase.split()) or (n == 1 and k in covered):
                     continue
                 ing_id, _ = resolve(phrase, None, "")
                 if ing_id and ing_id != "SKIP" and ing_id not in have and not same_family(ing_id, have, table):
@@ -737,6 +800,7 @@ def build():
         merged = merge(out, table)
         for m in merged:
             m.pop("eggpart", None)
+            m.pop("alt", None)
             if not m.get("prep"):
                 m.pop("prep", None)
         if len(merged) < 2:
@@ -745,7 +809,7 @@ def build():
         if sum(len(s) for s in steps) < 60 or not COOK_VERB.search(" ".join(steps)):
             review.append((rec, ["instructions too thin to follow"]))
             continue
-        meal = meal_type_of(rec)
+        meal = MEAL_OVERRIDE.get(rec["url"].split("/recipes/", 1)[-1]) or meal_type_of(rec)
         prep, cook = time_of(steps, merged, meal, rec["category"])
         recipes.append({
             "id": slug(rec["key"]),
@@ -925,6 +989,8 @@ def emit(table, recipes, review):
              "Method uses an ingredient missing from the list" if p.startswith("method uses") else
              "Amounts given as ratios (one part / two parts)" if p.startswith("method gives") else
              "Same dish as a Dishcart recipe" if p.startswith("same dish") else
+             "Credited to a cookbook or publication" if p.startswith("credited to") else
+             "Checked by hand: list incomplete in a way the checks can't see" if p.startswith("checked by hand") else
              "Same recipe posted twice" if p.startswith("duplicate of") else
              "Main ingredient missing from the list" if p.startswith(("title names", "method cooks", "method uses the")) else
              "Ingredient not in Dishcart's catalog" if p.startswith("unmapped") else
