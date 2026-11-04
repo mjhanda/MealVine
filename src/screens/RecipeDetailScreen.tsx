@@ -10,6 +10,7 @@ import RatingButtons from '../components/RatingButtons';
 import SauceChoice from '../components/SauceChoice';
 import { isUserRecipeId } from '../data/userRecipes';
 import { RootStackParamList } from '../navigation/types';
+import { RECIPE_AWAKE_MS, useIdleKeepAwake } from '../services/screenAwake';
 import { useUserRecipes } from '../store/customRecipesStore';
 import { useFavoritesStore } from '../store/favoritesStore';
 import { useHistoryStore } from '../store/historyStore';
@@ -31,6 +32,8 @@ import { formatQuantity, scaleAmount } from '../utils/units';
 type Props = NativeStackScreenProps<RootStackParamList, 'RecipeDetail'>;
 
 export default function RecipeDetailScreen({ route, navigation }: Props) {
+  // Reading a recipe while cooking: keep the phone awake until 5 minutes pass with no touch (T50).
+  const pokeAwake = useIdleKeepAwake(`recipe-${route.key}`, RECIPE_AWAKE_MS);
   useUserRecipes(); // re-render after editing your own recipe
   const recipe = recipeById(route.params.recipeId);
   const showUndo = useUndoStore((s) => s.show);
@@ -95,7 +98,7 @@ export default function RecipeDetailScreen({ route, navigation }: Props) {
   const steps = recipeAsCooked(recipe, servings, storeBought).steps;
 
   return (
-    <SafeAreaView style={styles.container} edges={['top', 'bottom']}>
+    <SafeAreaView style={styles.container} edges={['top', 'bottom']} onTouchStart={pokeAwake}>
       <View style={styles.header}>
         <Pressable
           onPress={() => navigation.goBack()}
@@ -117,7 +120,7 @@ export default function RecipeDetailScreen({ route, navigation }: Props) {
         </Pressable>
       </View>
 
-      <ScrollView contentContainerStyle={{ padding: 20, paddingBottom: 40 }}>
+      <ScrollView contentContainerStyle={{ padding: 20, paddingBottom: 40 }} onScroll={pokeAwake} scrollEventThrottle={1000}>
         <Text style={styles.emoji}>{recipe.emoji}</Text>
         <Text style={styles.title}>{recipe.title}</Text>
         <View style={styles.metaRow}>

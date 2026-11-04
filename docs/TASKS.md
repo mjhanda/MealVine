@@ -1,7 +1,7 @@
 # Dishcart — Task List (Mealime parity → launch)
 
 Written 2026-10-05 (as "MealApp"); T26–T35 added after the Dishcart / ads
-decisions; T40–T42 added 2026-10-18; T44–T46 added 2026-10-20 (#43 is a Dependabot PR); T47–T48 added 2026-10-20. Each task follows
+decisions; T40–T42 added 2026-10-18; T44–T46 added 2026-10-20 (#43 is a Dependabot PR); T47–T48 added 2026-10-20; T50 added 2026-11-03 (#49 is a Dependabot PR). Each task follows
 `.github/ISSUE_TEMPLATE/ai-task.yml` and is mirrored as a GitHub issue in
 **mjhanda/MealVine** (issue #N = TN). This file is the planning snapshot; the
 issues are the source of truth.
@@ -21,7 +21,7 @@ issues are the source of truth.
     first; will still submit to both stores.
   - T32 — Maestro E2E passes on the iOS simulator and Android emulator;
     physical-device pass and purchase steps still open.
-- **Open:** T15, T26–T31, T33–T36, T39.
+- **Open:** T15, T26–T31, T33–T36, T39, T50.
 - **Security (2026-10-20):** critical `shell-quote` alert fixed (lockfile); 4 remaining Dependabot
   alerts are dev/build-only with no patched release (node-forge, braces, uuid, sprintf-js).
 - **Not needed for personal use:** T26–T31, T33, T34 (store, ads, legal).
@@ -1147,4 +1147,29 @@ which answers the main complaint about how Mealime shut down. See T25.
 - **Dependencies / Blockers:** T47
 - **Priority:** P1 - High
 - **Target date:** 2026-10-21
+- **Additional Notes:** —
+
+## T50 — Keep the screen on while a recipe is open
+
+- **Summary:** The recipe page keeps the phone from going to sleep, so you can read along while cooking without starting cooking mode. After 5 minutes without a touch or scroll the phone may sleep as usual; any touch restarts the 5 minutes.
+- **Requester:** Owner
+- **Assignee(s) / AI agent:** Claude Code
+- **Reviewer(s):** Owner
+- **End user(s):** Everyone cooking from a recipe page
+- **Context:** Owner request 2026-11-03. Cooking mode already keeps the screen on (`useKeepAwake` in `CookScreen`); the recipe page doesn't, so the phone locks mid-recipe.
+- **Data Classification:** No sensitive data involved
+- **Notes on data handling:** Nothing persisted.
+- **In scope:**
+  - `expo-keep-awake` (already a dependency) with its own tag on the recipe page while it's focused and the app is in the foreground.
+  - A 5-minute idle window, reset by any touch or scroll on the page; released when the page loses focus or closes.
+  - Pure idle-timer logic in `src/utils/` with tests.
+- **Out of scope:** A setting to turn it off or change the time; the grocery list.
+- **Acceptance Criteria:**
+  - [ ] With a recipe open, the phone doesn't sleep at its normal screen timeout while you keep interacting
+  - [ ] After 5 idle minutes, normal sleep applies again; a touch re-arms it
+  - [ ] Leaving the recipe page releases the lock (cooking mode keeps its own)
+- **Test Strategy:** Unit tests with fake timers; on-device check on Android.
+- **Dependencies / Blockers:** None
+- **Priority:** P2 - Medium
+- **Target date:** 2026-11-03
 - **Additional Notes:** —
