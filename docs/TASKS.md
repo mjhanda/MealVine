@@ -8,7 +8,7 @@ issues are the source of truth.
 
 ### Status (2026-10-20, evening)
 
-- **Done:** T01–T14, T17–T19, T22–T24, T37, T38, T40–T42, T44–T48 (code in `main`, issues closed).
+- **Done:** T01–T14, T17–T19, T22–T24, T37, T38, T40–T42, T44–T48, T50 (code in `main`, issues closed).
   T42: installed on the owner's Pixel 11 Pro XL 2026-10-21 (release APK; `docs/release/personal-android.md`).
 - **Partly done:**
   - T16 — 342 recipes, 110 dinners (54 original, 11 adapted, 45 archive). Per diet: classic 110,
@@ -21,7 +21,7 @@ issues are the source of truth.
     first; will still submit to both stores.
   - T32 — Maestro E2E passes on the iOS simulator and Android emulator;
     physical-device pass and purchase steps still open.
-- **Open:** T15, T26–T31, T33–T36, T39, T50.
+- **Open:** T15, T26–T31, T33–T36, T39.
 - **Security (2026-10-20):** critical `shell-quote` alert fixed (lockfile); 4 remaining Dependabot
   alerts are dev/build-only with no patched release (node-forge, braces, uuid, sprintf-js).
 - **Not needed for personal use:** T26–T31, T33, T34 (store, ads, legal).
